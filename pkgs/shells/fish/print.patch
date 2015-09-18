@@ -1,0 +1,40 @@
+diff --git a/fish.cpp b/fish.cpp
+index 2d44b01..329cc6b 100644
+--- a/fish.cpp
++++ b/fish.cpp
+@@ -224,8 +224,9 @@ static struct config_paths_t determine_config_directory_paths(const char *argv0)
+ /* Source the file config.fish in the given directory */
+ static void source_config_in_directory(const wcstring &dir)
+ {
++    fwprintf( stderr, L"Woot %ls\n", dir.c_str() );
+     /* We want to execute a command like 'builtin source dir/config.fish 2>/dev/null' */
+     const wcstring escaped_dir = escape_string(dir, ESCAPE_ALL);
+     const wcstring cmd = L"builtin source " + escaped_dir + L"/config.fish 2>/dev/null";
+  src = /tmp/fish-2.2.0
+  o
+@@ -228,6 +228,7 @@ static struct config_paths_t determine_config_directory_paths(const char *argv0)
+ /* Source the file config.fish in the given directory */
+ static void source_config_in_directory(const wcstring &dir)
+ {
++  fwprintf( stderr, L"Woot %ls\n", dir.c_str() );
+     /* We want to execute a command like 'builtin source dir/config.fish 2>/dev/null' */
+     const wcstring escaped_dir = escape_string(dir, ESCAPE_ALL);
+     const wcstring cmd = L"builtin source " + escaped_dir + L"/config.fish 2>/dev/null";
+@@ -337,7 +338,9 @@ static void check_running_fishd()
+ */
+ static int read_init(const struct config_paths_t &paths)
+ {
++    printf("sourcing data config\n");
+     source_config_in_directory(paths.data);
++    printf("sourcing sys config\n");
+     source_config_in_directory(paths.sysconf);
+ 
+     /* We need to get the configuration directory before we can source the user configuration file. If path_get_config returns false then we have no configuration directory and no custom config to load. */
+@@ -542,6 +545,7 @@ int main(int argc, char **argv)
+         printf("%d: g_fork_count: %d\n", __LINE__, g_fork_count);
+ 
+     const io_chain_t empty_ios;
++    printf("starting to read init");
+     if (read_init(paths))
+     {
+         /* Stop the exit status of any initialization commands (#635) */

@@ -17,6 +17,8 @@ stdenv.mkDerivation rec {
                           ++ stdenv.lib.optional (!stdenv.isDarwin) man_db
                           ++ [ bc coreutils ];
 
+  patches = [ ./print.patch ];
+
   postInstall = ''
     sed -e "s|bc|${bc}/bin/bc|" \
         -e "s|/usr/bin/seq|${coreutils}/bin/seq|" \
@@ -31,6 +33,18 @@ stdenv.mkDerivation rec {
   '' + ''
     sed -i "s|/sbin /usr/sbin||" \
            "$out/share/fish/functions/__fish_complete_subcommand_root.fish"
+
+    # Source all files from NIXPKGS_FISH_SOURCE_PATHS array (to enable plugins)
+    # Escapes because otherwise the bash replaces it as variables (argh…)
+    cat >> "$out/etc/fish/config.fish" <<EOF
+    # source all files in this ENV variable
+    echo foo
+    for p in \$NIXPKGS_FISH_SOURCE_PATHS
+      echo "sourced \$p"
+      source "\$p"
+    end
+    EOF
+
   '';
 
   meta = with stdenv.lib; {
