@@ -48,28 +48,28 @@ rec {
       else false;
 
 
-  /* Return nested attribute set in which an attribute is set.
-
-     Example:
-       setAttrByPath ["a" "b"] 3
-       => { a = { b = 3; }; }
-  */
   setAttrByPath = attrPath: value:
     if attrPath == [] then value
     else listToAttrs
       [ { name = head attrPath; value = setAttrByPath (tail attrPath) value; } ];
 
 
-  /* Like `getAttrPath' without a default value. If it doesn't find the
-     path it will throw.
+  setAttrInSetByPath = attrPath: value: set:
+    if attrPath == [] then value
+    else set // {
+      ${head attrPath} = let new = set.${head attrPath} or {}; in
+        setAttrInSetByPath (tail attrPath) value (optionalAttrs (isAttrs new) new);
+    };
 
-     Example:
-       x = { a = { b = 3; }; }
-       getAttrFromPath ["a" "b"] x
-       => 3
-       getAttrFromPath ["z" "z"] x
-       => error: cannot find attribute `z.z'
-  */
+
+  /* Apply function f over the value of the attribute described by attrPath.
+     For instance, updateAttrByPath [ "x" "y" ] (a: a+1) 0 { x.y = 1; } returns
+     { x.y = 2; }. If the path doesn’t exist the default value is used. */
+  updateAttrByPath = attrPath: f: default: e:
+      (setAttrInSetByPath attrPath
+        (f (attrByPath attrPath default e))
+        e);
+
   getAttrFromPath = attrPath: set:
     let errorMsg = "cannot find attribute `" + concatStringsSep "." attrPath + "'";
     in attrByPath attrPath (abort errorMsg) set;
