@@ -2593,6 +2593,8 @@ let
 
   nitrogen = callPackage ../tools/X11/nitrogen {};
 
+  nix-http-serve = callPackage ../tools/misc/nix-http-serve {};
+
   nkf = callPackage ../tools/text/nkf {};
 
   nlopt = callPackage ../development/libraries/nlopt {};
