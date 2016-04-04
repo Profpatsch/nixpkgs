@@ -1,0 +1,69 @@
+--- a/configure	2016-04-01 02:35:20.544201901 +0200
++++ b/configure	2016-04-01 02:35:56.664695079 +0200
+@@ -631,7 +631,6 @@
+ A2PS
+ GS
+ CAT
+-FILEUTIL
+ EGREP
+ GREP
+ CPP
+@@ -3753,58 +3752,6 @@
+   MTINKPIPESSEARCHPATH="/usr/freeware/var/run:$MTINKPIPESSEARCHPATH"
+ fi
+ 
+-v="cannot open";
+-# Extract the first word of "file", so it can be a program name with args.
+-set dummy file; ac_word=$2
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+-$as_echo_n "checking for $ac_word... " >&6; }
+-if ${ac_cv_path_FILEUTIL+:} false; then :
+-  $as_echo_n "(cached) " >&6
+-else
+-  case $FILEUTIL in
+-  [\\/]* | ?:[\\/]*)
+-  ac_cv_path_FILEUTIL="$FILEUTIL" # Let the user override the test with a path.
+-  ;;
+-  *)
+-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+-for as_dir in $BSB
+-do
+-  IFS=$as_save_IFS
+-  test -z "$as_dir" && as_dir=.
+-    for ac_exec_ext in '' $ac_executable_extensions; do
+-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+-    ac_cv_path_FILEUTIL="$as_dir/$ac_word$ac_exec_ext"
+-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+-    break 2
+-  fi
+-done
+-  done
+-IFS=$as_save_IFS
+-
+-  test -z "$ac_cv_path_FILEUTIL" && ac_cv_path_FILEUTIL="FILE_UTILITY_NOT_FOUND"
+-  ;;
+-esac
+-fi
+-FILEUTIL=$ac_cv_path_FILEUTIL
+-if test -n "$FILEUTIL"; then
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $FILEUTIL" >&5
+-$as_echo "$FILEUTIL" >&6; }
+-else
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-fi
+-
+-if test "$FILEUTIL" != "FILE_UTILITY_NOT_FOUND" ; then
+-	v=`${FILEUTIL} - </etc/passwd 2>/dev/null`;
+-fi
+-if expr "$v" : ".*cannot open.*" >/dev/null;  then
+-	echo "Please use a file utility that handles 'file - 'correctly";
+-	echo "You can obtain one from: ftp://ftp.astron.com/pub/file/";
+-	echo " or ftp://ftp.lprng.com/pub/LPRng/UNIXTOOLS/file/";
+-	echo "if necessary, use the FILEUTIL environment variable to specify the path"
+-	exit 1
+-fi
+-
+ # Extract the first word of "cat", so it can be a program name with args.
+ set dummy cat; ac_word=$2
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5

@@ -16016,6 +16016,12 @@ in
 
   foo2zjs = callPackage ../misc/drivers/foo2zjs {};
 
+  foomatic-db = callPackage ../misc/drivers/foomatic-db {};
+  
+  foomatic-db-engine = callPackage ../misc/drivers/foomatic-db-engine {};
+
+  foomatic-db-nonfree = callPackage ../misc/drivers/foomatic-db-nonfree {};
+
   foomatic_filters = callPackage ../misc/drivers/foomatic-filters {};
 
   freestyle = callPackage ../misc/freestyle { };
