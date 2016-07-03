@@ -36,7 +36,7 @@ let
     dolphin = callPackage ./dolphin.nix {};
     dolphin-plugins = callPackage ./dolphin-plugins.nix {};
     ffmpegthumbs = callPackage ./ffmpegthumbs.nix {
-      ffmpeg = pkgs.ffmpeg_2
+      ffmpeg = pkgs.ffmpeg_2;
     };
     filelight = callPackage ./filelight.nix {};
     gpgmepp = callPackage ./gpgmepp.nix {};
