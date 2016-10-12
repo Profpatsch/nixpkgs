@@ -131,6 +131,7 @@ self: super:
   wai-extra = addExtraLibraries super.wai-extra [ self.tagged ];
   Spock-core = addExtraLibraries super.Spock-core [ self.tagged ];
   Spock = addExtraLibraries super.Spock [ self.tagged ];
+  Spock-api-ghcjs = addExtraLibraries super.Spock-api-ghcjs [ self.ghcjs-base ];
   contravariant = addExtraLibraries super.contravariant [ self.tagged self.unordered-containers ];
   comonad = addExtraLibraries super.comonad [ self.unordered-containers ];
   bifunctors = addExtraLibraries super.bifunctors [ self.unordered-containers ];
