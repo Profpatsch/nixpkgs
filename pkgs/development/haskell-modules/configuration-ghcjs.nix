@@ -62,11 +62,11 @@ self: super:
     configureFlags = [];
   });
 
-  profunctors = overrideCabal super.profunctors (drv: {
+  profunctors = addExtraLibraries (overrideCabal super.profunctors (drv: {
     preConfigure = ''
       sed -i 's/^{-# ANN .* #-}//' src/Data/Profunctor/Unsafe.hs
     '';
-  });
+  })) [ self.unordered-containers ];
 
   ghcjs-ffiqq = self.callPackage
     ({ mkDerivation, base, template-haskell, ghcjs-base, split, containers, text, ghc-prim
@@ -121,5 +121,36 @@ self: super:
         "glib" "gtk3" "webkitgtk3" "webkitgtk3-javascriptcore" "raw-strings-qq" "unix"
       ] drv.libraryHaskellDepends;
   });
+
+  semigroups = with self; addExtraLibraries super.semigroups [ hashable tagged text unordered-containers ];
+  semigroupoids = with self; addExtraLibraries super.semigroupoids [ unordered-containers ];
+  void = with self; addExtraLibraries super.void [ tagged unordered-containers ];
+  http2 = with self; addExtraLibraries super.http2 [ aeson aeson-pretty hex unordered-containers vector word8 ];
+  protolude = doJailbreak super.protolude;
+  wai = dontHaddock super.wai;
+  wai-extra = addExtraLibraries super.wai-extra [ self.tagged ];
+  Spock-core = addExtraLibraries super.Spock-core [ self.tagged ];
+  Spock = addExtraLibraries super.Spock [ self.tagged ];
+  contravariant = addExtraLibraries super.contravariant [ self.tagged self.unordered-containers ];
+  comonad = addExtraLibraries super.comonad [ self.unordered-containers ];
+  bifunctors = addExtraLibraries super.bifunctors [ self.unordered-containers ];
+  free = addExtraLibraries super.free [ self.unordered-containers ];
+  adjunctions = addExtraLibraries super.adjunctions [ self.unordered-containers ];
+  kan-extensions = addExtraLibraries super.kan-extensions [ self.unordered-containers ];
+
+  jsaddle-dom =
+    let removeLibraryHaskellDepends = drv: deps: overrideCabal drv (old: {
+      libraryHaskellDepends = pkgs.lib.fold pkgs.lib.remove old.libraryHaskellDepends deps;
+    });
+    in with self; addExtraLibraries (removeLibraryHaskellDepends super.jsaddle-dom [
+      gi-glib gi-gtk gi-webkit haskell-gi-base
+    ]) [ ghcjs-base ];
+  jsaddle =
+    let removeLibraryHaskellDepends = drv: deps: overrideCabal drv (old: {
+      libraryHaskellDepends = pkgs.lib.fold pkgs.lib.remove old.libraryHaskellDepends deps;
+    });
+    in with self; addExtraLibraries (removeLibraryHaskellDepends super.jsaddle [
+      gi-glib gi-gtk gi-webkit haskell-gi-base gi-javascriptcore webkitgtk3-javascriptcore
+    ]) [ ghcjs-base ];
 
 }
