@@ -1,0 +1,21 @@
+diff --git a/Cabal/Distribution/InstalledPackageInfo.hs b/Cabal/Distribution/InstalledPackageInfo.hs
+index 70ea6fc..be7b3d4 100644
+--- a/Distribution/InstalledPackageInfo.hs
++++ b/Distribution/InstalledPackageInfo.hs
+@@ -181,11 +181,11 @@ data ExposedModule
+ 
+ instance Text ExposedModule where
+     disp (ExposedModule m reexport) =
+-        Disp.sep [ disp m
+-                 , case reexport of
+-                    Just m' -> Disp.sep [Disp.text "from", disp m']
+-                    Nothing -> Disp.empty
+-                 ]
++        Disp.hsep [ disp m
++                  , case reexport of
++                     Just m' -> Disp.hsep [Disp.text "from", disp m']
++                     Nothing -> Disp.empty
++                  ]
+     parse = do
+         m <- parseModuleNameQ
+         Parse.skipSpaces
