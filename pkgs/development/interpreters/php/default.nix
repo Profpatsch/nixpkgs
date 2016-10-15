@@ -2,7 +2,7 @@
 , mysql, libxml2, readline, zlib, curl, postgresql, gettext
 , openssl, pkgconfig, sqlite, config, libjpeg, libpng, freetype
 , libxslt, libmcrypt, bzip2, icu, openldap, cyrus_sasl, libmhash, freetds
-, uwimap, pam, gmp, apacheHttpd, libiconv }:
+, uwimap, pam, gmp, apacheHttpd, libiconv, systemd }:
 
 let
 
@@ -19,11 +19,12 @@ let
 
       enableParallelBuilding = true;
 
-      buildInputs = [ flex bison pkgconfig ];
+      buildInputs = [ flex bison pkgconfig systemd ];
 
       configureFlags = [
         "EXTENSION_DIR=$(out)/lib/php/extensions"
-      ] ++ lib.optional stdenv.isDarwin "--with-iconv=${libiconv}";
+      ] ++ lib.optional stdenv.isDarwin "--with-iconv=${libiconv}"
+        ++ lib.optional stdenv.isLinux  "--with-fpm-systemd";
 
       flags = {
 
@@ -270,7 +271,7 @@ let
         done
 
         [[ -z "$libxml2" ]] || export PATH=$PATH:$libxml2/bin
-        ./configure --with-config-file-scan-dir=/etc --with-config-file-path=$out/etc --prefix=$out $configureFlags
+        ./configure --with-config-file-scan-dir=/etc/php.d --with-config-file-path=$out/etc --prefix=$out $configureFlags
       '';
 
       postInstall = ''
