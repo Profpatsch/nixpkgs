@@ -2,10 +2,13 @@
 
 SITE=https://www.theleagueofmoveabletype.com
 
-fonts=$(curl "$SITE" 2>/dev/null | sed -ne 's/<img.*cloudfront.*images\/\(.*\)-[[:digit:]-]\..*$/\1/p')
+# since there is no nice way to get all the fonts,
+# this fetches the homepage and extracts their names from the html …
+fonts=$(curl "$SITE" 2>/dev/null | \
+            sed -ne 's/<img.*cloudfront.*images\/\(.*\)-[[:digit:]-]\..*$/\1/p')
 
+# build an ad-hoc nixexpr list with the files & hashes
 echo "["
-
 for f in $fonts; do
     url="$SITE/$f/download"
     hash=$(nix-prefetch-url --type sha256 "$url" 2>/dev/null)
@@ -17,7 +20,6 @@ for f in $fonts; do
   }
 EOF
 done
-
 echo "]"
 
 

@@ -22,14 +22,20 @@ stdenv.mkDerivation rec {
     description = "Raleway is an elegant sans-serif typeface family";
 
     longDescription = ''
-      Initially designed by Matt McInerney as a single thin weight, it was expanded into a 9 weight family by Pablo Impallari and Rodrigo Fuenzalida in 2012 and iKerned by Igino Marini. In 2013 the Italics where added.
+      Initially designed by Matt McInerney as a single thin weight, it was
+      expanded into a 9 weight family by Pablo Impallari and Rodrigo Fuenzalida
+      in 2012 and iKerned by Igino Marini. In 2013 the Italics where added.
 
-      It is a display face and the download features both old style and lining numerals, standard and discretionary ligatures, a pretty complete set of diacritics, as well as a stylistic alternate inspired by more geometric sans-serif typefaces than its neo-grotesque inspired default character set.
+      It is a display face and the download features both old style and lining
+      numerals, standard and discretionary ligatures, a pretty complete set of
+      diacritics, as well as a stylistic alternate inspired by more geometric
+      sans-serif typefaces than its neo-grotesque inspired default character
+      set.
 
       It also has a sister display family, Raleway Dots.
     '';
 
-    homepage = src.homepage;
+    homepage = src.meta.homepage;
     license = stdenv.lib.licenses.ofl;
 
     maintainers = with stdenv.lib.maintainers; [ profpatsch ];
