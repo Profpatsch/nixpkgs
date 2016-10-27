@@ -26,6 +26,14 @@ stdenv.mkDerivation rec {
     ./relocation.patch
     ./ghc-7.x-dont-pass-linker-flags-via-response-files.patch   # https://github.com/NixOS/nixpkgs/issues/10752
   ];
+  postPatch = ''
+    # emulates https://github.com/haskell/cabal/pull/3928/files
+    # broke packages with exposed-modules, like ghcjs-dom-jsaddle
+    # will be in the cabal release after 1.24.0
+    sed -ie '/instance Text ExposedModule where/,/parse = do/ s/Disp\.sep/Disp\.hsep/' \
+               libraries/Cabal/Cabal/Distribution/InstalledPackageInfo.hs
+    cat libraries/Cabal/Cabal/Distribution/InstalledPackageInfo.hs
+  '';
 
   buildInputs = [ ghc perl libxml2 libxslt docbook_xsl docbook_xml_dtd_45 docbook_xml_dtd_42 hscolour ];
 
