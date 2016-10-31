@@ -4800,6 +4800,16 @@ in modules // {
     };
   };
 
+  pytest_30 = self.pytest_27.override rec {
+    name = "pytest-3.0.3";
+
+    propagatedBuildInputs = with self; [ hypothesis py ];
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/p/pytest/${name}.tar.gz";
+      sha256 = "1rxydacrdb8s312l3bn0ybrqsjp13abzyim1x21s80386l5504zj";
+    };
+  };
+
   pytestcache = buildPythonPackage rec {
     name = "pytest-cache-1.0";
     src = pkgs.fetchurl {
@@ -4890,11 +4900,11 @@ in modules // {
 
   pytestflakes = buildPythonPackage rec {
     name = "pytest-flakes-${version}";
-    version = "1.0.0";
+    version = "1.0.1";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/p/pytest-flakes/${name}.tar.gz";
-      sha256 = "0vvfprga6k4v2zq1qsr3yq1bjl22vygfsnvyn3hh80cc2386dk6h";
+      sha256 = "9c2271654294020e134624020a2144cb93b7334809d70fb3f470cd31ec788a3a";
     };
 
     propagatedBuildInputs = with self ; [ pytest pyflakes pytestcache ];
@@ -14259,8 +14269,6 @@ in modules // {
       sha256 = "1gfrxf71xll1w6zb69znqg5c9j0g7036fsalkvqprh2id640cl3a";
     };
 
-    propagatedBuildInputs = [ pkgs.mpd_clientlib ];
-
     buildInputs = with self; [ mock ];
     patchPhase = ''
       sed -i -e '/tests_require/d' \
@@ -14271,7 +14279,7 @@ in modules // {
       description = "A Python client module for the Music Player Daemon";
       homepage = "https://github.com/Mic92/python-mpd2";
       license = licenses.lgpl3Plus;
-      maintainers = with maintainers; [ rvl ];
+      maintainers = with maintainers; [ rvl mic92 ];
     };
   };
 
@@ -29164,6 +29172,10 @@ in modules // {
     patches = [ ../development/python-modules/suds-0.4-CVE-2013-2217.patch ];
 
     meta = with stdenv.lib; {
+      # Broken for security issues:
+      # - https://github.com/NixOS/nixpkgs/issues/19678
+      # - https://lwn.net/Vulnerabilities/559200/
+      broken = true;
       description = "Lightweight SOAP client";
       homepage = https://fedorahosted.org/suds;
       license = licenses.lgpl3Plus;

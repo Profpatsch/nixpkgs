@@ -564,7 +564,7 @@ in
     qt4Support = config.avahi.qt4Support or false;
   };
 
-  avro-cpp = callPackage ../development/libraries/avro-c++ { };
+  avro-cpp = callPackage ../development/libraries/avro-c++ { boost = boost160; };
 
   aws = callPackage ../tools/virtualization/aws { };
 
@@ -773,6 +773,8 @@ in
   datefudge = callPackage ../tools/system/datefudge { };
 
   ddate = callPackage ../tools/misc/ddate { };
+
+  dehydrated = callPackage ../tools/admin/dehydrated { };
 
   deis = callPackage ../development/tools/deis {};
 
@@ -3684,6 +3686,8 @@ in
 
   sshuttle = callPackage ../tools/security/sshuttle { };
 
+  ssldump = callPackage ../tools/networking/ssldump { };
+
   sstp = callPackage ../tools/networking/sstp {};
 
   sudo = callPackage ../tools/security/sudo { };
@@ -5105,7 +5109,9 @@ in
     stdenv = overrideCC stdenv gcc49;
   };
 
-  ponyc = callPackage ../development/compilers/ponyc { };
+  ponyc = callPackage ../development/compilers/ponyc {
+    llvm = llvm_38;
+  };
 
   pony-stable = callPackage ../development/compilers/ponyc/pony-stable.nix { };
 
@@ -7774,6 +7780,8 @@ in
     inherit (perlPackages) libintlperl GetoptLong SysVirt;
   };
 
+  libgumbo = callPackage ../development/libraries/libgumbo { };
+  
   libhangul = callPackage ../development/libraries/libhangul { };
 
   libharu = callPackage ../development/libraries/libharu { };
@@ -8757,6 +8765,8 @@ in
   protobufc = protobufc1_1;
   protobufc1_1 = callPackage ../development/libraries/protobufc/1.1.nix { };
   protobufc1_0 = callPackage ../development/libraries/protobufc/1.0.nix { };
+
+  flatbuffers = callPackage ../development/libraries/flatbuffers { };
 
   pth = callPackage ../development/libraries/pth { };
 
@@ -10173,6 +10183,8 @@ in
 
   cbfstool = callPackage ../applications/virtualization/cbfstool { };
 
+  vmfs-tools = callPackage ../tools/filesystems/vmfs-tools { };
+
   pgpool92 = pgpool.override { postgresql = postgresql92; };
   pgpool93 = pgpool.override { postgresql = postgresql93; };
   pgpool94 = pgpool.override { postgresql = postgresql94; };
@@ -11026,7 +11038,6 @@ in
   linuxPackages_mptcp = linuxPackagesFor pkgs.linux_mptcp;
   linuxPackages_rpi = linuxPackagesFor pkgs.linux_rpi;
   linuxPackages_3_10 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_10);
-  linuxPackages_3_10_tuxonice = linuxPackagesFor pkgs.linux_3_10_tuxonice;
   linuxPackages_3_12 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_12);
   linuxPackages_3_18 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_18);
   linuxPackages_4_1 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_4_1);
@@ -14425,7 +14436,7 @@ in
   stella = callPackage ../misc/emulators/stella { };
 
   statsd = callPackage ../tools/networking/statsd {
-    nodejs = nodejs-0_10;
+    nodejs = nodejs-4_x;
   };
 
   linuxstopmotion = callPackage ../applications/video/linuxstopmotion { };
@@ -15458,6 +15469,8 @@ in
 
   fairymax = callPackage ../games/fairymax {};
 
+  fava = callPackage ../applications/office/fava {};
+
   fish-fillets-ng = callPackage ../games/fish-fillets-ng {};
 
   flightgear = qt5.callPackage ../games/flightgear { };
@@ -16372,6 +16385,10 @@ in
     cmake = cmakeCurses;
   });
 
+  ### PHYSICS
+
+  sacrifice = callPackage ../applications/science/physics/sacrifice {};
+
   ### SCIENCE/PROGRAMMING
 
   plm = callPackage ../applications/science/programming/plm { };
@@ -16695,6 +16712,8 @@ in
 
   ### SCIENCE / PHYSICS
 
+  fastjet = callPackage ../development/libraries/physics/fastjet { };
+
   geant4 = callPackage ../development/libraries/physics/geant4 {
     enableMultiThreading = true;
     enableG3toG4         = false;
@@ -16720,6 +16739,22 @@ in
   };
 
   g4py = callPackage ../development/libraries/physics/geant4/g4py { };
+
+  hepmc = callPackage ../development/libraries/physics/hepmc { };
+
+  herwig = callPackage ../development/libraries/physics/herwig { };
+
+  lhapdf = callPackage ../development/libraries/physics/lhapdf { };
+
+  nlojet = callPackage ../development/libraries/physics/nlojet { };
+
+  pythia = callPackage ../development/libraries/physics/pythia { };
+
+  rivet = callPackage ../development/libraries/physics/rivet { };
+
+  thepeg = callPackage ../development/libraries/physics/thepeg { };
+
+  yoda = callPackage ../development/libraries/physics/yoda { };
 
   ### MISC
 
@@ -17372,4 +17407,8 @@ in
   zoom-us = qt55.callPackage ../applications/networking/instant-messengers/zoom-us {};
 
   xulrunner = firefox-unwrapped;
+
+  nitrokey-app = callPackage ../tools/security/nitrokey-app { };
+
+  fpm2 = callPackage ../tools/security/fpm2 { };
 }
