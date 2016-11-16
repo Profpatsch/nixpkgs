@@ -29,7 +29,6 @@ doNotDisplayTwice rec {
   btrfsProgs = btrfs-progs; # added 2016-01-03
   bundler_HEAD = bundler; # added 2015-11-15
   checkbashism = checkbashisms; # added 2016-08-16
-  cheetahTemplate = pythonPackages.cheetah; # 2015-06-15
   cifs_utils = cifs-utils; # added 2016-08
   clangAnalyzer = clang-analyzer;  # added 2015-02-20
   clawsMail = claws-mail; # added 2016-04-29
@@ -48,7 +47,6 @@ doNotDisplayTwice rec {
   firefoxWrapper = firefox;           # 2015-09
   foomatic_filters = foomatic-filters;  # 2016-08
   fuse_exfat = exfat;                   # 2015-09-11
-  fuse_zip = fuse-zip; # added 2016-04-27
   gettextWithExpat = gettext; # 2016-02-19
   git-hub = gitAndTools.git-hub; # added 2016-04-29
   googleAuthenticator = google-authenticator; # added 2016-10-16

@@ -221,7 +221,7 @@ in rec {
   tests.boot-stage1 = callTest tests/boot-stage1.nix {};
   tests.cadvisor = hydraJob (import tests/cadvisor.nix { system = "x86_64-linux"; });
   tests.chromium = (callSubTests tests/chromium.nix { system = "x86_64-linux"; }).stable;
-  tests.cjdns = callTest tests/cjdns.nix {};
+  #tests.cjdns = callTest tests/cjdns.nix {};
   tests.containers-ipv4 = callTest tests/containers-ipv4.nix {};
   tests.containers-ipv6 = callTest tests/containers-ipv6.nix {};
   tests.containers-bridge = callTest tests/containers-bridge.nix {};
@@ -275,6 +275,7 @@ in rec {
   tests.networkingProxy = callTest tests/networking-proxy.nix {};
   tests.nfs3 = callTest tests/nfs.nix { version = 3; };
   tests.nfs4 = callTest tests/nfs.nix { version = 4; };
+  tests.leaps = callTest tests/leaps.nix { };
   tests.nsd = callTest tests/nsd.nix {};
   tests.openssh = callTest tests/openssh.nix {};
   #tests.panamax = hydraJob (import tests/panamax.nix { system = "x86_64-linux"; });

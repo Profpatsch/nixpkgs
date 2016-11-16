@@ -61,6 +61,7 @@
   ./misc/nixpkgs.nix
   ./misc/passthru.nix
   ./misc/version.nix
+  ./programs/adb.nix
   ./programs/atop.nix
   ./programs/bash/bash.nix
   ./programs/blcr.nix
@@ -77,6 +78,7 @@
   ./programs/man.nix
   ./programs/mosh.nix
   ./programs/nano.nix
+  ./programs/oblogout.nix
   ./programs/screen.nix
   ./programs/shadow.nix
   ./programs/shell.nix
@@ -166,6 +168,7 @@
   ./services/desktops/gnome3/gnome-keyring.nix
   ./services/desktops/gnome3/gnome-online-accounts.nix
   ./services/desktops/gnome3/gnome-online-miners.nix
+  ./services/desktops/gnome3/gnome-terminal-server.nix
   ./services/desktops/gnome3/gnome-user-share.nix
   ./services/desktops/gnome3/gvfs.nix
   ./services/desktops/gnome3/seahorse.nix
@@ -248,6 +251,7 @@
   ./services/misc/gitolite.nix
   ./services/misc/gpsd.nix
   ./services/misc/ihaskell.nix
+  ./services/misc/leaps.nix
   ./services/misc/mantisbt.nix
   ./services/misc/mathics.nix
   ./services/misc/matrix-synapse.nix
@@ -314,6 +318,7 @@
   ./services/monitoring/zabbix-server.nix
   ./services/network-filesystems/cachefilesd.nix
   ./services/network-filesystems/drbd.nix
+  ./services/network-filesystems/ipfs.nix
   ./services/network-filesystems/netatalk.nix
   ./services/network-filesystems/nfsd.nix
   ./services/network-filesystems/openafs-client/default.nix
@@ -494,6 +499,7 @@
   ./services/web-apps/pump.io.nix
   ./services/web-apps/tt-rss.nix
   ./services/web-apps/selfoss.nix
+  ./services/web-apps/quassel-webserver.nix
   ./services/web-servers/apache-httpd/default.nix
   ./services/web-servers/caddy.nix
   ./services/web-servers/fcgiwrap.nix
@@ -533,6 +539,7 @@
   ./services/x11/window-managers/fluxbox.nix
   ./services/x11/window-managers/icewm.nix
   ./services/x11/window-managers/bspwm.nix
+  ./services/x11/window-managers/bspwm-unstable.nix
   ./services/x11/window-managers/metacity.nix
   ./services/x11/window-managers/none.nix
   ./services/x11/window-managers/twm.nix
