@@ -129,7 +129,9 @@
   };
 
   mssql = (callPackage ../msodbcsql {}).overrideAttrs (old: {
-    fancyName = "Microsoft ODBC Driver 13 for SQL Server";
-    driver = "lib/libmsodbcsql.so";
+    passthru = old.passthru or {} // {
+      fancyName = "Microsoft ODBC Driver 13 for SQL Server";
+      driver = "lib/libmsodbcsql.so";
+    };
   });
 }
