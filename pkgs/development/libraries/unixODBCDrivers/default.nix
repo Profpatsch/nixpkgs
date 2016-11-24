@@ -1,4 +1,4 @@
-{ fetchurl, stdenv, unixODBC, cmake, postgresql, mysql55, mariadb, sqlite, zlib, libxml2 }:
+{ callPackage, fetchurl, stdenv, unixODBC, cmake, postgresql, mysql55, mariadb, sqlite, zlib, libxml2 }:
 
 # I haven't done any parameter tweaking.. So the defaults provided here might be bad
 
@@ -127,4 +127,6 @@
       maintainers = with maintainers; [ vlstill ];
     };
   };
+
+  mssql = callPackage ../msodbcsql {};
 }
