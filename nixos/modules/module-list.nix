@@ -159,6 +159,8 @@
   ./services/databases/postgresql.nix
   ./services/databases/redis.nix
   ./services/databases/riak.nix
+  ./services/databases/riak-cs.nix
+  ./services/databases/stanchion.nix
   ./services/databases/virtuoso.nix
   ./services/desktops/accountsservice.nix
   ./services/desktops/geoclue2.nix
@@ -178,6 +180,7 @@
   ./services/desktops/telepathy.nix
   ./services/development/hoogle.nix
   ./services/editors/emacs.nix
+  ./services/editors/infinoted.nix
   ./services/games/factorio.nix
   ./services/games/ghost-one.nix
   ./services/games/minecraft-server.nix
@@ -346,6 +349,7 @@
   ./services/networking/connman.nix
   ./services/networking/consul.nix
   ./services/networking/coturn.nix
+  ./services/networking/dante.nix
   ./services/networking/ddclient.nix
   ./services/networking/dhcpcd.nix
   ./services/networking/dhcpd.nix
@@ -354,6 +358,7 @@
   ./services/networking/dnsmasq.nix
   ./services/networking/ejabberd.nix
   ./services/networking/fan.nix
+  ./services/networking/fakeroute.nix
   ./services/networking/ferm.nix
   ./services/networking/firefox/sync-server.nix
   ./services/networking/firewall.nix
@@ -519,6 +524,7 @@
   ./services/x11/colord.nix
   ./services/x11/compton.nix
   ./services/x11/unclutter.nix
+  ./services/x11/unclutter-xfixes.nix
   ./services/x11/desktop-managers/default.nix
   ./services/x11/display-managers/auto.nix
   ./services/x11/display-managers/default.nix
@@ -539,7 +545,6 @@
   ./services/x11/window-managers/fluxbox.nix
   ./services/x11/window-managers/icewm.nix
   ./services/x11/window-managers/bspwm.nix
-  ./services/x11/window-managers/bspwm-unstable.nix
   ./services/x11/window-managers/metacity.nix
   ./services/x11/window-managers/none.nix
   ./services/x11/window-managers/twm.nix
