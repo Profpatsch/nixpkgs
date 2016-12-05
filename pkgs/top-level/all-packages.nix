@@ -2290,6 +2290,8 @@ in
 
   jhead = callPackage ../tools/graphics/jhead { };
 
+  jid = callPackage ../development/tools/jid { };
+
   jing = self.jing-trang;
   jing-trang = callPackage ../tools/text/xml/jing-trang { };
 
