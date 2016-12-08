@@ -19,8 +19,9 @@ self: super: {
   ghc-paths = appendPatch super.ghc-paths ./patches/ghc-paths-nix.patch;
 
   # enable using a local hoogle with extra packagages in the database
-  # (see file for docs)
-  hoogleLocal = self.callPackage ./hoogle.nix {};
+  # nix-shell -p "haskellPackages.hoogleLocal (with haskellPackages; [ mtl lens ])"
+  # $ hoogle server
+  hoogleLocal = { packages ? [] }: self.callPackage ./hoogle.nix { inherit packages; };
 
   # Break infinite recursions.
   clock = dontCheck super.clock;
