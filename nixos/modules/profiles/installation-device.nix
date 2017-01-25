@@ -66,9 +66,8 @@ with lib;
     boot.kernel.sysctl."vm.overcommit_memory" = "1";
 
     # To speed up installation a little bit, include the complete
-    # stdenv in the Nix store on the CD.  Archive::Cpio is needed for
-    # the initrd builder.
-    system.extraDependencies = [ pkgs.stdenv pkgs.busybox pkgs.perlPackages.ArchiveCpio ];
+    # stdenv in the Nix store on the CD.
+    system.extraDependencies = with pkgs; [ stdenv stdenvNoCC busybox ];
 
     # Show all debug messages from the kernel but don't log refused packets
     # because we have the firewall enabled. This makes installs from the
@@ -76,5 +75,6 @@ with lib;
     boot.consoleLogLevel = mkDefault 7;
     networking.firewall.logRefusedConnections = mkDefault false;
 
+    environment.systemPackages = [ pkgs.vim ];
   };
 }

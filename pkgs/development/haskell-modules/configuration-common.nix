@@ -60,8 +60,6 @@ self: super: {
   })).overrideScope (self: super: {
     # https://github.com/bitemyapp/esqueleto/issues/8
     esqueleto = self.esqueleto_2_4_3;
-    # https://github.com/yesodweb/yesod/issues/1324
-    yesod-persistent = self.yesod-persistent_1_4_1_1;
     # https://github.com/prowdsponsor/esqueleto/issues/137
     persistent = self.persistent_2_2_4_1;
     persistent-template = self.persistent-template_2_1_8_1;
@@ -616,6 +614,11 @@ self: super: {
   # /homeless-shelter. Disabled.
   purescript = dontCheck super.purescript;
 
+  # Requires bower-json >= 1.0.0.1 && < 1.1
+  purescript_0_10_5 = super.purescript_0_10_5.overrideScope (self: super: {
+    bower-json = self.bower-json_1_0_0_1;
+  });
+
   # https://github.com/tych0/xcffib/issues/37
   xcffib = dontCheck super.xcffib;
 
@@ -689,6 +692,9 @@ self: super: {
 
   # https://github.com/nushio3/doctest-prop/issues/1
   doctest-prop = dontCheck super.doctest-prop;
+
+  # Depends on itself for testing
+  doctest-discover = addBuildTool super.doctest-discover (dontCheck super.doctest-discover);
 
   # https://github.com/bos/aeson/issues/253
   aeson = dontCheck super.aeson;
@@ -1003,11 +1009,12 @@ self: super: {
   # The most current version needs some packages to build that are not in LTS 7.x.
   stack = super.stack.overrideScope (self: super: {
     http-client = self.http-client_0_5_5;
-    http-client-tls = self.http-client-tls_0_3_3;
+    http-client-tls = self.http-client-tls_0_3_3_1;
     http-conduit = self.http-conduit_2_2_3;
     optparse-applicative = dontCheck self.optparse-applicative_0_13_0_0;
     criterion = super.criterion.override { inherit (super) optparse-applicative; };
     aeson = self.aeson_1_0_2_1;
+    hpack = self.hpack_0_15_0;
   });
 
   # The latest Hoogle needs versions not yet in LTS Haskell 7.x.
@@ -1072,17 +1079,42 @@ self: super: {
 
   # http-api-data_0.3.x requires QuickCheck > 2.9, but overriding that version
   # is hard because of transitive dependencies, so we just disable tests.
-  http-api-data_0_3_3 = dontCheck super.http-api-data_0_3_3;
+  http-api-data_0_3_5 = dontCheck super.http-api-data_0_3_5;
 
   # Fix build for latest versions of servant and servant-client.
   servant_0_9_1_1 = super.servant_0_9_1_1.overrideScope (self: super: {
-    http-api-data = self.http-api-data_0_3_3;
+    http-api-data = self.http-api-data_0_3_5;
   });
   servant-client_0_9_1_1 = super.servant-client_0_9_1_1.overrideScope (self: super: {
-    http-api-data = self.http-api-data_0_3_3;
+    http-api-data = self.http-api-data_0_3_5;
     servant-server = self.servant-server_0_9_1_1;
     servant = self.servant_0_9_1_1;
   });
+
+  # build servant docs from the repository
+  servant =
+    let
+      ver = super.servant.version;
+      docs = pkgs.stdenv.mkDerivation {
+        name = "servant-sphinx-documentation-${ver}";
+        src = "${pkgs.fetchFromGitHub {
+          owner = "haskell-servant";
+          repo = "servant";
+          rev = "v${ver}";
+          sha256 = "0fynv77m7rk79pdp535c2a2bd44csgr32zb4wqavbalr7grpxg4q";
+        }}/doc";
+        buildInputs = with pkgs.pythonPackages; [ sphinx recommonmark sphinx_rtd_theme ];
+        makeFlags = "html";
+        installPhase = ''
+          mv _build/html $out
+        '';
+      };
+    in overrideCabal super.servant (old: {
+      postInstall = old.postInstall or "" + ''
+        ln -s ${docs} $out/share/doc/servant
+      '';
+    });
+
 
   # https://github.com/plow-technologies/servant-auth/issues/20
   servant-auth = dontCheck super.servant-auth;
@@ -1110,7 +1142,7 @@ self: super: {
   # https://github.com/NixOS/nixpkgs/issues/19612
   wai-app-file-cgi = (dontCheck super.wai-app-file-cgi).overrideScope (self: super: {
     http-client = self.http-client_0_5_5;
-    http-client-tls = self.http-client-tls_0_3_3;
+    http-client-tls = self.http-client-tls_0_3_3_1;
     http-conduit = self.http-conduit_2_2_3;
   });
 
@@ -1153,7 +1185,14 @@ self: super: {
   # https://github.com/krisajenkins/elm-export/pull/22
   elm-export = doJailbreak super.elm-export;
 
-  turtle_1_3_0 = super.turtle_1_3_0.overrideScope (self: super: {
+  turtle_1_3_1 = super.turtle_1_3_1.overrideScope (self: super: {
     optparse-applicative = self.optparse-applicative_0_13_0_0;
+  });
+
+  lentil = super.lentil.overrideScope (self: super: {
+    pipes = self.pipes_4_3_2;
+    optparse-applicative = self.optparse-applicative_0_13_0_0;
+    # https://github.com/roelvandijk/terminal-progress-bar/issues/14
+    terminal-progress-bar = doJailbreak self.terminal-progress-bar_0_1_1;
   });
 }
