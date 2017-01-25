@@ -11271,12 +11271,13 @@ in {
     };
   };
 
-  flask = buildPythonPackage {
-    name = "flask-0.11.1";
+  flask = buildPythonPackage rec {
+    name = "flask-${version}";
+    version = "0.12";
 
     src = pkgs.fetchurl {
-      url = "mirror://pypi/F/Flask/Flask-0.11.1.tar.gz";
-      sha256 = "03kbfll4sj3v5z7r31c7bhfpi11r1np076d4p1k2kg4yzcmkywdl";
+      url = "mirror://pypi/F/Flask/Flask-${version}.tar.gz";
+      sha256 = "12yasybryp33rdchsqgckf15zj4pjfam7ly5spmn2sijpv6h7s4k";
     };
 
     propagatedBuildInputs = with self; [ itsdangerous click werkzeug jinja2 ];
