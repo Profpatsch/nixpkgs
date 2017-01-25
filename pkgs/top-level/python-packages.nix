@@ -14015,25 +14015,6 @@ in {
     };
   });
 
-  lxml_3_5 = buildPythonPackage ( rec {
-    name = "lxml-3.5.0";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/l/lxml/${name}.tar.gz";
-      sha256 = "0y7m2s8ci6q642zl85y5axkj8z827l0vhjl532acb75hlkir77rl";
-    };
-
-    buildInputs = with self; [ pkgs.libxml2 pkgs.libxslt ];
-
-    hardeningDisable = stdenv.lib.optional stdenv.isDarwin "format";
-
-    meta = {
-      description = "Pythonic binding for the libxml2 and libxslt libraries";
-      homepage = http://lxml.de;
-      license = licenses.bsd3;
-    };
-  });
-
   lxc = buildPythonPackage (rec {
     name = "python-lxc-unstable-2016-08-25";
     disabled = !isPy27;
@@ -20314,17 +20295,6 @@ in {
       description = "A generic syntax highlighter";
       license = licenses.bsd2;
       maintainers = with maintainers; [ nckx garbas ];
-    };
-  };
-
-  # For Pelican 3.6.3
-  pygments_2_0 = self.pygments.override rec {
-    version = "2.0.2";
-    name = "Pygments-${version}";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/P/Pygments/${name}.tar.gz";
-      sha256 = "7320919084e6dac8f4540638a46447a3bd730fca172afc17d2c03eed22cf4f51";
     };
   };
 
