@@ -84,6 +84,12 @@ let
       inherit lib; inherit (self) stdenv stdenvNoCC; inherit (self.xorg) lndir;
     };
 
+  packageTests = self: super:
+    import ../build-support/package-tests.nix {
+      inherit (super) runCommand; inherit lib;
+    };
+
+
   stdenvBootstappingAndPlatforms = self: super: {
     buildPackages = (if buildPackages == null then self else buildPackages)
       // { recurseForDerivations = false; };
@@ -138,6 +144,7 @@ let
     platformCompat
     stdenvAdapters
     trivialBuilders
+    packageTests
     splice
     allPackages
     aliases
