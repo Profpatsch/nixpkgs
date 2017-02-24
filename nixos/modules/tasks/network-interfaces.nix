@@ -1,4 +1,4 @@
-{ config, lib, pkgs, utils, ... }:
+{ config, lib, pkgs, utils, stdenv, ... }:
 
 with lib;
 with utils;
@@ -132,6 +132,13 @@ let
         default = null;
         example = "enp0s3";
         description = "The default gateway interface.";
+      };
+
+      metric = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        example = 42;
+        description = "The default gateway metric/preference.";
       };
 
     };
@@ -351,7 +358,7 @@ in
       default = null;
       example = {
         address = "131.211.84.1";
-        device = "enp3s0";
+        interface = "enp3s0";
       };
       type = types.nullOr (types.coercedTo types.str gatewayCoerce (types.submodule gatewayOpts));
       description = ''
@@ -364,7 +371,7 @@ in
       default = null;
       example = {
         address = "2001:4d0:1e04:895::1";
-        device = "enp3s0";
+        interface = "enp3s0";
       };
       type = types.nullOr (types.coercedTo types.str gatewayCoerce (types.submodule gatewayOpts));
       description = ''
@@ -946,7 +953,16 @@ in
         (i: flip map [ "4" "6" ] (v: nameValuePair "net.ipv${v}.conf.${i.name}.proxy_arp" true))
       ));
 
-    security.setuidPrograms = [ "ping" "ping6" ];
+    # Capabilities won't work unless we have at-least a 4.3 Linux
+    # kernel because we need the ambient capability
+    security.wrappers = if (versionAtLeast (getVersion config.boot.kernelPackages.kernel) "4.3") then {
+      ping = {
+        source  = "${pkgs.iputils.out}/bin/ping";
+        capabilities = "cap_net_raw+p";
+      };
+    } else {
+      ping.source = "${pkgs.iputils.out}/bin/ping";
+    };
 
     # Set the host and domain names in the activation script.  Don't
     # clear it if it's not configured in the NixOS configuration,

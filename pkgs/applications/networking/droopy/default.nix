@@ -1,8 +1,8 @@
-{ lib, fetchFromGitHub, buildPythonApplication }:
+{ stdenv, lib, fetchFromGitHub, wrapPython }:
 
 with lib;
 
-buildPythonApplication rec {
+stdenv.mkDerivation rec {
   name = "droopy-${version}";
   version = "20160830";
 
@@ -13,17 +13,12 @@ buildPythonApplication rec {
     sha256 = "03i1arwyj9qpfyyvccl21lbpz3rnnp1hsadvc0b23nh1z2ng9sff";
   };
 
-  phases = [ "unpackPhase" "installPhase" "fixupPhase" ];
+  nativeBuildInputs = [ wrapPython ];
 
   installPhase = ''
-    mkdir -p $out/bin
-    shopt -s extglob
-    # copy everything but these files
-    cp -r !(Readme.md|img) $out
-    shopt -u extglob
-
-    cd $out/bin
-    ln -s ../droopy .
+    install -vD droopy $out/bin/droopy
+    install -vD -m 644 man/droopy.1 $out/share/man/man1/droopy.1
+    wrapPythonPrograms
   '';
 
   meta = {
