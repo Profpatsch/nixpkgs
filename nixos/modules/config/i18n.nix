@@ -9,6 +9,11 @@ let
     locales = config.i18n.supportedLocales;
   };
 
+  noLANGinExtraLocaleAssertion = {
+    assertion = !(config.i18n.extraLocales ? "LANG");
+    message = "Please don’t set LANG in i18n.extraLocales, use i18n.defaultLocale.";
+  };
+
 in
 
 {
@@ -27,6 +32,17 @@ in
           It also determines the character set, such as UTF-8.
         '';
       };
+
+      extraLocales = mkOption {
+        type = types.attrsOf types.str;
+        default = {};
+        example = { LC_TIME = "en_DK.UTF-8"; };
+        description = ''
+          Additional default locale variables (apart from LANG).
+          See <literal>man 7 locale</literal> for possible items.
+        '';
+      };
+
 
       supportedLocales = mkOption {
         type = types.listOf types.str;
@@ -135,8 +151,12 @@ in
         source = pkgs.writeText "locale.conf"
           ''
             LANG=${config.i18n.defaultLocale}
+            ${concatStringsSep "\n" (mapAttrsToList
+                (k: v: "${k}=${v}") config.i18n.extraLocales)}
           '';
       };
+
+    assertions = [ noLANGinExtraLocaleAssertion ];
 
   };
 }
