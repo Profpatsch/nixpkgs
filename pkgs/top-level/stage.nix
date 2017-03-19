@@ -85,7 +85,7 @@ let
     };
 
   packageTests = self: super:
-    import ../build-support/package-tests.nix {
+    import ../build-support/package-tests {
       inherit (super) runCommand; inherit lib;
     };
 
