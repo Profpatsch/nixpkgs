@@ -51,7 +51,7 @@ stdenv.mkDerivation rec {
     '';
     homepage = http://lilyterm.luna.com.tw/;
     license = licenses.gpl3;
-    maintainers = with maintainers; [ AndersonTorres Profpatsch ];
+    maintainers = with maintainers; [ AndersonTorres profpatsch ];
     platforms = platforms.linux;
   };
 }
