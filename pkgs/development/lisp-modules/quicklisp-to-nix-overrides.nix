@@ -2,7 +2,7 @@
 let
   addDeps = newdeps: x: {deps = x.deps ++ newdeps;};
   addNativeLibs = libs: x: { propagatedBuildInputs = libs; };
-  skipBuildPhase = x: { 
+  skipBuildPhase = x: {
     overrides = y: ((x.overrides y) // { buildPhase = "true"; });
   };
   qlnp = quicklisp-to-nix-packages;
@@ -10,19 +10,37 @@ let
     ((builtins.head l) x) // (multiOverride (builtins.tail l) x);
 in
 {
-  stumpwm = addDeps (with qlnp; [alexandria cl-ppcre clx]);
+  stumpwm = x:{
+    overrides = y: (x.overrides y) // {
+      preConfigure = ''
+        export configureFlags="$configureFlags --with-$NIX_LISP=common-lisp.sh";
+      '';
+    };
+  };
   iterate = skipBuildPhase;
   cl-fuse = x: {
     propagatedBuildInputs = [pkgs.fuse];
     overrides = y : (x.overrides y) // {
       configurePhase = ''
+        export SAVED_CL_SOURCE_REGISTRY="$CL_SOURCE_REGISTRY"
         export CL_SOURCE_REGISTRY="$CL_SOURCE_REGISTRY:$PWD"
         export makeFlags="$makeFlags LISP=common-lisp.sh"
+      '';
+      preInstall = ''
+        export CL_SOURCE_REGISTRY="$SAVED_CL_SOURCE_REGISTRY"
       '';
     };
   };
   hunchentoot = addNativeLibs [pkgs.openssl];
-  iolib = addNativeLibs [pkgs.libfixposix pkgs.gcc];
+  iolib = x: {
+    propagatedBuildInputs = (x.propagatedBuildInputs or []) ++
+     [pkgs.libfixposix pkgs.gcc];
+    testSystems = (x.testSystems or ["iolib"]) ++ [
+      "iolib/os" "iolib/zstreams" "iolib/common-lisp" "iolib/base" "iolib/asdf"
+      "iolib/conf" "iolib/grovel" "iolib/syscalls" "iolib/sockets"
+      "iolib/multiplex" "iolib/streams" "iolib/pathnames"
+    ];
+  };
   cl-unicode = addDeps (with qlnp; [cl-ppcre flexi-streams]);
   clack =  addDeps (with qlnp;[lack bordeaux-threads prove]);
   clack-v1-compat =  addDeps (with qlnp;[
@@ -31,17 +49,14 @@ in
     flexi-streams circular-streams ironclad cl-syntax-annot alexandria
     split-sequence
   ]);
-  clack-handler-fcgi = addDeps (with qlnp; []);
   lack = addDeps (with qlnp; [ironclad]);
-  cxml = skipBuildPhase;
-  cxml-xml = skipBuildPhase;
-  cxml-dom = skipBuildPhase;
-  cxml-klacks = skipBuildPhase;
-  cxml-test = skipBuildPhase;
+  cxml = multiOverride [ skipBuildPhase (addDeps (with qlnp; [
+    closure-common puri trivial-gray-streams
+  ]))];
   wookie = multiOverride [(addDeps (with qlnp; [
       alexandria blackbird cl-async chunga fast-http quri babel cl-ppcre
       cl-fad fast-io vom do-urlencode cl-async-ssl
-    ])) 
+    ]))
     (addNativeLibs (with pkgs; [libuv openssl]))];
   woo = addDeps (with qlnp; [
     cffi lev clack swap-bytes static-vectors fast-http proc-parse quri fast-io
@@ -92,18 +107,10 @@ in
       '';
     };
   };
-  cffi-grovel = addDeps (with qlnp; [ cffi-toolchain ]);
-  cffi-toolchain = addDeps (with qlnp; [ cffi uiop ]);
-  cffi-examples = addDeps (with qlnp; [ cffi ]);
-  cffi-libffi = addDeps (with qlnp; [ cffi ]);
-  cffi-uffi-compat = addDeps (with qlnp; [ cffi ]);
   cffi = multiOverride [(addNativeLibs [pkgs.libffi])
-    (addDeps (with qlnp; [uffi]))];
+    (addDeps (with qlnp; [uffi uiop trivial-features]))];
   cl-vectors = addDeps (with qlnp; [zpb-ttf]);
   "3bmd" = addDeps (with qlnp; [esrap split-sequence]);
-  "3bmd-ext-tables" = addDeps (with qlnp; [qlnp."3bmd"]);
-  "3bmd-ext-wiki-links" = addDeps (with qlnp; [qlnp."3bmd"]);
-  "3bmd-youtube" = addDeps (with qlnp; [qlnp."3bmd"]);
   cl-dbi = addDeps (with qlnp; [
     cl-syntax cl-syntax-annot split-sequence closer-mop bordeaux-threads
   ]);
@@ -126,4 +133,11 @@ in
   babel-streams = addDeps (with qlnp; [babel]);
   plump = addDeps (with qlnp; [array-utils trivial-indent]);
   sqlite = addNativeLibs [pkgs.sqlite];
+  uiop = x: {
+    overrides = y: (x.overrides y) // {
+      postInstall = ((x.overrides y).postInstall or "") + ''
+        cp -r "${pkgs.asdf}/lib/common-lisp/asdf/uiop/contrib" "$out/lib/common-lisp/uiop"
+      '';
+    };
+  };
 }
