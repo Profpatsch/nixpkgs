@@ -12,7 +12,7 @@ let
   haskellPackages = self:
     let
 
-      mkDerivationImpl = pkgs.callPackage ./generic-builder.nix {
+      mkDerivationImpl = file: pkgs.callPackage file {
         inherit stdenv;
         inherit (pkgs) fetchurl pkgconfig glibcLocales coreutils gnugrep gnused;
         nodejs = pkgs.nodejs-slim;
@@ -39,7 +39,8 @@ let
         });
       };
 
-      mkDerivation = makeOverridable mkDerivationImpl;
+      mkDerivation = makeOverridable (mkDerivationImpl ./generic-builder.nix);
+      mkDerivationNew = makeOverridable (mkDerivationImpl ./generic-builder-tmp.nix);
 
       callPackageWithScope = scope: drv: args: (stdenv.lib.callPackageWith scope drv args) // {
         overrideScope = f: callPackageWithScope (mkScope (fix' (extends f scope.__unfix__))) drv args;
@@ -80,7 +81,10 @@ let
     in
       import ./hackage-packages.nix { inherit pkgs stdenv callPackage; } self // {
 
-        inherit mkDerivation callPackage haskellSrc2nix hackage2nix;
+        inherit callPackage haskellSrc2nix hackage2nix;
+        mkDerivation = if (builtins.trace ghc.name (stdenv.lib.traceVal ghc.version)) != "8.0.2" then mkDerivation
+          else ({pname,...}@args: if (stdenv.lib.traceVal pname) == "hscolour" then mkDerivation args else mkDerivationNew args);
+        # inherit mkDerivation;
 
         callHackage = name: version: self.callPackage (self.hackage2nix name version);
 

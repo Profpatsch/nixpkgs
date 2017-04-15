@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, ghc, pkgconfig, glibcLocales, coreutils, gnugrep, gnused
+{ stdenv, fetchurl, ghc, pkgconfig, glibcLocales, coreutils, gnugrep, gnused, patchelfUnstable, fetchFromGitHub, glibc
 , jailbreak-cabal, hscolour, cpphs, nodejs
 }: let isCross = (ghc.cross or null) != null; in
 
@@ -170,7 +170,17 @@ in
 
 assert allPkgconfigDepends != [] -> pkgconfig != null;
 
-stdenv.mkDerivation ({
+let
+  patchelfPatched = patchelfUnstable.overrideAttrs (old: {
+    src = fetchFromGitHub {
+      owner = "dezgeg";
+      repo = "patchelf";
+      rev = "61e27dbcadc45677a6f038bc69f5e876567decde";
+      sha256 = "17fx424i0mdqkcml4mm8cgn2jymzr08xkk85vgdixa2irdjapnnv";
+    };
+    setupHook = [ ./patchelf-setup-hook-tmp.sh ];
+  });
+in stdenv.mkDerivation ({
   name = "${pname}-${version}";
 
   pos = builtins.unsafeGetAttrPos "pname" args;
@@ -181,7 +191,7 @@ stdenv.mkDerivation ({
 
   inherit src;
 
-  nativeBuildInputs = otherBuildInputs ++ optionals (!hasActiveLibrary) propagatedBuildInputs;
+  nativeBuildInputs = otherBuildInputs ++ optionals (!hasActiveLibrary) propagatedBuildInputs ++ [ patchelfPatched ];
   propagatedNativeBuildInputs = optionals hasActiveLibrary propagatedBuildInputs;
 
   LANG = "en_US.UTF-8";         # GHC needs the locale configured during the Haddock phase.
@@ -311,8 +321,23 @@ stdenv.mkDerivation ({
       done
     ''}
 
+
+
     runHook postInstall
   '';
+
+  postFixup = ''
+    echo FIXER UPPER
+    for so in $(find $out -name "*.so"); do
+      echo I FOUND SO: $so
+      ${patchelfPatched}/bin/patchelf --print-needed $so
+      ${patchelfPatched}/bin/patchelf --print-rpath $so
+      echo LDD says:
+      ${stdenv.lib.getBin glibc}/bin/ldd $so
+    done
+    ${postFixup}
+  '';
+
 
   passthru = passthru // {
 
@@ -364,7 +389,7 @@ stdenv.mkDerivation ({
 // optionalAttrs (installPhase != "")   { inherit installPhase; }
 // optionalAttrs (postInstall != "")    { inherit postInstall; }
 // optionalAttrs (preFixup != "")       { inherit preFixup; }
-// optionalAttrs (postFixup != "")      { inherit postFixup; }
+# // optionalAttrs (postFixup != "")      { inherit postFixup; }
 // optionalAttrs (dontStrip)            { inherit dontStrip; }
 // optionalAttrs (hardeningDisable != []) { inherit hardeningDisable; }
 // optionalAttrs (stdenv.isLinux)       { LOCALE_ARCHIVE = "${glibcLocales}/lib/locale/locale-archive"; }
