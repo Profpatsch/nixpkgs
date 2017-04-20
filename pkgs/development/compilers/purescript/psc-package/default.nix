@@ -1,8 +1,8 @@
-{ haskellPackages, fetchFromGitHub, lib }:
+{ haskellPackages, mkDerivation, fetchFromGitHub, lib }:
 
 with lib;
 
-haskellPackages.mkDerivation rec {
+mkDerivation rec {
   pname = "psc-package";
   version = "0.1.1";
 
@@ -22,4 +22,5 @@ haskellPackages.mkDerivation rec {
 
   description = "An experimental package manager for PureScript";
   license = licenses.bsd3;
+  maintainers = with lib.maintainers; [ profpatsch ];
 }
