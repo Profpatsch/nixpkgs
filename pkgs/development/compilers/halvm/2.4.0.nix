@@ -32,7 +32,10 @@ stdenv.mkDerivation rec {
     patchShebangs .
   '';
   hardeningDisable = ["all"];
-  postInstall = "$out/bin/halvm-ghc-pkg recache";
+  postInstall = ''
+    patchShebangs $out/bin
+    $out/bin/halvm-ghc-pkg recache
+  '';
   passthru = {
     inherit bootPkgs;
     cross.config = "halvm";
@@ -43,7 +46,8 @@ stdenv.mkDerivation rec {
   meta = {
     homepage = "http://github.com/GaloisInc/HaLVM";
     description = "The Haskell Lightweight Virtual Machine (HaLVM): GHC running on Xen";
+    platforms = ["x86_64-linux"];       # other platforms don't have Xen
     maintainers = with stdenv.lib.maintainers; [ dmjio ];
-    inherit (bootPkgs.ghc.meta) license platforms;
+    inherit (bootPkgs.ghc.meta) license;
   };
 }
