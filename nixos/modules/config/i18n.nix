@@ -4,24 +4,33 @@ with lib;
 
 let
 
-  glibcLocales = pkgs.glibcLocales.override {
-    allLocales = any (x: x == "all") config.i18n.supportedLocales;
-    locales = config.i18n.supportedLocales;
-  };
-
   noLANGinExtraLocaleAssertion = {
     assertion = !(config.i18n.extraLocales ? "LANG");
     message = "Please don’t set LANG in i18n.extraLocales, use i18n.defaultLocale.";
   };
 
 in
-
 {
   ###### interface
 
   options = {
 
     i18n = {
+      glibcLocales = mkOption {
+        type = types.path;
+        default = pkgs.glibcLocales.override {
+          allLocales = any (x: x == "all") config.i18n.supportedLocales;
+          locales = config.i18n.supportedLocales;
+        };
+        example = literalExample "pkgs.glibcLocales";
+        description = ''
+          Customized pkg.glibcLocales package.
+
+          Changing this option can disable handling of i18n.defaultLocale
+          and supportedLocale.
+        '';
+      };
+
       defaultLocale = mkOption {
         type = types.str;
         default = "en_US.UTF-8";
@@ -134,7 +143,7 @@ in
         '');
 
     environment.systemPackages =
-      optional (config.i18n.supportedLocales != []) glibcLocales;
+      optional (config.i18n.supportedLocales != []) config.i18n.glibcLocales;
 
     environment.sessionVariables =
       { LANG = config.i18n.defaultLocale;
@@ -142,7 +151,7 @@ in
       };
 
     systemd.globalEnvironment = mkIf (config.i18n.supportedLocales != []) {
-      LOCALE_ARCHIVE = "${glibcLocales}/lib/locale/locale-archive";
+      LOCALE_ARCHIVE = "${config.i18n.glibcLocales}/lib/locale/locale-archive";
     };
 
     # ‘/etc/locale.conf’ is used by systemd.
