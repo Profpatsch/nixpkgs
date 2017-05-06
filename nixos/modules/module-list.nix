@@ -328,7 +328,7 @@
   ./services/monitoring/cadvisor.nix
   ./services/monitoring/collectd.nix
   ./services/monitoring/das_watchdog.nix
-  ./services/monitoring/dd-agent.nix
+  ./services/monitoring/dd-agent/dd-agent.nix
   ./services/monitoring/grafana.nix
   ./services/monitoring/graphite.nix
   ./services/monitoring/hdaps.nix
@@ -534,6 +534,7 @@
   ./services/security/munge.nix
   ./services/security/oauth2_proxy.nix
   ./services/security/physlock.nix
+  ./services/security/shibboleth-sp.nix
   ./services/security/sshguard.nix
   ./services/security/tor.nix
   ./services/security/torify.nix
