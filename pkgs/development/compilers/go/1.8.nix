@@ -1,7 +1,8 @@
 { stdenv, fetchFromGitHub, tzdata, iana-etc, go_bootstrap, runCommand, writeScriptBin
 , perl, which, pkgconfig, patch, fetchpatch
 , pcre, cacert, llvm
-, Security, Foundation, bash }:
+, Security, Foundation, bash
+, makeWrapper, git, subversion, mercurial, bazaar }:
 
 let
 
@@ -24,17 +25,17 @@ in
 
 stdenv.mkDerivation rec {
   name = "go-${version}";
-  version = "1.8.1";
+  version = "1.8.3";
 
   src = fetchFromGitHub {
     owner = "golang";
     repo = "go";
     rev = "go${version}";
-    sha256 = "1157mmzjpk887cpcpn2qy9c69anc22c4p3cjpl84zl7an41x660j";
+    sha256 = "0g83xm9gb872rsqzwqr1zw5szq69xhynljj2nglg4yyfi7dm2r1c";
   };
 
   # perl is used for testing go vet
-  nativeBuildInputs = [ perl which pkgconfig patch ];
+  nativeBuildInputs = [ perl which pkgconfig patch makeWrapper ];
   buildInputs = [ pcre ]
     ++ optionals stdenv.isLinux [ stdenv.glibc.out stdenv.glibc.static ];
   propagatedBuildInputs = optionals stdenv.isDarwin [ Security Foundation ];
@@ -79,6 +80,9 @@ stdenv.mkDerivation rec {
 
   '' + optionalString stdenv.isLinux ''
     sed -i 's,/usr/share/zoneinfo/,${tzdata}/share/zoneinfo/,' src/time/zoneinfo_unix.go
+  '' + optionalString stdenv.isArm ''
+    sed -i '/TestCurrent/areturn' src/os/user/user_test.go
+    echo '#!/usr/bin/env bash' > misc/cgo/testplugin/test.bash
   '' + optionalString stdenv.isDarwin ''
     substituteInPlace src/race.bash --replace \
       "sysctl machdep.cpu.extfeatures | grep -qv EM64T" true
@@ -148,6 +152,9 @@ stdenv.mkDerivation rec {
   installPhase = ''
     cp -r . $GOROOT
     ( cd $GOROOT/src && ./all.bash )
+
+    # (https://github.com/golang/go/wiki/GoGetTools)
+    wrapProgram $out/share/go/bin/go --prefix PATH ":" "${stdenv.lib.makeBinPath [ git subversion mercurial bazaar ]}"
   '';
 
   preFixup = ''

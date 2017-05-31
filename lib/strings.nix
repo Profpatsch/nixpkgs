@@ -438,9 +438,11 @@ rec {
        => true
        isStorePath pkgs.python
        => true
+       isStorePath [] || isStorePath 42 || isStorePath {} || …
+       => false
   */
   isStorePath = x:
-       isString x
+       builtins.isString x
     && builtins.substring 0 1 (toString x) == "/"
     && dirOf (builtins.toPath x) == builtins.storeDir;
 
