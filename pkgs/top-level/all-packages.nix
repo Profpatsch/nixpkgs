@@ -8339,6 +8339,9 @@ with pkgs;
     inherit (ocamlPackages_4_02) bap ocaml findlib ctypes;
   };
 
+  libbass = (callPackage ../development/libraries/audio/libbass { }).bass;
+  libbass_fx = (callPackage ../development/libraries/audio/libbass { }).bass_fx;
+
   libbluedevil = callPackage ../development/libraries/libbluedevil { };
 
   libbdplus = callPackage ../development/libraries/libbdplus { };
