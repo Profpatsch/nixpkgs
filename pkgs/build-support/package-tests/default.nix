@@ -19,6 +19,7 @@ let
       # the original derivation as much as possible
       outputs = drvOutOutputs;
       passthru = drvOut.drvAttrs;
+      preferLocalBuild = true;
       # depend on drvDeps (by putting it in builder context)
       inherit drvDeps;
     }
@@ -41,7 +42,9 @@ let
   withTests = tests: drv:
     let testDrvs = lib.mapAttrsToList
       (name: testScript:
-        runCommand "${drv.name}-test-${name}" {} ''
+        runCommand "${drv.name}-test-${name}" {
+          preferLocalBuild = true;
+        } ''
           ${testScript}
           touch "$out"
       '') tests;
