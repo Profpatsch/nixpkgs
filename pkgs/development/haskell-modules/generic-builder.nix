@@ -115,7 +115,7 @@ let
   defaultConfigureFlags = [
     "--verbose" "--prefix=$out" "--libdir=\\$prefix/lib/\\$compiler" "--libsubdir=\\$pkgid"
     (optionalString enableSeparateDataOutput "--datadir=$data/share/${ghc.name}")
-    (optionalString enableSeparateDocOutput "--docdir=${docdir "$doc"}")
+    "--docdir=${if enableSeparateDocOutput then docdir "$doc" else docdir "$out"}"
     "--with-gcc=$CC" # Clang won't work without that extra information.
     "--package-db=$packageConfDir"
     (optionalString (enableSharedExecutables && stdenv.isLinux) "--ghc-option=-optl=-Wl,-rpath=$out/lib/${ghc.name}/${pname}-${version}")
