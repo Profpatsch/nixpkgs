@@ -1,16 +1,18 @@
-{ lib, fetchPypi, buildPythonPackage, protobuf3_0, hidapi, ecdsa, mnemonic }:
+{ lib, fetchPypi, buildPythonPackage, protobuf3_2, hidapi, ecdsa, mnemonic
+, requests
+}:
 
 buildPythonPackage rec {
   name = "${pname}-${version}";
   pname = "trezor";
-  version = "0.7.13";
+  version = "0.7.16";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "d05f388bb56b6f61cc727999cc725078575238a0b6172450322bc55c437fefe5";
+    sha256 = "6bdb69fc125ba705854e21163be6c7da3aa17c2a3a84f40b6d8a3f6e4a8cb314";
   };
 
-  propagatedBuildInputs = [ protobuf3_0 hidapi ];
+  propagatedBuildInputs = [ protobuf3_2 hidapi requests ];
 
   buildInputs = [ ecdsa mnemonic ];
 

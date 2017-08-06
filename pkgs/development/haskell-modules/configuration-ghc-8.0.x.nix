@@ -1,6 +1,6 @@
-{ pkgs }:
+{ pkgs, haskellLib }:
 
-with import ./lib.nix { inherit pkgs; };
+with haskellLib;
 
 self: super: {
 
@@ -47,13 +47,19 @@ self: super: {
     sha256 = "026vv2k3ks73jngwifszv8l59clg88pcdr4mz0wr0gamivkfa1zy";
   });
 
-  ## GHC 8.0.2
-
   # http://hub.darcs.net/dolio/vector-algorithms/issue/9#comment-20170112T145715
   vector-algorithms = dontCheck super.vector-algorithms;
 
   # https://github.com/thoughtbot/yesod-auth-oauth2/pull/77
   yesod-auth-oauth2 = doJailbreak super.yesod-auth-oauth2;
 
+  # https://github.com/nominolo/ghc-syb/issues/20
+  ghc-syb-utils = dontCheck super.ghc-syb-utils;
+
+  # Newer versions require ghc>=8.2
+  apply-refact = super.apply-refact_0_3_0_1;
+
+  # This builds needs the latest Cabal version.
+  cabal2nix = super.cabal2nix.overrideScope (self: super: { Cabal = self.Cabal_2_0_0_2; });
 
 }

@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, qtbase, vcg, glew, qmakeHook, makeQtWrapper, mesa }:
+{ stdenv, fetchFromGitHub, qtbase, vcg, glew, qmake, mesa }:
 
 
 stdenv.mkDerivation {
@@ -12,9 +12,9 @@ stdenv.mkDerivation {
   };
 
   buildInputs = [ qtbase vcg glew ];
-  nativeBuildInputs = [ qmakeHook makeQtWrapper ];
 
   enableParallelBuilding = true;
+  nativeBuildInputs = [ qmake ];
 
   qmakeFlags = [ "openBrf.pro" ];
 
@@ -31,14 +31,14 @@ stdenv.mkDerivation {
       --set-rpath "${stdenv.lib.makeLibraryPath [ qtbase glew stdenv.cc.cc mesa ]}" \
       $out/share/openBrf/openBrf
 
-    makeQtWrapper "$out/share/openBrf/openBrf" "$out/bin/openBrf"
+    ln -s "$out/share/openBrf/openBrf" "$out/bin/openBrf"
   '';
 
   dontPatchELF = true;
 
   meta = with stdenv.lib; {
     description = "A tool to edit resource files (BRF)";
-    homepage = "https://github.com/cfcohen/openbrf";
+    homepage = https://github.com/cfcohen/openbrf;
     maintainers = with stdenv.lib.maintainers; [ abbradar ];
     license = licenses.free;
     platforms = platforms.linux;

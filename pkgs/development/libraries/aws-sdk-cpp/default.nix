@@ -26,6 +26,7 @@ in stdenv.mkDerivation rec {
   # FIXME: might be nice to put different APIs in different outputs
   # (e.g. libaws-cpp-sdk-s3.so in output "s3").
   outputs = [ "out" "dev" ];
+  separateDebugInfo = stdenv.isLinux;
 
   buildInputs = [ cmake curl ];
 
@@ -43,8 +44,11 @@ in stdenv.mkDerivation rec {
       for i in testing-resources aws-cpp-sdk-*; do
         export ${loaderVar}=$(pwd)/$i:''${${loaderVar}}
       done
+    '';
 
-      export HOME=$TMPDIR
+  preConfigure =
+    ''
+      rm aws-cpp-sdk-core-tests/aws/auth/AWSCredentialsProviderTest.cpp
     '';
 
   NIX_LDFLAGS = lib.concatStringsSep " " (

@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitLab, doxygen, glib, libaccounts-glib, pkgconfig, qtbase, qmakeHook }:
+{ stdenv, fetchFromGitLab, doxygen, glib, libaccounts-glib, pkgconfig, qtbase, qmake }:
 
 stdenv.mkDerivation rec {
   name = "accounts-qt-${version}";
@@ -12,7 +12,7 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ glib libaccounts-glib qtbase ];
-  nativeBuildInputs = [ doxygen pkgconfig qmakeHook ];
+  nativeBuildInputs = [ doxygen pkgconfig qmake ];
 
   preConfigure = ''
     qmakeFlags="$qmakeFlags LIBDIR=$out/lib CMAKE_CONFIG_PATH=$out/lib/cmake"
@@ -23,7 +23,7 @@ stdenv.mkDerivation rec {
 
   meta = with stdenv.lib; {
     description = "Qt library for accessing the online accounts database";
-    homepage = "http://code.google.com/p/accounts-sso/";
+    homepage = http://code.google.com/p/accounts-sso/;
     license = licenses.lgpl21;
     maintainers = with maintainers; [ nckx ];
     platforms = with platforms; linux;

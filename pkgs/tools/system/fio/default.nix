@@ -1,8 +1,8 @@
 { stdenv, fetchFromGitHub, libaio, python, zlib }:
 
 let
-  version = "2.20";
-  sha256 = "06sn9ll75xbr2rr7zn8xzdy1v705kqfxv6q1zx6ysvxwri0sxrfx";
+  version = "2.99";
+  sha256 = "0fj8fk2w06ahcn35z8pj88sx12yrx1yfd38j6k5aigj4dfj3f3zy";
 in
 
 stdenv.mkDerivation rec {
@@ -24,7 +24,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with stdenv.lib; {
-    homepage = "http://git.kernel.dk/?p=fio.git;a=summary";
+    homepage = "http://git.kernel.dk/?p=fio.git;a=summary;";
     description = "Flexible IO Tester - an IO benchmark tool";
     license = licenses.gpl2;
     platforms = platforms.unix;

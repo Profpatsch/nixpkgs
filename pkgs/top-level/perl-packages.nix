@@ -3,7 +3,7 @@
    them.  Also, because most Nix expressions for CPAN packages are
    trivial, most are actually defined here.  I.e. there's no function
    for each package in a separate file: the call to the function would
-   be almost as must code as the function itself. */
+   be almost as much code as the function itself. */
 
 {pkgs, overrides}:
 
@@ -2483,6 +2483,18 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
+  CpanelJSONXS = buildPerlPackage rec {
+    name = "Cpanel-JSON-XS-3.0237";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/R/RU/RURBAN/${name}.tar.gz";
+      sha256 = "da86fffdbe6c1b7a023e95e2b8db7d6b45a08871c8312f23e45253c78e662d07";
+    };
+    meta = {
+      description = "CPanel fork of JSON::XS, fast and correct serializing";
+      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+    };
+  };
+
   CPANChanges = buildPerlPackage rec {
     name = "CPAN-Changes-0.400002";
     src = fetchurl {
@@ -2859,16 +2871,15 @@ let self = _self // overrides; _self = with self; {
   };
 
   CryptX = buildPerlPackage rec {
-    name = "CryptX-0.044";
+    name = "CryptX-0.050";
     src = fetchurl {
       url = "mirror://cpan/authors/id/M/MI/MIK/${name}.tar.gz";
-      sha256 = "15e5e6bd7b90af24c7e730751fec7b10d8e22ef4380d527bda242dee7dd20443";
+      sha256 = "c1de040779d9f5482d0a2f17a9a5aa6b069c7c58c07fbe26ab62bc689a5c9161";
     };
     propagatedBuildInputs = [ JSONMaybeXS ];
     meta = {
       description = "Crypto toolkit";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
-      maintainers = [ maintainers.rycee ];
     };
   };
 
@@ -5772,6 +5783,7 @@ let self = _self // overrides; _self = with self; {
     meta = {
       description = "Extensions and convenience methods to manage background processes";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+      platforms = stdenv.lib.platforms.linux;
     };
   };
 
@@ -7208,11 +7220,11 @@ let self = _self // overrides; _self = with self; {
 
   ImageExifTool = buildPerlPackage rec {
     name = "Image-ExifTool-${version}";
-    version = "10.48";
+    version = "10.55";
 
     src = fetchurl {
       url = "http://www.sno.phy.queensu.ca/~phil/exiftool/${name}.tar.gz";
-      sha256 = "1wbwapwhv4imh1lj4dw4a8z2mhw983wk5pzdbp7pkijfji0vjj0p";
+      sha256 = "0z8zwjjfvyllnhsafhddbybywpgqv0pl1dbn1g034cs27yj836q2";
     };
 
     meta = with stdenv.lib; {
@@ -7753,6 +7765,7 @@ let self = _self // overrides; _self = with self; {
       url = mirror://cpan/authors/id/P/PV/PVANDRY/gettext-1.05.tar.gz;
       sha256 = "15262a00vx714szpx8p2z52wxkz46xp7acl72znwjydyq4ypydi7";
     };
+    LANG="C";
   };
 
   LocaleMaketext = buildPerlPackage {
@@ -9738,15 +9751,17 @@ let self = _self // overrides; _self = with self; {
   };
 
   Mouse = buildPerlModule rec {
-    name = "Mouse-v2.4.5";
+    name = "Mouse-v2.4.10";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/S/SY/SYOHEX/${name}.tar.gz";
-      sha256 = "1f4dps68f2w1fwqjfpr4kllbcbwd744v3h1r9rkpwc2fhvq3q8hl";
+      url = "mirror://cpan/authors/id/G/GF/GFUJI/${name}.tar.gz";
+      sha256 = "053d28c4v8kj7llwfwj5hjkvc1kcs6mvcn24yg7vxklgj6hxv5dr";
     };
     buildInputs = [
       ModuleBuildXSUtil TestException TestLeakTrace TestRequires TestOutput
       TestFatal
     ];
+    NIX_CFLAGS_COMPILE = stdenv.lib.optionalString stdenv.isi686 "-fno-stack-protector";
+    hardeningDisable = stdenv.lib.optional stdenv.isi686 "stackprotector";
   };
 
   MouseXNativeTraits = buildPerlPackage rec {
@@ -10717,16 +10732,16 @@ let self = _self // overrides; _self = with self; {
   };
 
   PDFAPI2 = buildPerlPackage rec {
-    name = "PDF-API2-2.030";
+    name = "PDF-API2-2.033";
     src = fetchurl {
       url = "mirror://cpan/authors/id/S/SS/SSIMMS/${name}.tar.gz";
-      sha256 = "a802c25c1f00b093778223fc7aea94ebd87a9abdb915151746b8ee5d4a358769";
+      sha256 = "9c0866ec1a3053f73afaca5f5cdbe6925903b4ce606f4bf4ac317731a69d27a0";
     };
+    buildInputs = [ TestException TestMemoryCycle ];
     propagatedBuildInputs = [ FontTTF ];
     meta = {
       description = "Facilitates the creation and modification of PDF files";
-      license = stdenv.lib.licenses.lgpl21;
-      maintainers = [ maintainers.rycee ];
+      license = stdenv.lib.licenses.lgpl21Plus;
     };
   };
 
@@ -10753,10 +10768,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   PerlCritic = buildPerlModule rec {
-    name = "Perl-Critic-1.128";
+    name = "Perl-Critic-1.130";
     src = fetchurl {
       url = "mirror://cpan/authors/id/P/PE/PETDANCE/${name}.tar.gz";
-      sha256 = "83ce563da0a950946367323214b6db30d72db7d006dce24c2a00a9ec13ddb9b4";
+      sha256 = "0662e8f02dd78e39ee9d5b01bdf5376a7cc70ce2b0edc9ca015be35e6cb61df6";
     };
     buildInputs = [ ModuleBuild TestDeep ];
     propagatedBuildInputs = [ BKeywords ConfigTiny EmailAddress ExceptionClass FileHomeDir FileWhich IOString ListMoreUtils ModulePluggable PPI PPIxRegexp PPIxUtilities PerlTidy PodSpell Readonly StringFormat TaskWeaken ];
@@ -12619,6 +12634,15 @@ let self = _self // overrides; _self = with self; {
       description = "Perl6 style Junction operators in Perl5";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
     };
+  };
+
+  SysCPU = buildPerlPackage rec {
+    name = "Sys-CPU-0.61";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/M/MZ/MZSANFORD/${name}.tar.gz";
+      sha256 = "1r6976bs86j7zp51m5vh42xlyah951jgdlkimv202413kjvqc2i5";
+    };
+    buildInputs = stdenv.lib.optional stdenv.isDarwin pkgs.darwin.apple_sdk.frameworks.Carbon;
   };
 
   SysHostnameLong = buildPerlPackage rec {
@@ -15000,16 +15024,16 @@ let self = _self // overrides; _self = with self; {
   };
 
   UnicodeCaseFold = buildPerlModule rec {
-    name = "Unicode-CaseFold-1.00";
+    name = "Unicode-CaseFold-1.01";
     src = fetchurl {
       url = "mirror://cpan/authors/id/A/AR/ARODLAND/${name}.tar.gz";
-      sha256 = "c489b5a440e84b0554e866d3fe4077fa1956eeed473e203588e0c24acce1f016";
+      sha256 = "418a212808f9d0b8bb330ac905096d2dd364976753d4c71534dab9836a63194d";
     };
+    buildInputs = [ ModuleBuild ];
     meta = {
       homepage = http://metacpan.org/release/Unicode-CaseFold;
       description = "Unicode case-folding for case-insensitive lookups";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
-      maintainers = [ stdenv.lib.maintainers.rycee ];
     };
   };
 

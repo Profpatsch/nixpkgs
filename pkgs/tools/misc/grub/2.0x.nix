@@ -3,6 +3,7 @@
 , zfs ? null
 , efiSupport ? false
 , zfsSupport ? true
+, xenSupport ? false
 }:
 
 with stdenv.lib;
@@ -46,6 +47,7 @@ in (
 
 assert efiSupport -> canEfi;
 assert zfsSupport -> zfs != null;
+assert !(efiSupport && xenSupport);
 
 stdenv.mkDerivation rec {
   name = "grub-${version}";
@@ -83,6 +85,8 @@ stdenv.mkDerivation rec {
        # See <http://www.mail-archive.com/qemu-devel@nongnu.org/msg22775.html>.
        sed -i "tests/util/grub-shell.in" \
            -e's/qemu-system-i386/qemu-system-x86_64 -nodefaults/g'
+
+      unset CPP # setting CPP intereferes with dependency calculation
     '';
 
   prePatch =
@@ -98,7 +102,8 @@ stdenv.mkDerivation rec {
   patches = [ ./fix-bash-completion.patch ];
 
   configureFlags = optional zfsSupport "--enable-libzfs"
-    ++ optionals efiSupport [ "--with-platform=efi" "--target=${efiSystemsBuild.${stdenv.system}.target}" "--program-prefix=" ];
+    ++ optionals efiSupport [ "--with-platform=efi" "--target=${efiSystemsBuild.${stdenv.system}.target}" "--program-prefix=" ]
+    ++ optionals xenSupport [ "--with-platform=xen" "--target=${efiSystemsBuild.${stdenv.system}.target}"];
 
   # save target that grub is compiled for
   grubTarget = if efiSupport

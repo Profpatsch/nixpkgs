@@ -10,7 +10,7 @@ assert releaseType == "alpha" || releaseType == "headless" || releaseType == "de
 
 with stdenv.lib;
 let
-  version = if releaseType != "demo" then "0.15.16" else "0.14.23";
+  version = if releaseType != "demo" then "0.15.31" else "0.15.31";
 
   arch = if stdenv.system == "x86_64-linux" then {
     inUrl = "linux64";
@@ -23,13 +23,12 @@ let
   authenticatedFetch = callPackage ./fetch.nix { inherit username password; };
 
   fetch = rec {
-    extension = if releaseType != "demo" then "tar.xz" else "tar.gz";
     url = "https://www.factorio.com/get-download/${version}/${releaseType}/${arch.inUrl}";
-    name = "factorio_${releaseType}_${arch.inTar}-${version}.${extension}";
+    name = "factorio_${releaseType}_${arch.inTar}-${version}.tar.xz";
     x64 = {
-      headless =           fetchurl { inherit name url; sha256 = "0ig0nrvqllb9294qn2ci5j5s31ycsjn23bp6hc633xqkgfmklmic"; };
-      alpha    = authenticatedFetch { inherit name url; sha256 = "0bf0z6fi0cpbq487hz4sz8ljapchzhld01sj767wsldakjfkm9g9"; };
-      demo     =           fetchurl { inherit name url; sha256 = "10a2lwmspqviwgymn3zhjgpiynsa6dplgnikdirma5sl2hhcfb6s"; };
+      headless =           fetchurl { inherit name url; sha256 = "1kbf6pj0rdiydx7g3xaqhnvvjr01g1afys2flw8x5myanffhql9x"; };
+      alpha    = authenticatedFetch { inherit name url; sha256 = "0mz7x0hc3kvs6l1isnryld08sfy8gkgq81vvmmssa3ayp5y67rh4"; };
+      demo     =           fetchurl { inherit name url; sha256 = "0zsjlgys96qlqs79m634wh36vx5d7faq4749i9lsxm88b6fylfaf"; };
     };
     i386 = {
       headless = abort "Factorio 32-bit headless binaries are not available for download.";

@@ -283,7 +283,7 @@ stdenv.mkDerivation ({
     NM_FOR_TARGET = "${targetPlatform.config}-nm";
     CXX_FOR_TARGET = "${targetPlatform.config}-g++";
     # If we are making a cross compiler, cross != null
-    NIX_CC_CROSS = if targetPlatform == hostPlatform then "${stdenv.ccCross}" else "";
+    NIX_CC_CROSS = optionalString (targetPlatform == hostPlatform) builtins.toString stdenv.cc;
     dontStrip = true;
     configureFlags = ''
       ${if enableMultilib then "" else "--disable-multilib"}
@@ -453,7 +453,7 @@ stdenv.mkDerivation ({
   '';
 
   meta = {
-    homepage = "http://ghdl.free.fr/";
+    homepage = http://ghdl.free.fr/;
     license = stdenv.lib.licenses.gpl2Plus;
     description = "Complete VHDL simulator, using the GCC technology (gcc ${version})";
     maintainers = with stdenv.lib.maintainers; [viric];

@@ -1,27 +1,17 @@
 { stdenv, fetchFromGitHub, rtmpdump, php, pythonPackages }:
 
-stdenv.mkDerivation rec {
+pythonPackages.buildPythonApplication rec {
   name = "yle-dl-${version}";
-  version = "2.16";
+  version = "2.20";
 
   src = fetchFromGitHub {
     owner = "aajanki";
     repo = "yle-dl";
     rev = version;
-    sha256 = "1ahv7b3r52mvi2b5ji77l62hy543b6pdmq8hnd9xxvnxai463k35";
+    sha256 = "06wzv230hfh3w9gs245kff8666bsfbax3ibr5zxj3h5z4qhhf9if";
   };
 
-  patchPhase = ''
-    substituteInPlace yle-dl --replace '/usr/local/share/' "$out/share/"
-  '';
-
-  buildInputs = [ pythonPackages.wrapPython ];
   pythonPath = [ rtmpdump php ] ++ (with pythonPackages; [ pycrypto ]);
-
-  installPhase = ''
-    make install prefix=$out
-    wrapPythonPrograms
-  '';
 
   meta = with stdenv.lib; {
     description = "Downloads videos from Yle (Finnish Broadcasting Company) servers";
