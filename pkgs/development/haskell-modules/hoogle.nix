@@ -40,14 +40,14 @@ let
     if !isGhcjs
     then "ghc"
     else "ghcjs";
-  ghcDocLibDir =
+  docLibGlob =
     if !isGhcjs
-    then ghc.doc + ''/share/doc/ghc*/html/libraries''
-    else ghc     + ''/doc/lib'';
+    then ''share/doc/ghc*/html/libraries''
+    else ''doc/lib'';
   # On GHCJS, use a stripped down version of GHC's prologue.txt
   prologue =
     if !isGhcjs
-    then "${ghcDocLibDir}/prologue.txt"
+    then "${ghc.doc}/${docLibGlob}/prologue.txt"
     else writeText "ghcjs-prologue.txt" ''
       This index includes documentation for many Haskell modules.
     '';
@@ -67,7 +67,7 @@ stdenv.mkDerivation {
     mkdir -p $out/share/doc/hoogle
 
     echo importing builtin packages
-    for docdir in ${ghcDocLibDir}/*; do
+    for docdir in ${ghc.doc}/${docLibGlob}/*; do
       name="$(basename $docdir)"
       ${opts isGhcjs ''docdir="$docdir/html"''}
       if [[ -d $docdir ]]; then
