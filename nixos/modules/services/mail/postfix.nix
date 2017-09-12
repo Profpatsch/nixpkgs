@@ -213,8 +213,8 @@ let
         wakeupDefined = options.wakeup.isDefined;
         wakeupUCDefined = options.wakeupUnusedComponent.isDefined;
         finalValue = toString config.wakeup
-                   + optionalString (!config.wakeupUnusedComponent) "?";
-      in if wakeupDefined && wakeupUCDefined then finalValue else "-";
+                   + optionalString (wakeupUCDefined && !config.wakeupUnusedComponent) "?";
+      in if wakeupDefined then finalValue else "-";
 
     in [
       config.name
@@ -835,12 +835,6 @@ in
     })
     (mkIf (cfg.dnsBlacklists != []) {
       services.postfix.mapFiles."client_access" = checkClientAccessFile;
-    })
-    (mkIf (cfg.extraConfig != "") {
-      warnings = [ "The services.postfix.extraConfig option was deprecated. Please use services.postfix.config instead." ];
-    })
-    (mkIf (cfg.extraMasterConf != "") {
-      warnings = [ "The services.postfix.extraMasterConf option was deprecated. Please use services.postfix.masterConfig instead." ];
     })
   ]);
 }

@@ -35,9 +35,6 @@ self: super: {
   unix = null;
   xhtml = null;
 
-  # cabal-install can use the native Cabal library.
-  cabal-install = super.cabal-install.override { Cabal = null; };
-
   # jailbreak-cabal can use the native Cabal library.
   jailbreak-cabal = super.jailbreak-cabal.override { Cabal = null; };
 
@@ -46,6 +43,9 @@ self: super: {
     url = "https://patch-diff.githubusercontent.com/raw/bmillwood/applicative-quoters/pull/7.patch";
     sha256 = "026vv2k3ks73jngwifszv8l59clg88pcdr4mz0wr0gamivkfa1zy";
   });
+
+  # Requires ghc 8.2
+  ghc-proofs = dontDistribute super.ghc-proofs;
 
   # http://hub.darcs.net/dolio/vector-algorithms/issue/9#comment-20170112T145715
   vector-algorithms = dontCheck super.vector-algorithms;
