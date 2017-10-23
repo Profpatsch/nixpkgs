@@ -100,6 +100,14 @@ rec {
       name = "unspecified";
     };
 
+    unit = mkOptionType {
+      name = "unit";
+      description = "unit";
+      # we use the empty attribute set to represent unit
+      check = x: (x == {});
+      merge = mergeEqualOption;
+    };
+
     bool = mkOptionType {
       name = "bool";
       description = "boolean";
@@ -267,6 +275,31 @@ rec {
       substSubModules = m: nullOr (elemType.substSubModules m);
       functor = (defaultFunctor name) // { wrapped = elemType; };
     };
+
+    taggedUnion = elemTypes: mkOptionType rec {
+      name = "taggedUnion";
+      description =
+        let format = field: type: "${field}: ${type.description}";
+            combined = "«"
+                    + lib.concatStringsSep " | " (lib.mapAttrsToList format elemTypes)
+                    + "»";
+        in "tagged union of ${combined}";
+      check = x:
+        let elems = builtins.attrNames x;
+        # a tag is an attribute set { tagName = val }
+        in isAttrs x
+        && length elems == 1
+        # of course the tagName has to exist in our taggedUnion
+        && elemTypes ? (head elems);
+      # TODO: should it merge if the tag is the same
+      # and the tag’s type is mergeable?
+      merge = mergeOneOption;
+      #getSubOptions?!
+      #getSubModules?!
+      #substSubModules?!
+      # functor!?
+    };
+
 
     # A submodule (like typed attribute set). See NixOS manual.
     submodule = opts:
