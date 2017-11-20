@@ -426,6 +426,18 @@ rec {
         functor = (defaultFunctor name) // { wrapped = finalType; };
       };
 
+    # An arbitrarily deeply nested structure of `containerType`
+    # with `type` at the leaves.
+    # Examples for `nestedOf attrsOf int`:
+    #   { }, { foo = 4; }, { foo = 4; bar.baz = 20 };
+    # Examples for `nestedOf listOf str`:
+    #   [ ], [[[[ "hello" ]]]], [ "hello", [[[[] [[ "nyan" ]] ]]]]
+    nestedOf = containerType: type:
+      lib.fix (nestedType:
+        containerType (either type nestedType)
+          // { name = "nestedOf";
+               description = "nested ${(containerType type).description}"; });
+
     # Obsolete alternative to configOf.  It takes its option
     # declarations from the ‘options’ attribute of containing option
     # declaration.

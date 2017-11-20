@@ -210,6 +210,19 @@
 	<replaceable>to</replaceable>. Can be used to preserve backwards
         compatibility of an option if its type was changed.</para></listitem>
   </varlistentry>
+  <varlistentry>
+    <term>
+      <varname>types.nestedOf</varname>
+      <replaceable>containerType</replaceable>
+      <replaceable>type</replaceable>
+    </term>
+    <listitem>
+      <para>An arbitrarily nested structure of
+      <replaceable>containerType</replaceable> values with
+      <replaceable>type</replaceable> at the leaves.
+      See definition docstring for examples.</para>
+    </listitem>
+  </varlistentry>
 </variablelist>
 
 </section>
