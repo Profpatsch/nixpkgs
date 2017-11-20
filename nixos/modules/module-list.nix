@@ -725,6 +725,7 @@
   ./tasks/trackpoint.nix
   ./tasks/powertop.nix
   ./testing/service-runner.nix
+  ./testing/tests.nix
   ./virtualisation/container-config.nix
   ./virtualisation/containers.nix
   ./virtualisation/docker.nix
