@@ -65,9 +65,6 @@ self: super: {
   options = dontCheck super.options;
   statistics = dontCheck super.statistics;
 
-  # segfault due to missing return: https://github.com/haskell/c2hs/pull/184
-  c2hs = dontCheck super.c2hs;
-
   # https://github.com/gilith/hol/pull/1
   hol = appendPatch (doJailbreak super.hol) (pkgs.fetchpatch {
     name = "hol.patch";
@@ -98,7 +95,7 @@ self: super: {
       name = "git-annex-${drv.version}-src";
       url = "git://git-annex.branchable.com/";
       rev = "refs/tags/" + drv.version;
-      sha256 = "0ky3avbda1avccalkh7ifjnll37cjjmdyypw9m1glsrzgzmr5lbr";
+      sha256 = "14449sllp81d23mnjwn1m658kzry5qvww2ykxkbkdcrlz6kl6dy0";
     };
   })).override {
     dbus = if pkgs.stdenv.isLinux then self.dbus else null;
@@ -155,7 +152,7 @@ self: super: {
     extraLibraries = [ pkgs.openblasCompat ];
   });
 
-  LambdaHack = super.LambdaHack.override { sdl2-ttf = super.sdl2-ttf_2_0_1; };
+  LambdaHack = super.LambdaHack.override { sdl2-ttf = super.sdl2-ttf_2_0_2; };
 
   # The Haddock phase fails for one reason or another.
   acme-one = dontHaddock super.acme-one;
@@ -891,9 +888,8 @@ self: super: {
   # https://github.com/danidiaz/tailfile-hinotify/issues/2
   tailfile-hinotify = dontCheck super.tailfile-hinotify;
 
-  # build liquidhaskell with the proper (old) aeson version
-  liquidhaskell = super.liquidhaskell.override { aeson = self.aeson_0_11_3_0; };
-  aeson_0_11_3_0 = super.aeson_0_11_3_0.override { base-orphans = self.base-orphans_0_5_4; };
+  # build liquidhaskell with the proper (new) aeson version
+  liquidhaskell = super.liquidhaskell.override { aeson = dontCheck self.aeson_1_2_3_0; };
 
   # Test suite fails: https://github.com/lymar/hastache/issues/46.
   # Don't install internal mkReadme tool.
@@ -936,12 +932,6 @@ self: super: {
     sha256 = "1vss7b99zrhw3r29krl1b60r4qk0m2mpwmrz8q8zdxrh33hb8pd7";
   });
 
-  # happy 1.19.6+ broke the Agda build. Sticking with the previous version
-  # avoided that issue, but now the build fails with a segmentation fault
-  # during the install phase for no apparent reason:
-  # https://hydra.nixos.org/build/60678124
-  Agda = markBroken (super.Agda.override { happy = self.happy_1_19_5; });
-
   # cryptol-2.5.0 doesn't want happy 1.19.6+.
   cryptol = super.cryptol.override { happy = self.happy_1_19_5; };
 
@@ -967,10 +957,29 @@ self: super: {
     optparse-applicative = self.optparse-applicative_0_14_0_0;
   });
 
-  # Break "hpack >=0.17.0 && <0.19".
-  stack = doJailbreak super.stack;
+  # Depends on broken fluid.
+  fluid-idl-http-client = markBroken super.fluid-idl-http-client;
+  fluid-idl-scotty = markBroken super.fluid-idl-scotty;
 
-  # https://github.com/mgajda/json-autotype/issues/15
-  json-autotype = doJailbreak super.json-autotype;
+  # depends on amqp >= 0.17
+  amqp-utils = super.amqp-utils.override { amqp = dontCheck super.amqp_0_18_1; };
+
+  # Build with gi overloading feature disabled.
+  ltk = super.ltk.overrideScope (self: super: { haskell-gi-overloading = self.haskell-gi-overloading_0_0; });
+
+  # missing dependencies: Glob >=0.7.14 && <0.8, data-fix ==0.0.4
+  stack2nix = doJailbreak super.stack2nix;
+
+  # Hacks to work around https://github.com/haskell/c2hs/issues/192.
+  c2hs = (overrideCabal super.c2hs {
+    version = "0.26.2-28-g8b79823";
+    doCheck = false;
+    src = pkgs.fetchFromGitHub {
+      owner = "deech";
+      repo = "c2hs";
+      rev = "8b79823c32e234c161baec67fdf7907952ca62b8";
+      sha256 = "0hyrcyssclkdfcw2kgcark8jl869snwnbrhr9k0a9sbpk72wp7nz";
+    };
+  }).override { language-c = self.language-c_0_7_0; };
 
 }

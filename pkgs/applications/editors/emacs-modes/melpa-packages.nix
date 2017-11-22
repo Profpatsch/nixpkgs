@@ -51,9 +51,6 @@ self:
       cmake-mode = markBroken (dontConfigure super.cmake-mode);
 
       # upstream issue: missing file header
-      cn-outline = markBroken super.cn-outline;
-
-      # upstream issue: missing file header
       connection = markBroken super.connection;
 
       # upstream issue: missing file header
@@ -149,6 +146,9 @@ self:
 
       # upstream issue: missing file footer
       seoul256-theme = markBroken super.seoul256-theme;
+
+      # bad dependencies
+      shm = markBroken super.shm;
 
       spaceline = super.spaceline.override {
         inherit (self.melpaPackages) powerline;

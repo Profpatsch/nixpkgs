@@ -1,5 +1,8 @@
-{ lib, fetchurl, pythonPackages, pkgconfig, qtbase, qtsvg, qtwebkit, qtwebengine, dbus_libs
-, lndir, makeWrapper, qmake }:
+{ lib, fetchurl, pythonPackages, pkgconfig, makeWrapper, qmake
+, lndir, qtbase, qtsvg, qtwebkit, qtwebengine, dbus_libs
+, withWebSockets ? false, qtwebsockets
+, withConnectivity ? false, qtconnectivity
+}:
 
 let
   version = "5.9";
@@ -25,7 +28,7 @@ in buildPythonPackage {
 
   buildInputs = [
     lndir qtbase qtsvg qtwebkit qtwebengine dbus_libs
-  ];
+  ] ++ lib.optional withWebSockets qtwebsockets ++ lib.optional withConnectivity qtconnectivity;
 
   propagatedBuildInputs = [ sip ];
 
@@ -45,7 +48,6 @@ in buildPythonPackage {
     ${python.executable} configure.py  -w \
       --confirm-license \
       --dbus=${dbus_libs.dev}/include/dbus-1.0 \
-      --qmake=$QMAKE \
       --no-qml-plugin \
       --bindir=$out/bin \
       --destdir=$out/${python.sitePackages} \
