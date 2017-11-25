@@ -214,4 +214,14 @@ self: super:
   # triggers an internal pattern match failure in haddock
   # https://github.com/haskell/haddock/issues/553
   wai = dontHaddock super.wai;
+
+  dhall-json = overrideCabal super.dhall-json (drv: {
+     src = pkgs.fetchFromGitHub {
+       owner = "dhall-lang";
+       repo = "dhall-json";
+       rev = "7d5b2b87fd513d7f2dda0cf1e832c8ac107ba7a3";
+       sha256 = "02hvpg4dlh43zpkc416yha4s7vs1j6pxh012jfnkvjfdk7ab5vdm";
+     };
+  });
+
 }
