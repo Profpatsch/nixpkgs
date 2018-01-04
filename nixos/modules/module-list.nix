@@ -71,6 +71,7 @@
   ./programs/bcc.nix
   ./programs/blcr.nix
   ./programs/browserpass.nix
+  ./programs/ccache.nix
   ./programs/cdemu.nix
   ./programs/chromium.nix
   ./programs/command-not-found/command-not-found.nix
@@ -91,6 +92,7 @@
   ./programs/npm.nix
   ./programs/oblogout.nix
   ./programs/qt5ct.nix
+  ./programs/rootston.nix
   ./programs/screen.nix
   ./programs/slock.nix
   ./programs/shadow.nix
@@ -104,6 +106,7 @@
   ./programs/tmux.nix
   ./programs/venus.nix
   ./programs/vim.nix
+  ./programs/way-cooler.nix
   ./programs/wireshark.nix
   ./programs/xfs_quota.nix
   ./programs/xonsh.nix
@@ -210,13 +213,13 @@
   ./services/desktops/gnome3/seahorse.nix
   ./services/desktops/gnome3/sushi.nix
   ./services/desktops/gnome3/tracker.nix
+  ./services/desktops/gnome3/tracker-miners.nix
   ./services/desktops/profile-sync-daemon.nix
   ./services/desktops/telepathy.nix
   ./services/development/hoogle.nix
   ./services/editors/emacs.nix
   ./services/editors/infinoted.nix
   ./services/games/factorio.nix
-  ./services/games/ghost-one.nix
   ./services/games/minecraft-server.nix
   ./services/games/minetest-server.nix
   ./services/games/terraria.nix
@@ -238,6 +241,7 @@
   ./services/hardware/tlp.nix
   ./services/hardware/thinkfan.nix
   ./services/hardware/trezord.nix
+  ./services/hardware/u2f.nix
   ./services/hardware/udev.nix
   ./services/hardware/udisks2.nix
   ./services/hardware/upower.nix
@@ -256,6 +260,7 @@
   ./services/logging/rsyslogd.nix
   ./services/logging/syslog-ng.nix
   ./services/logging/syslogd.nix
+  ./services/mail/dkimproxy-out.nix
   ./services/mail/dovecot.nix
   ./services/mail/dspam.nix
   ./services/mail/exim.nix
@@ -327,6 +332,7 @@
   ./services/misc/nix-ssh-serve.nix
   ./services/misc/nzbget.nix
   ./services/misc/octoprint.nix
+  ./services/misc/osrm.nix
   ./services/misc/packagekit.nix
   ./services/misc/parsoid.nix
   ./services/misc/phd.nix
@@ -351,6 +357,7 @@
   ./services/misc/taskserver
   ./services/misc/tzupdate.nix
   ./services/misc/uhub.nix
+  ./services/misc/xmr-stak.nix
   ./services/misc/zookeeper.nix
   ./services/monitoring/apcupsd.nix
   ./services/monitoring/arbtt.nix
@@ -397,7 +404,9 @@
   ./services/monitoring/vnstat.nix
   ./services/monitoring/zabbix-agent.nix
   ./services/monitoring/zabbix-server.nix
+  ./services/network-filesystems/beegfs.nix
   ./services/network-filesystems/cachefilesd.nix
+  ./services/network-filesystems/davfs2.nix
   ./services/network-filesystems/drbd.nix
   ./services/network-filesystems/glusterfs.nix
   ./services/network-filesystems/kbfs.nix
@@ -587,6 +596,7 @@
   ./services/system/cloud-init.nix
   ./services/system/dbus.nix
   ./services/system/earlyoom.nix
+  ./services/system/localtime.nix
   ./services/system/kerberos.nix
   ./services/system/nscd.nix
   ./services/system/saslauthd.nix
@@ -744,6 +754,4 @@
   ./virtualisation/vmware-guest.nix
   ./virtualisation/xen-dom0.nix
   ./virtualisation/xe-guest-utilities.nix
-  ./virtualisation/openstack/keystone.nix
-  ./virtualisation/openstack/glance.nix
 ]
