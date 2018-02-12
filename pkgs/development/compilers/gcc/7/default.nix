@@ -56,7 +56,7 @@ assert langGo -> langCC;
 with stdenv.lib;
 with builtins;
 
-let version = "7.2.0";
+let version = "7.3.0";
 
     # Whether building a cross-compiler for GNU/Hurd.
     crossGNU = targetPlatform != hostPlatform && targetPlatform.config == "i586-pc-gnu";
@@ -185,7 +185,7 @@ stdenv.mkDerivation ({
 
   src = fetchurl {
     url = "mirror://gcc/releases/gcc-${version}/gcc-${version}.tar.xz";
-    sha256 = "16j7i0888j2f1yp9l0nhji6cq65dy6y4nwy8868a8njbzzwavxqw";
+    sha256 = "0p71bij6bfhzyrs8676a8jmpjsfz392s2rg862sdnsk30jpacb43";
   };
 
   inherit patches;
@@ -312,7 +312,11 @@ stdenv.mkDerivation ({
   dontDisableStatic = true;
 
   # TODO(@Ericson2314): Always pass "--target" and always prefix.
-  configurePlatforms = [ "build" "host" ] ++ stdenv.lib.optional (targetPlatform != hostPlatform) "target";
+  configurePlatforms =
+    # TODO(@Ericson2314): Figure out what's going wrong with Arm
+    if buildPlatform == hostPlatform && hostPlatform == targetPlatform && targetPlatform.isArm
+    then []
+    else [ "build" "host" ] ++ stdenv.lib.optional (targetPlatform != hostPlatform) "target";
 
   configureFlags =
     # Basic dependencies

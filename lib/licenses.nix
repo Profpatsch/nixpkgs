@@ -79,6 +79,11 @@ lib.mapAttrs (n: v: v // { shortName = n; }) rec {
     fullName = ''Beerware License'';
   };
 
+  bsd0 = spdx {
+    spdxId = "0BSD";
+    fullName = "BSD Zero Clause License";
+  };
+
   bsd2 = spdx {
     spdxId = "BSD-2-Clause";
     fullName = ''BSD 2-clause "Simplified" License'';
@@ -200,6 +205,11 @@ lib.mapAttrs (n: v: v // { shortName = n; }) rec {
     fullName = "Eclipse Public License 1.0";
   };
 
+  epl20 = spdx {
+    spdxId = "EPL-2.0";
+    fullName = "Eclipse Public License 2.0";
+  };
+
   epson = {
     fullName = "Seiko Epson Corporation Software License Agreement for Linux";
     url = https://download.ebz.epson.net/dsc/du/02/eula/global/LINUX_EN.html;
@@ -307,6 +317,12 @@ lib.mapAttrs (n: v: v // { shortName = n; }) rec {
     fullName  = "INRIA Non-Commercial License Agreement for the CompCert verified compiler";
     url       = "http://compcert.inria.fr/doc/LICENSE";
     free      = false;
+  };
+
+  inria-icesl = {
+    fullName = "INRIA Non-Commercial License Agreement for IceSL";
+    url      = "http://shapeforge.loria.fr/icesl/EULA_IceSL_binary.pdf";
+    free     = false;
   };
 
   ipa = spdx {
@@ -469,6 +485,12 @@ lib.mapAttrs (n: v: v // { shortName = n; }) rec {
   postgresql = spdx {
     spdxId = "PostgreSQL";
     fullName = "PostgreSQL License";
+  };
+
+  postman = {
+    fullName = "Postman EULA";
+    url = https://www.getpostman.com/licenses/postman_base_app;
+    free = false;
   };
 
   psfl = spdx {

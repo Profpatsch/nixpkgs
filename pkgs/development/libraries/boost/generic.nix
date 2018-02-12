@@ -125,9 +125,9 @@ stdenv.mkDerivation {
   configureFlags = [
     "--includedir=$(dev)/include"
     "--libdir=$(out)/lib"
-    (if enablePython then "--with-python=${python.interpreter}" else "--without-python")
-    (if hostPlatform == buildPlatform then "--with-icu=${icu.dev}" else  "--without-icu")
-  ] ++ optional (toolset != null) "--with-toolset=${toolset}";
+  ] ++ optional enablePython "--with-python=${python.interpreter}"
+    ++ [ (if hostPlatform == buildPlatform then "--with-icu=${icu.dev}" else "--without-icu") ]
+    ++ optional (toolset != null) "--with-toolset=${toolset}";
 
   buildPhase = ''
     ./b2 ${b2Args}
@@ -144,7 +144,7 @@ stdenv.mkDerivation {
 
   postFixup = ''
     # Make boost header paths relative so that they are not runtime dependencies
-    find "$dev/include" \( -name '*.hpp' -or -name '*.h' -or -name '*.ipp' \) \
+    cd "$dev" && find include \( -name '*.hpp' -or -name '*.h' -or -name '*.ipp' \) \
       -exec sed '1i#line 1 "{}"' -i '{}' \;
   '' + optionalString (hostPlatform.libc == "msvcrt") ''
     $RANLIB "$out/lib/"*.a

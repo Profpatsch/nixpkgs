@@ -197,10 +197,10 @@
       #input = 174; # unused
       sddm = 175;
       tss = 176;
-      memcached = 177;
+      #memcached = 177; removed 2018-01-03
       ntp = 179;
       zabbix = 180;
-      redis = 181;
+      #redis = 181; removed 2018-01-03
       unifi = 183;
       uptimed = 184;
       zope2 = 185;
@@ -301,6 +301,9 @@
       pykms = 282;
       kodi = 283;
       restya-board = 284;
+      mighttpd2 = 285;
+      hass = 286;
+      monero = 287;
 
       # When adding a uid, make sure it doesn't match an existing gid. And don't use uids above 399!
 
@@ -475,10 +478,10 @@
       input = 174;
       sddm = 175;
       tss = 176;
-      #memcached = 177; # unused
+      #memcached = 177; # unused, removed 2018-01-03
       #ntp = 179; # unused
       #zabbix = 180; # unused
-      #redis = 181; # unused
+      #redis = 181; # unused, removed 2018-01-03
       #unifi = 183; # unused
       #uptimed = 184; # unused
       #zope2 = 185; # unused
@@ -570,6 +573,9 @@
       pykms = 282;
       kodi = 283;
       restya-board = 284;
+      mighttpd2 = 285;
+      hass = 286;
+      monero = 287;
 
       # When adding a gid, make sure it doesn't match an existing
       # uid. Users and groups with the same name should have equal
