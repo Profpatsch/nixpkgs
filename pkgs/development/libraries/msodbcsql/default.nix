@@ -58,6 +58,6 @@ stdenv.mkDerivation rec {
     description = "ODBC access to SQL Server, Azure SQL Database and Azure SQL DW";
     license = licenses.unfree;
     homepage = "https://www.microsoft.com/en-us/download/details.aspx?id=28160";
-    maintainer = [ maintainers.profpatsch ];
+    maintainer = [ ];
   };
 }
