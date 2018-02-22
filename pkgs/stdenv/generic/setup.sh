@@ -690,7 +690,16 @@ substitute() {
                 ;;
         esac
 
-        content="${content//"$pattern"/$replacement}"
+        # fail if no substitution is found (to prevent errors and unnecessary builder code)
+        if [ "$pattern" != "$replacement" ]; then
+            local newcontent
+            newcontent="${content//"$pattern"/$replacement}"
+            if [ "$newcontent" == "$content" ]; then
+                echo "substitute(): ERROR: '$pattern' doesn't match anything in file '$input'" >&2
+                exit 1
+            fi
+            content="$newcontent"
+        fi
     done
 
     if [ -e "$output" ]; then chmod +w "$output"; fi
