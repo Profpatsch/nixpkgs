@@ -1,0 +1,23 @@
+{
+  inherit (import ./. {})
+    apacheHttpd
+    cmake
+    cryptsetup
+    emacs
+    gettext
+    git
+    imagemagick
+    jdk
+    linux
+    mysql
+    nginx
+    nodejs
+    openssh
+    php
+    postgresql
+    python
+    rsyslog
+    stdenv
+    subversion
+    vim;
+}
