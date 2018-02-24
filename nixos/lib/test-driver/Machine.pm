@@ -227,6 +227,18 @@ sub retry {
     die "action timed out after $n seconds";
 }
 
+# Call the given code reference repeatedly, with 1 second intervals,
+# until it returns 1 or a timeout is reached.
+sub retryTimeout {
+    my ($timeout, $coderef) = @_;
+    my $n;
+    for ($n = $timeout; $n >0; $n--) {
+        return if &$coderef($n);
+        sleep 1;
+    }
+    die "action timed out after $timeout seconds";
+}
+
 
 sub connect {
     my ($self) = @_;
@@ -460,6 +472,16 @@ sub waitForOpenPort {
             return 1 if $status == 0;
         }
     });
+}
+
+sub waitForOpenPortTimeout {
+    my ($self, $port, $timeout) = @_;
+    $self->nest("waiting for TCP port $port", sub {
+        retryTimeout($timeout, sub {
+            my ($status, $out) = $self->execute("nc -z localhost $port");
+            return 1 if $status == 0;
+        })
+                });
 }
 
 
