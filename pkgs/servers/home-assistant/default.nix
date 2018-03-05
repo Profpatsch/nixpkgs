@@ -28,6 +28,13 @@ let
           sha256 = "14zbnbn53yvrpv79ch6n02myq9b4winjkaykzi356sfqb7f3d16g";
         };
       });
+      voluptuous = super.voluptuous.overridePythonAttrs (oldAttrs: rec {
+        version = "0.10.5";
+        src = oldAttrs.src.override {
+          inherit version;
+          sha256 = "15i3gaap8ilhpbah1ffc6q415wkvliqxilc6s69a4rinvkw6cx3s";
+        };
+      });
       hass-frontend = super.callPackage ./frontend.nix { };
     };
   };
@@ -44,7 +51,7 @@ let
   extraBuildInputs = extraPackages py.pkgs;
 
   # Don't forget to run parse-requirements.py after updating
-  hassVersion = "0.63";
+  hassVersion = "0.63.3";
 
 in with py.pkgs; buildPythonApplication rec {
   pname = "homeassistant";
@@ -57,12 +64,12 @@ in with py.pkgs; buildPythonApplication rec {
     owner = "home-assistant";
     repo = "home-assistant";
     rev = version;
-    sha256 = "0gfdhjydl619jpnflnig5hzglib9385hdk5vw5pris0ksqk27mfk";
+    sha256 = "1lrdrn0x8i81vbqxziv5fgcc8ldz7x5r62kfz3nyg4g43rk3dqq8";
   };
 
   propagatedBuildInputs = [
     # From setup.py
-    requests pyyaml pytz pip jinja2 voluptuous typing aiohttp yarl async-timeout chardet astral certifi
+    requests pyyaml pytz pip jinja2 voluptuous typing aiohttp yarl async-timeout chardet astral certifi attrs
     # From http, frontend and recorder components
     sqlalchemy aiohttp-cors hass-frontend user-agents
   ] ++ componentBuildInputs ++ extraBuildInputs;

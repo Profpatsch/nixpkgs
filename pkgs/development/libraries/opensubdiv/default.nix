@@ -1,5 +1,5 @@
-{ lib, stdenv, fetchurl, fetchFromGitHub, cmake, pkgconfig, xorg, mesa_glu
-, mesa_noglu, glew, ocl-icd, python3
+{ lib, stdenv, fetchurl, fetchFromGitHub, cmake, pkgconfig, xorg, libGLU
+, libGL, glew, ocl-icd, python3
 , cudaSupport ? false, cudatoolkit
 }:
 
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" ];
 
   buildInputs =
-    [ cmake pkgconfig mesa_glu mesa_noglu ocl-icd python3
+    [ cmake pkgconfig libGLU libGL ocl-icd python3
       # FIXME: these are not actually needed, but the configure script wants them.
       glew xorg.libX11 xorg.libXrandr xorg.libXxf86vm xorg.libXcursor
       xorg.libXinerama xorg.libXi
@@ -30,7 +30,10 @@ stdenv.mkDerivation rec {
       "-DNO_EXAMPLES=1"
       "-DGLEW_INCLUDE_DIR=${glew.dev}/include"
       "-DGLEW_LIBRARY=${glew.dev}/lib"
-    ] ++ lib.optional cudaSupport "-DOSD_CUDA_NVCC_FLAGS=--gpu-architecture=compute_30";
+    ] ++ lib.optionals cudaSupport [
+      "-DOSD_CUDA_NVCC_FLAGS=--gpu-architecture=compute_30"
+      "-DCUDA_HOST_COMPILER=${cudatoolkit.cc}/bin/cc"
+    ];
 
   enableParallelBuilding = true;
 

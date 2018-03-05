@@ -46,7 +46,7 @@ in
   cxml = skipBuildPhase;
   wookie = addNativeLibs (with pkgs; [libuv openssl]);
   lev = addNativeLibs [pkgs.libev];
-  "cl+ssl" = addNativeLibs [pkgs.openssl];
+  cl_plus_ssl = addNativeLibs [pkgs.openssl];
   cl-colors = skipBuildPhase;
   cl-libuv = addNativeLibs [pkgs.libuv];
   cl-async-ssl = addNativeLibs [pkgs.openssl];
@@ -138,5 +138,24 @@ $out/lib/common-lisp/query-fs"
     asdFilesToKeep = (x.asdFilesToKeep or []) ++ [
       "cl-unification-lib.asd"
     ];
+  };
+  simple-date = x: {
+    deps = with quicklisp-to-nix-packages; [
+      fiveam md5 usocket
+    ];
+    parasites = [
+      "simple-date/tests"
+    ];
+  };
+  cl-postgres = x: {
+    deps = pkgs.lib.filter (x: x.outPath != quicklisp-to-nix-packages.simple-date.outPath) x.deps;
+    parasites = (x.parasites or []) ++ [
+      "simple-date" "simple-date/postgres-glue"
+    ];
+    asdFilesToKeep = x.asdFilesToKeep ++ ["simple-date.asd"];
+  };
+  buildnode = x: {
+    deps = pkgs.lib.filter (x: x.name != quicklisp-to-nix-packages.buildnode-xhtml.name) x.deps;
+    parasites = pkgs.lib.filter (x: x!= "buildnode-test") x.parasites;
   };
 }

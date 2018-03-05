@@ -1,5 +1,5 @@
 { stdenv, lib, fetchurl, pkgconfig, audiofile
-, openglSupport ? false, mesa_noglu
+, openglSupport ? false, libGL
 , alsaSupport ? true, alsaLib
 , x11Support ? true, libICE, libXi, libXScrnSaver, libXcursor, libXinerama, libXext, libXxf86vm, libXrandr
 , waylandSupport ? true, wayland, wayland-protocols, libxkbcommon
@@ -8,13 +8,14 @@
 , ibusSupport ? false, ibus
 , pulseaudioSupport ? true, libpulseaudio
 , AudioUnit, Cocoa, CoreAudio, CoreServices, ForceFeedback, OpenGL
+, libiconv
 }:
 
 # OSS is no longer supported, for it's much crappier than ALSA and
 # PulseAudio.
 assert !stdenv.isDarwin -> alsaSupport || pulseaudioSupport;
 
-assert openglSupport -> (stdenv.isDarwin || mesa_noglu != null && x11Support);
+assert openglSupport -> (stdenv.isDarwin || libGL != null && x11Support);
 
 let
   configureFlagsFun = attrs: [
@@ -41,10 +42,11 @@ stdenv.mkDerivation rec {
   # Since `libpulse*.la' contain `-lgdbm', PulseAudio must be propagated.
   propagatedBuildInputs = lib.optionals x11Support [ libICE libXi libXScrnSaver libXcursor libXinerama libXext libXrandr libXxf86vm ] ++
     lib.optionals waylandSupport [ wayland wayland-protocols libxkbcommon ] ++
-    lib.optional pulseaudioSupport libpulseaudio;
+    lib.optional pulseaudioSupport libpulseaudio
+    ++ [ libiconv ];
 
   buildInputs = [ audiofile ] ++
-    lib.optional openglSupport mesa_noglu ++
+    lib.optional openglSupport libGL ++
     lib.optional alsaSupport alsaLib ++
     lib.optional dbusSupport dbus ++
     lib.optional udevSupport udev ++

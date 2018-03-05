@@ -35,8 +35,8 @@ let
 
 
   versionModule =
-    { system.nixosVersionSuffix = versionSuffix;
-      system.nixosRevision = nixpkgs.rev or nixpkgs.shortRev;
+    { system.nixos.versionSuffix = versionSuffix;
+      system.nixos.revision = nixpkgs.rev or nixpkgs.shortRev;
     };
 
 
@@ -228,7 +228,9 @@ in rec {
   tests.boot = callSubTests tests/boot.nix {};
   tests.boot-stage1 = callTest tests/boot-stage1.nix {};
   tests.borgbackup = callTest tests/borgbackup.nix {};
+  tests.buildbot = callTest tests/buildbot.nix {};
   tests.cadvisor = callTestOnTheseSystems ["x86_64-linux"] tests/cadvisor.nix {};
+  tests.ceph = callTestOnTheseSystems ["x86_64-linux"] tests/ceph.nix {};
   tests.chromium = (callSubTestsOnTheseSystems ["x86_64-linux"] tests/chromium.nix {}).stable;
   tests.cjdns = callTest tests/cjdns.nix {};
   tests.cloud-init = callTest tests/cloud-init.nix {};
@@ -244,6 +246,7 @@ in rec {
   tests.containers-macvlans = callTest tests/containers-macvlans.nix {};
   tests.couchdb = callTest tests/couchdb.nix {};
   tests.docker = callTestOnTheseSystems ["x86_64-linux"] tests/docker.nix {};
+  tests.docker-tools = callTestOnTheseSystems ["x86_64-linux"] tests/docker-tools.nix {};
   tests.docker-edge = callTestOnTheseSystems ["x86_64-linux"] tests/docker-edge.nix {};
   tests.dovecot = callTest tests/dovecot.nix {};
   tests.dnscrypt-proxy = callTestOnTheseSystems ["x86_64-linux"] tests/dnscrypt-proxy.nix {};
@@ -257,8 +260,10 @@ in rec {
   tests.firefox = callTest tests/firefox.nix {};
   tests.firewall = callTest tests/firewall.nix {};
   tests.fleet = callTestOnTheseSystems ["x86_64-linux"] tests/fleet.nix {};
+  tests.fwupd = callTest tests/fwupd.nix {};
   #tests.gitlab = callTest tests/gitlab.nix {};
   tests.gitolite = callTest tests/gitolite.nix {};
+  tests.gjs = callTest tests/gjs.nix {};
   tests.gocd-agent = callTest tests/gocd-agent.nix {};
   tests.gocd-server = callTest tests/gocd-server.nix {};
   tests.gnome3 = callTest tests/gnome3.nix {};
@@ -269,6 +274,7 @@ in rec {
   tests.hibernate = callTest tests/hibernate.nix {};
   tests.home-assistant = callTest tests/home-assistant.nix { };
   tests.hound = callTest tests/hound.nix {};
+  tests.hocker-fetchdocker = callTest tests/hocker-fetchdocker {};
   tests.i3wm = callTest tests/i3wm.nix {};
   tests.initrd-network-ssh = callTest tests/initrd-network-ssh {};
   tests.installer = callSubTests tests/installer.nix {};
@@ -276,6 +282,7 @@ in rec {
   tests.ipv6 = callTest tests/ipv6.nix {};
   tests.jenkins = callTest tests/jenkins.nix {};
   tests.plasma5 = callTest tests/plasma5.nix {};
+  tests.plotinus = callTest tests/plotinus.nix {};
   tests.keymap = callSubTests tests/keymap.nix {};
   tests.initrdNetwork = callTest tests/initrd-network.nix {};
   tests.kafka_0_9 = callTest tests/kafka_0_9.nix {};
@@ -314,9 +321,12 @@ in rec {
   tests.nfs4 = callTest tests/nfs.nix { version = 4; };
   tests.nginx = callTest tests/nginx.nix { };
   tests.nghttpx = callTest tests/nghttpx.nix { };
+  tests.nix-ssh-serve = callTest tests/nix-ssh-serve.nix { };
+  tests.novacomd = callTestOnTheseSystems ["x86_64-linux"] tests/novacomd.nix { };
   tests.leaps = callTest tests/leaps.nix { };
   tests.nsd = callTest tests/nsd.nix {};
   tests.openssh = callTest tests/openssh.nix {};
+  tests.openldap = callTest tests/openldap.nix {};
   tests.owncloud = callTest tests/owncloud.nix {};
   tests.pam-oath-login = callTest tests/pam-oath-login.nix {};
   #tests.panamax = callTestOnTheseSystems ["x86_64-linux"] tests/panamax.nix {};
@@ -325,14 +335,15 @@ in rec {
   tests.postgresql = callSubTests tests/postgresql.nix {};
   tests.pgmanage = callTest tests/pgmanage.nix {};
   tests.postgis = callTest tests/postgis.nix {};
+  tests.powerdns = callTest tests/powerdns.nix {};
   #tests.pgjwt = callTest tests/pgjwt.nix {};
   tests.predictable-interface-names = callSubTests tests/predictable-interface-names.nix {};
   tests.printing = callTest tests/printing.nix {};
   tests.prometheus = callTest tests/prometheus.nix {};
   tests.proxy = callTest tests/proxy.nix {};
-  tests.pumpio = callTest tests/pump.io.nix {};
   # tests.quagga = callTest tests/quagga.nix {};
   tests.quake3 = callTest tests/quake3.nix {};
+  tests.rabbitmq = callTest tests/rabbitmq.nix {};
   tests.radicale = callTest tests/radicale.nix {};
   tests.rspamd = callSubTests tests/rspamd.nix {};
   tests.runInMachine = callTest tests/run-in-machine.nix {};
@@ -345,6 +356,7 @@ in rec {
   tests.snapper = callTest tests/snapper.nix {};
   tests.statsd = callTest tests/statsd.nix {};
   tests.sudo = callTest tests/sudo.nix {};
+  tests.systemd = callTest tests/systemd.nix {};
   tests.switchTest = callTest tests/switch-test.nix {};
   tests.taskserver = callTest tests/taskserver.nix {};
   tests.tomcat = callTest tests/tomcat.nix {};
@@ -354,6 +366,7 @@ in rec {
   tests.wordpress = callTest tests/wordpress.nix {};
   tests.xfce = callTest tests/xfce.nix {};
   tests.xmonad = callTest tests/xmonad.nix {};
+  tests.xrdp = callTest tests/xrdp.nix {};
   tests.yabar = callTest tests/yabar.nix {};
   tests.zookeeper = callTest tests/zookeeper.nix {};
 

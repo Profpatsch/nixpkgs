@@ -54,11 +54,13 @@ let
 
     base64 = callPackage ../development/ocaml-modules/base64 { };
 
-    bap = callPackage ../development/ocaml-modules/bap { cmdliner = cmdliner_0_9; };
+    bap = callPackage ../development/ocaml-modules/bap { };
 
     batteries = callPackage ../development/ocaml-modules/batteries { };
 
     bitstring = callPackage ../development/ocaml-modules/bitstring { };
+
+    bitv = callPackage ../development/ocaml-modules/bitv { };
 
     bolt = callPackage ../development/ocaml-modules/bolt { };
 
@@ -192,9 +194,7 @@ let
       then callPackage ../development/ocaml-modules/csv { }
       else callPackage ../development/ocaml-modules/csv/1.5.nix { };
 
-    curses = callPackage ../development/ocaml-modules/curses {
-      ncurses = pkgs.ncurses5;
-    };
+    curses = callPackage ../development/ocaml-modules/curses { };
 
     custom_printf = callPackage ../development/ocaml-modules/custom_printf { };
 
@@ -372,6 +372,10 @@ let
     ocaml_lwt = if lib.versionOlder "4.02" ocaml.version then lwt3 else lwt2;
 
     lwt_react = callPackage ../development/ocaml-modules/lwt_react {
+      lwt = lwt3;
+    };
+
+    lwt_ssl = callPackage ../development/ocaml-modules/lwt_ssl {
       lwt = lwt3;
     };
 

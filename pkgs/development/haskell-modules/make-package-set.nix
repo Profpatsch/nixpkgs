@@ -112,7 +112,7 @@ let
       sha256Arg = if isNull sha256 then "--sha256=" else ''--sha256="${sha256}"'';
     in pkgs.buildPackages.stdenv.mkDerivation {
       name = "cabal2nix-${name}";
-      nativeBuildInputs = [ pkgs.buildPackages.haskellPackages.cabal2nix ];
+      nativeBuildInputs = [ pkgs.buildPackages.cabal2nix ];
       preferLocalBuild = true;
       phases = ["installPhase"];
       LANG = "en_US.UTF-8";
@@ -145,18 +145,21 @@ in package-set { inherit pkgs stdenv callPackage; } self // {
     callHackage = name: version: self.callPackage (self.hackage2nix name version);
 
     # Creates a Haskell package from a source package by calling cabal2nix on the source.
-    callCabal2nix = name: src: args:
-      overrideCabal (self.callPackage (haskellSrc2nix {
+    callCabal2nix = name: src: args: let
+      filter = path: type:
+                 pkgs.lib.hasSuffix "${name}.cabal" path ||
+                 baseNameOf path == "package.yaml";
+      expr = haskellSrc2nix {
         inherit name;
-        src = pkgs.lib.cleanSourceWith
-          { src = if pkgs.lib.canCleanSource src
-                    then src
-                    else pkgs.safeDiscardStringContext src;
-            filter = path: type:
-              pkgs.lib.hasSuffix "${name}.cabal" path ||
-              pkgs.lib.hasSuffix "package.yaml" path;
-          };
-      }) args) (_: { inherit src; });
+        src = if pkgs.lib.canCleanSource src
+                then pkgs.lib.cleanSourceWith { inherit src filter; }
+              else src;
+      };
+    in overrideCabal (self.callPackage expr args) (orig: {
+         inherit src;
+         preConfigure =
+           "# Generated from ${expr}\n${orig.preConfigure or ""}";
+       });
 
     # : { root : Path
     #   , source-overrides : Defaulted (Either Path VersionNumber)

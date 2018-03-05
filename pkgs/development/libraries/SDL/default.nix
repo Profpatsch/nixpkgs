@@ -1,5 +1,5 @@
-{ stdenv, fetchurl, fetchpatch, pkgconfig, audiofile, libcap
-, openglSupport ? false, mesa_noglu, mesa_glu
+{ stdenv, fetchurl, fetchpatch, pkgconfig, audiofile, libcap, libiconv
+, openglSupport ? false, libGL, libGLU
 , alsaSupport ? true, alsaLib
 , x11Support ? hostPlatform == buildPlatform, libXext, libICE, libXrandr
 , pulseaudioSupport ? true, libpulseaudio
@@ -33,14 +33,15 @@ stdenv.mkDerivation rec {
     optionals x11Support [ libXext libICE libXrandr ] ++
     optional alsaSupport alsaLib ++
     optional stdenv.isLinux libcap ++
-    optionals openglSupport [ mesa_noglu mesa_glu ] ++
+    optionals openglSupport [ libGL libGLU ] ++
     optional pulseaudioSupport libpulseaudio ++
     optional stdenv.isDarwin Cocoa;
 
   buildInputs = let
     notMingw = !hostPlatform.isMinGW;
   in optional notMingw audiofile
-  ++ optionals stdenv.isDarwin [ OpenGL CoreAudio CoreServices AudioUnit Kernel ];
+  ++ optionals stdenv.isDarwin [ OpenGL CoreAudio CoreServices AudioUnit Kernel ]
+  ++ [ libiconv ];
 
   # XXX: By default, SDL wants to dlopen() PulseAudio, in which case
   # we must arrange to add it to its RPATH; however, `patchelf' seems

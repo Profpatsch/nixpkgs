@@ -21,7 +21,7 @@
 , bash
 , fetchurl
 , perl
-, gfortran
+, gfortran6
 , python
 , autoreconfHook
 , gettext
@@ -29,6 +29,8 @@
 , texlive
 , texinfo
 , hevea
+, buildDocs ? false
+, optimize ? false # optimize sage to the current system (obviously impure)
 }:
 
 stdenv.mkDerivation rec {
@@ -87,19 +89,19 @@ stdenv.mkDerivation rec {
     # Sage installs during first `make`, `make install` is no-op and just takes time.
   '';
 
-  outputs = [ "out" "doc" ];
+  outputs = [ "out" ] ++ stdenv.lib.optionals (buildDocs) [ "doc" ];
 
   buildInputs = [
     bash # needed for the build
     perl # needed for the build
     python # needed for the build
-    gfortran # needed to build giac, openblas
+    gfortran6 # needed to build giac, openblas
     autoreconfHook # needed to configure sage with prefix
     gettext # needed to build the singular spkg
-    hevea # needed to build the docs of the giac spkg
     which # needed in configure of mpir
-    # needed to build the docs of the giac spkg
     texinfo # needed to build maxima
+  ] ++ stdenv.lib.optionals(buildDocs) [
+    hevea # needed to build the docs of the giac spkg
     (texlive.combine { inherit (texlive)
       scheme-basic
       collection-pstricks # needed by giac
@@ -110,7 +112,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  nativeBuildInputs = [ gfortran perl which ];
+  nativeBuildInputs = [ gfortran6 perl which ];
 
   patches = [
     # fix usages of /bin/rm
@@ -135,13 +137,15 @@ stdenv.mkDerivation rec {
     # TODO could be patched with `sed s|printf(ctime(\(.*\)))|%s... or fixed upstream
   ];
 
+  configureFlags = stdenv.lib.optionals(buildDocs) [ "--docdir=$(doc)" ];
   preConfigure = ''
-    export SAGE_NUM_THREADS=$NIX_BUILD_CORES
-    export SAGE_ATLAS_ARCH=fast
+    export SAGE_NUM_THREADS="$NIX_BUILD_CORES"
 
-    export HOME=$out/sage-home
-    mkdir -p $out/sage-home
+    export HOME=/tmp/sage-home
+    export SAGE_ROOT="$PWD"
+    export SAGE_SRC="$PWD"
 
+    mkdir -p "$HOME"
     mkdir -p "$out"
 
     # we need to keep the source around
@@ -149,13 +153,22 @@ stdenv.mkDerivation rec {
     cd ..
     mv "$dir" "$out/sage-root"
 
+    export SAGE_SPKG_INSTALL_DOCS='no'
     cd "$out/sage-root" # build in target dir, since `make` is also `make install`
+  ''
+  + stdenv.lib.optionalString (buildDocs) ''
+    mkdir -p "$doc"
+    export SAGE_DOC="$doc"
+    export SAGE_DOCBUILD_OPTS="--no-pdf-links -k"
+  ''
+  + stdenv.lib.optionalString (!optimize) ''
+    export SAGE_FAT_BINARY=yes
   '';
+
+  buildFlags = if (buildDocs) then "doc" else "build";
 
   # for reference: http://doc.sagemath.org/html/en/installation/source.html
   preBuild = ''
-    # TODO do this conditionally
-    export SAGE_SPKG_INSTALL_DOCS='no'
     # symlink python to make sure the shebangs are patched to the sage path
     # while still being able to use python before building it
     # (this is important because otherwise sage will try to install python
@@ -167,15 +180,27 @@ stdenv.mkDerivation rec {
   '';
 
   postBuild = ''
+    # Clean up
     rm -r "$out/sage-root/upstream" # don't keep the sources of all the spkgs
-    rm -r "$out/sage-root/src/build"
-    rm -rf "$out/sage-root/src/.git"
+    rm -rf "$out/sage-root/src/build"
+    rm -rf "$out/sage-root/src/autom4te.cache"
+    rm -rf "$out/sage-root/src/config"
+    rm -rf "$out/sage-root/src/m4"
+    rm -rf "$out/sage-root/.git"
     rm -r "$out/sage-root/logs"
+    rm -r "$out"/lib/python*/test
     # Fix dependency cycle between out and doc
     rm -f "$out/sage-root/config.log"
     rm -f "$out/sage-root/config.status"
     rm -f "$out/sage-root/build/make/Makefile-auto"
     rm -f "$out/sage-home/.sage/gap/libgap-workspace-"*
+    # Make sure unnessessary packages don't end up in the build closure
+    find "$out" \
+        -iname 'config.log' \
+        -delete \
+        -or -iname 'Makefile' \
+        -delete
+    rm -f "$out/lib/R/etc/Renviron"
     # Make sure all shebangs are properly patched
     bash $patchSageShebangs $out
   '';
