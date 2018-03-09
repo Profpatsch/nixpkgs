@@ -209,12 +209,20 @@ rec {
       description = "attribute set of ${elemType.description}s";
       check = isAttrs;
       merge = loc: defs:
-        mapAttrs (n: v: v.value) (filterAttrs (n: v: v ? value) (zipAttrsWith (name: defs:
-            (mergeDefinitions (loc ++ [name]) elemType defs).optionalValue
-          )
-          # Push down position info.
-          (map (def: listToAttrs (mapAttrsToList (n: def':
-            { name = n; value = { inherit (def) file; value = def'; }; }) def.value)) defs)));
+        let
+          pushDownPositionInfo = def:
+            listToAttrs (mapAttrsToList
+              (n: def': { name = n; value = { inherit (def) file; value = def'; }; })
+              def.value);
+          # Q: why do we need this? Why don’t all elements have .value?
+          # A: zipAttrs over [ { file = …; value = …; } ] == { value = […]; … }
+          #    where the list may be empty if the first list was empty. Ah!
+          mapValues = attrs: mapAttrs (n: v: v.value) (filterAttrs (n: v: v ? value) attrs);
+        in
+          mapValues
+            (zipAttrsWith
+              (name: defs: (mergeDefinitions (loc ++ [name]) elemType defs).optionalValue)
+              (map pushDownPositionInfo defs));
       getSubOptions = prefix: elemType.getSubOptions (prefix ++ ["<name>"]);
       getSubModules = elemType.getSubModules;
       substSubModules = m: attrsOf (elemType.substSubModules m);
@@ -293,7 +301,7 @@ rec {
         && elemTypes ? (head elems);
       # TODO: should it merge if the tag is the same
       # and the tag’s type is mergeable?
-      merge = mergeOneOption;
+      # merge = loc: defs:; TODO
       #getSubOptions?!
       #getSubModules?!
       #substSubModules?!
