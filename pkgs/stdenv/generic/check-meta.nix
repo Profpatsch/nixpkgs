@@ -6,7 +6,7 @@
 let
   # See discussion at https://github.com/NixOS/nixpkgs/pull/25304#issuecomment-298385426
   # for why this defaults to false, but I (@copumpkin) want to default it to true soon.
-  shouldCheckMeta = config.checkMeta or false;
+  shouldCheckMeta = config.checkMeta or true; #or false;
 
   allowUnfree = config.allowUnfree or false || builtins.getEnv "NIXPKGS_ALLOW_UNFREE" == "1";
 
@@ -176,6 +176,32 @@ let
         platforms = list platform;
         hydraPlatforms = list platform;
         broken = bool;
+        tests =
+          let
+            derivationPredicate = t: restrict {
+              description = "<δ>: ${t.description}";
+              type = t;
+              check = lib.isDerivation;
+            };
+            testT = derivationPredicate (productOpt {
+              open = true;
+              opt = {};
+              req = {
+                name = string;
+                passthru = product {
+                  isVmTest = bool;
+                  foo = attrs (list string);
+                };
+                # TODO: meta should reuse metaType and add some
+                # fields to the req attribute
+                meta = productOpt {
+                  open = true;
+                  req.description = string;
+                  opt.platforms = list platform;
+                };
+              };
+            });
+          in attrs testT;
 
         # Weirder stuff that doesn't appear in the documentation?
         knownVulnerabilities = list string;

@@ -1,4 +1,4 @@
-{ stdenv, fetchurl }:
+{ stdenv, fetchurl, pkgs }:
 
 stdenv.mkDerivation rec {
   name = "hello-2.10";
@@ -20,5 +20,15 @@ stdenv.mkDerivation rec {
     license = stdenv.lib.licenses.gpl3Plus;
     maintainers = [ stdenv.lib.maintainers.eelco ];
     platforms = stdenv.lib.platforms.all;
+
+    tests = {
+      "onetestyboi" = pkgs.runCommand "hi" {
+        # meta.description = "hi";
+        passthru = {
+          isVmTest = "string";
+          foo = { a = [ [] ]; b = [ "foo" 42 ]; };
+        };
+      } ''touch $out'';
+    };
   };
 }
