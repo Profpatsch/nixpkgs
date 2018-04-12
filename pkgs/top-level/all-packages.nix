@@ -344,6 +344,8 @@ with pkgs;
 
   setupSystemdUnits = callPackage ../build-support/setup-systemd-units.nix { };
 
+  setupLocalNixStore = callPackage ../build-support/setup-local-nix-store.nix {};
+
   singularity-tools = callPackage ../build-support/singularity-tools { };
 
   srcOnly = args: callPackage ../build-support/src-only args;
