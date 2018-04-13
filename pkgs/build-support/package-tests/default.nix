@@ -41,6 +41,7 @@ let
    * derivation and should result in failure if
    * the functionality is not as expected. */
   withTests = tests: drv:
+    assert lib.isDerivation drv; # drv needs to be a derivation!
     let testDrvs = lib.mapAttrsToList
       (name: testScript:
         runCommand "${drv.name}-test-${name}" {
