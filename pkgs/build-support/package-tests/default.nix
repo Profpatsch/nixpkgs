@@ -20,6 +20,7 @@ let
       outputs = drvOutOutputs;
       passthru = drvOut.drvAttrs;
       preferLocalBuild = true;
+      allowSubstitutes = false;
       # depend on drvDeps (by putting it in builder context)
       inherit drvDeps;
     }
@@ -44,6 +45,7 @@ let
       (name: testScript:
         runCommand "${drv.name}-test-${name}" {
           preferLocalBuild = true;
+          allowSubstitutes = false;
         } ''
           ${testScript}
           touch "$out"
