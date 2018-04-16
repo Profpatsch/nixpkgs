@@ -4,6 +4,7 @@
     "/run/current-system/sw/lib/gwenhywfar/plugins"
     ".nix-profile/lib/gwenhywfar/plugins"
   ]
+, guiSupport ? true
 }:
 
 stdenv.mkDerivation rec {
@@ -43,9 +44,14 @@ stdenv.mkDerivation rec {
       configure
   '';
 
+  configureFlags = with stdenv.lib; [
+    ''--with-guis=${if guiSupport then "all" else "none"}''
+  ];
+
   nativeBuildInputs = [ pkgconfig gettext ];
 
-  buildInputs = [ gtk2 qt4 gnutls libgcrypt ];
+  buildInputs = [ gnutls libgcrypt ]
+    ++ stdenv.lib.optionals guiSupport [ gtk2 qt4 ];
 
   QTDIR = qt4;
 
