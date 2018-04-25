@@ -107,17 +107,12 @@ rec {
        (This means fn is type Val -> String.) */
     allowPrettyValues ? false
   }@args: v: with builtins;
-    if      isInt      v then toString v
+    let     isPath   = v: typeOf v == "path";
+    in if   isInt      v then toString v
     else if isBool     v then (if v == true then "true" else "false")
     else if isString   v then "\"" + v + "\""
     else if null ==    v then "null"
-    else if isFunction v then
-      let fna = lib.functionArgs v;
-          showFnas = concatStringsSep "," (libAttr.mapAttrsToList
-                       (name: hasDefVal: if hasDefVal then "(${name})" else name)
-                       fna);
-      in if fna == {}    then "<λ>"
-                         else "<λ:{${showFnas}}>"
+    else if isPath     v then toString v
     else if isList     v then "[ "
         + libStr.concatMapStringsSep " " (toPretty args) v
       + " ]"
@@ -128,11 +123,19 @@ rec {
       # TODO: there is probably a better representation?
       else if v ? type && v.type == "derivation" then
         "<δ:${v.name}>"
+        # "<δ:${concatStringsSep "," (builtins.attrNames v)}>"
       else "{ "
           + libStr.concatStringsSep " " (libAttr.mapAttrsToList
               (name: value:
                 "${toPretty args name} = ${toPretty args value};") v)
         + " }"
+    else if isFunction v then
+      let fna = lib.functionArgs v;
+          showFnas = concatStringsSep "," (libAttr.mapAttrsToList
+                       (name: hasDefVal: if hasDefVal then "(${name})" else name)
+                       fna);
+      in if fna == {}    then "<λ>"
+                         else "<λ:{${showFnas}}>"
     else abort "toPretty: should never happen (v = ${v})";
 
 }

@@ -296,6 +296,7 @@ import ./types-simple.nix
       int = 42;
       bool = true;
       string = "fnord";
+      path = /. + "/foo"; # toPath returns a string
       null_ = null;
       function = x: x;
       functionArgs = { arg ? 4, foo }: arg;
@@ -307,6 +308,7 @@ import ./types-simple.nix
       int = "42";
       bool = "true";
       string = "\"fnord\"";
+      path = "/foo";
       null_ = "null";
       function = "<λ>";
       functionArgs = "<λ:{(arg),foo}>";
