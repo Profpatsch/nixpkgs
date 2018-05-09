@@ -18,7 +18,7 @@ in
     i18n = {
       glibcLocales = mkOption {
         type = types.path;
-        default = pkgs.glibcLocales.override {
+        default = pkgs.buildPackages.glibcLocales.override {
           allLocales = any (x: x == "all") config.i18n.supportedLocales;
           locales = config.i18n.supportedLocales;
         };
