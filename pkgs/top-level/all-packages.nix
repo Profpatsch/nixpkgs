@@ -13850,6 +13850,7 @@ with pkgs;
 
   getconf =
     if hostPlatform.isMusl then musl-getconf
+    # TODO: darwin doesn’t have a /bin/getconf in their libc!
     else lib.getBin stdenv.cc.libc;
 
   nettools = if stdenv.isLinux then callPackage ../os-specific/linux/net-tools { }

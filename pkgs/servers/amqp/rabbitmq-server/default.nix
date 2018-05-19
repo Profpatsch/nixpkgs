@@ -1,5 +1,5 @@
 { stdenv, fetchurl, runCommand
-, erlang, python, libxml2, libxslt, xmlto
+, erlang, python, libxml2, libxslt, xmlto, getconf
 , docbook_xml_dtd_45, docbook_xsl, zip, unzip, rsync
 
 , AppKit, Carbon, Cocoa
@@ -8,7 +8,7 @@
 let
   # we only need that one glibc binary (28k instead of 2.7M)
   getconf = runCommand "getconf" {} ''
-    install -D ${stdenv.lib.getBin stdenv.cc.libc}/bin/getconf $out/bin/getconf
+    install -D ${stdenv.lib.getBin getconf}/bin/getconf $out/bin/getconf
   '';
 
 in stdenv.mkDerivation rec {
