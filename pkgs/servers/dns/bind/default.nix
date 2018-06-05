@@ -6,14 +6,14 @@
 assert enableSeccomp -> libseccomp != null;
 assert enablePython -> python3 != null;
 
-let version = "9.12.1"; in
+let version = "9.12.1-P2"; in
 
 stdenv.mkDerivation rec {
   name = "bind-${version}";
 
   src = fetchurl {
     url = "http://ftp.isc.org/isc/bind9/${version}/${name}.tar.gz";
-    sha256 = "043mjcw405qa0ghm5dkhfsq35gsy279724fz3mjqpr1mbi14dr0n";
+    sha256 = "0a9dvyg1dk7vpqn9gz7p5jas3bz7z22bjd66b98g1qk16i2w7rqd";
   };
 
   outputs = [ "out" "lib" "dev" "man" "dnsutils" "host" ];
@@ -66,6 +66,8 @@ stdenv.mkDerivation rec {
       sed -i "$f" -e 's|-L${openssl.dev}|-L${openssl.out}|g'
     done
   '';
+
+  doCheck = false; # requires root and the net
 
   meta = {
     homepage = http://www.isc.org/software/bind;

@@ -38,7 +38,7 @@ let
   inherit (stdenv) buildPlatform hostPlatform;
 
   inherit (stdenv.lib) fix' extends makeOverridable;
-  inherit (haskellLib) overrideCabal;
+  inherit (haskellLib) overrideCabal getHaskellBuildInputs;
 
   mkDerivationImpl = pkgs.callPackage ./generic-builder.nix {
     inherit stdenv;
@@ -162,7 +162,7 @@ in package-set { inherit pkgs stdenv callPackage; } self // {
       filter = path: type:
                  pkgs.lib.hasSuffix "${name}.cabal" path ||
                  baseNameOf path == "package.yaml";
-      expr = haskellSrc2nix {
+      expr = self.haskellSrc2nix {
         inherit name;
         src = if pkgs.lib.canCleanSource src
                 then pkgs.lib.cleanSourceWith { inherit src filter; }
@@ -238,7 +238,7 @@ in package-set { inherit pkgs stdenv callPackage; } self // {
     shellFor = { packages, withHoogle ? false, ... } @ args:
       let
         selected = packages self;
-        packageInputs = builtins.map (p: p.override { mkDerivation = haskellLib.extractBuildInputs p.compiler; }) selected;
+        packageInputs = builtins.map getHaskellBuildInputs selected;
         haskellInputs =
           builtins.filter
             (input: pkgs.lib.all (p: input.outPath != p.outPath) selected)

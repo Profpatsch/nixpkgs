@@ -201,6 +201,8 @@ in {
 
   # packages defined elsewhere
 
+  amazon_kclpy = callPackage ../development/python-modules/amazon_kclpy { };
+
   backports_csv = callPackage ../development/python-modules/backports_csv {};
 
   bap = callPackage ../development/python-modules/bap {
@@ -311,6 +313,8 @@ in {
 
   outcome = callPackage ../development/python-modules/outcome {};
 
+  pdfminer = callPackage ../development/python-modules/pdfminer_six { };
+
   plantuml = callPackage ../tools/misc/plantuml { };
 
   Pmw = callPackage ../development/python-modules/Pmw { };
@@ -318,6 +322,8 @@ in {
   py_stringmatching = callPackage ../development/python-modules/py_stringmatching { };
 
   pyaes = callPackage ../development/python-modules/pyaes { };
+
+  pyairvisual = callPackage ../development/python-modules/pyairvisual { };
 
   pyamf = callPackage ../development/python-modules/pyamf { };
 
@@ -405,6 +411,10 @@ in {
   };
 
   pytest-tornado = callPackage ../development/python-modules/pytest-tornado { };
+
+  python-openid = callPackage (if isPy3k
+    then ../development/python-modules/python3-openid
+    else ../development/python-modules/python-openid) { };
 
   python-sql = callPackage ../development/python-modules/python-sql { };
 
@@ -544,6 +554,8 @@ in {
   astor = callPackage ../development/python-modules/astor {};
 
   asyncio = callPackage ../development/python-modules/asyncio {};
+
+  asyncssh = callPackage ../development/python-modules/asyncssh { };
 
   python-fontconfig = callPackage ../development/python-modules/python-fontconfig { };
 
@@ -1315,7 +1327,7 @@ in {
     #setupPyBuildFlags = [ "--berkeley-db=${pkgs.db}" ];
     # We can also use a variable
     preConfigure = ''
-      export BERKELEYDB_DIR=${pkgs.db};
+      export BERKELEYDB_DIR=${pkgs.db.dev};
     '';
 
     meta = {
@@ -2093,6 +2105,8 @@ in {
 
   demjson = callPackage ../development/python-modules/demjson { };
 
+  deprecation = callPackage ../development/python-modules/deprecation { };
+
   derpconf = callPackage ../development/python-modules/derpconf { };
 
   deskcon = self.buildPythonPackage rec {
@@ -2809,9 +2823,10 @@ in {
   };
 
   gnutls = buildPythonPackage rec {
-    name = "python-gnutls";
+    pname = "python-gnutls";
+    version = "3.0.0";
     src = pkgs.fetchurl {
-      url = "mirror://pypi/p/python-gnutls/python-gnutls-3.0.0.tar.gz";
+      url = "mirror://pypi/p/python-gnutls/${pname}-${version}.tar.gz";
       sha256 = "1yrdxcj5rzvz8iglircz6icvyggz5fmdcd010n6w3j60yp4p84kc";
     };
 
@@ -3780,28 +3795,6 @@ in {
     };
   };
 
-
-  pdfminer = buildPythonPackage rec {
-    version = "20140328";
-    name = "pdfminer-${version}";
-
-    disabled = ! isPy27;
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/p/pdfminer/pdfminer-${version}.tar.gz";
-      sha256 = "0qpjv4b776dwvpf5a7v19g41qsz97bv0qqsyvm7a31k50n9pn65s";
-    };
-
-    propagatedBuildInputs = with self; [  ];
-
-    meta = {
-      description = "Tool for extracting information from PDF documents";
-      homepage = http://euske.github.io/pdfminer/index.html;
-      license = licenses.mit;
-      maintainers = with maintainers; [ ];
-    };
-  };
-
   peppercorn = buildPythonPackage rec {
     name = "peppercorn-0.5";
 
@@ -4705,6 +4698,8 @@ in {
     };
   };
 
+  django-allauth = callPackage ../development/python-modules/django-allauth { };
+
   django_appconf = callPackage ../development/python-modules/django_appconf { };
 
   django_colorful = buildPythonPackage rec {
@@ -4771,6 +4766,8 @@ in {
   };
 
   django_extensions = callPackage ../development/python-modules/django-extensions { };
+
+  django-gravatar2 = callPackage ../development/python-modules/django-gravatar2 { };
 
   django_guardian = callPackage ../development/python-modules/django_guardian { };
 
@@ -5156,6 +5153,7 @@ in {
     };
   };
 
+  effect = callPackage ../development/python-modules/effect {};
 
   elpy = buildPythonPackage rec {
     name = "elpy-${version}";
@@ -6949,6 +6947,9 @@ in {
 
   pylru = callPackage ../development/python-modules/pylru { };
 
+  libnl-python = disabledIf isPy3k
+    (toPythonModule (pkgs.libnl.override{pythonSupport=true; inherit python; })).py;
+
   lark-parser = callPackage ../development/python-modules/lark-parser { };
 
   lazy-object-proxy = buildPythonPackage rec {
@@ -8075,6 +8076,8 @@ in {
 
   mysqlclient = callPackage ../development/python-modules/mysqlclient { };
 
+  mypy = callPackage ../development/python-modules/mypy { };
+
   mwclient = buildPythonPackage rec {
     version = "0.8.3";
     pname = "mwclient";
@@ -9087,16 +9090,16 @@ in {
   });
 
   osc = buildPythonPackage {
-    name = "osc-0.159.0-4-g2d44589";
+    name = "osc-0.162.0-55-gb730f88";
     disabled = isPy3k;
     src = pkgs.fetchFromGitHub {
       owner = "openSUSE";
       repo = "osc";
-      rev = "2d44589886845af7da911aaec9403344e396cd91";
-      sha256 = "0s8p7gkp64w6r5rnxpbvl2dgb5p85kq2skcqm6qxn5ddadhw2sfz";
+      rev = "b730f880cfe85a8547f569355a21706f27ebfa78";
+      sha256 = "0hh9j5zd2kc0804d2jmf1q3w5xm9l9s69hhgysbncrv5fw0414lh";
     };
     buildInputs = with pkgs; [ bashInteractive ]; # needed for bash-completion helper
-    propagatedBuildInputs = with self; [ urlgrabber m2crypto pyyaml ];
+    propagatedBuildInputs = with self; [ urlgrabber m2crypto pyyaml lxml ];
     postInstall = ''
       ln -s $out/bin/osc-wrapper.py $out/bin/osc
       install -D -m444 osc.fish $out/etc/fish/completions/osc.fish
@@ -9883,25 +9886,7 @@ in {
 
   pybase64 = callPackage ../development/python-modules/pybase64 { };
 
-  pylibconfig2 = buildPythonPackage rec {
-    name = "pylibconfig2-${version}";
-    version = "0.2.4";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/p/pylibconfig2/${name}.tar.gz";
-      sha256 = "0kyg6gldj6hi2jhc5xhi834bb2mcaiy24dvfik963shnldqr7kqg";
-    };
-
-    doCheck = false;
-
-    propagatedBuildInputs = with self ; [ pyparsing ];
-
-    meta = {
-      homepage = https://github.com/heinzK1X/pylibconfig2;
-      description = "Pure python library for libconfig syntax";
-      license = licenses.gpl3;
-    };
-  };
+  pylibconfig2 = callPackage ../development/python-modules/pylibconfig2 { };
 
   pylibmc = callPackage ../development/python-modules/pylibmc {};
 
@@ -10373,7 +10358,7 @@ in {
   };
 
   pybcrypt = buildPythonPackage rec {
-    name = "pybcrypt";
+    pname = "pybcrypt";
     version = "0.4";
 
     src = pkgs.fetchurl {
@@ -11271,9 +11256,17 @@ in {
     buildInputs = with self; [ pyasn1 pycrypto ];
   };
 
+  python-language-server = callPackage ../development/python-modules/python-language-server {};
+
+  pyls-mypy = callPackage ../development/python-modules/pyls-mypy {};
+
+  pyls-isort = callPackage ../development/python-modules/pyls-isort {};
+
   pyudev = callPackage ../development/python-modules/pyudev {
     inherit (pkgs) fetchurl systemd;
   };
+
+  pynmea2 = callPackage ../development/python-modules/pynmea2 {};
 
   pynzb = buildPythonPackage (rec {
     name = "pynzb-0.1.0";
@@ -13034,15 +13027,7 @@ in {
     };
   };
 
-  timeout-decorator = buildPythonPackage rec {
-    name    = "timeout-decorator-${version}";
-    version = "0.3.2";
-
-    src = pkgs.fetchurl {
-      url    = "http://pypi.python.org/packages/source/t/timeout-decorator/${name}.tar.gz";
-      sha256 = "1x9l8bwdk72if2d5h5mi4lcaidbsmyh0iz114cfyyj1rzz5rxqaf";
-    };
-  };
+  timeout-decorator = callPackage ../development/python-modules/timeout-decorator { };
 
   pid = buildPythonPackage rec {
     name = "pid-${version}";
@@ -13421,27 +13406,7 @@ in {
     };
   };
 
-  supervisor = buildPythonPackage rec {
-    name = "supervisor-3.1.4";
-
-    disabled = isPy3k;
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/s/supervisor/${name}.tar.gz";
-      sha256 = "0kk0sv7780m4dzmrcb2m284krz907jh8jp7khz5a79qryy4m1xw2";
-    };
-
-    buildInputs = with self; [ mock ];
-    propagatedBuildInputs = with self; [ meld3 ];
-
-    # failing tests when building under chroot as root user doesn't exist
-    doCheck = false;
-
-    meta = {
-      description = "A system for controlling process state under UNIX";
-      homepage = http://supervisord.org/;
-    };
-  };
+  supervisor = callPackage ../development/python-modules/supervisor {};
 
   subprocess32 = callPackage ../development/python-modules/subprocess32 { };
 
@@ -14282,25 +14247,7 @@ in {
 
   TurboCheetah = callPackage ../development/python-modules/TurboCheetah { };
 
-  tweepy = buildPythonPackage (rec {
-    name = "tweepy-3.5.0";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/t/tweepy/${name}.tar.gz";
-      sha256 = "0n2shilamgwhzmvf534xg7f6hrnznbixyl5pw2f5a3f391gwy37h";
-    };
-
-    doCheck = false;
-    propagatedBuildInputs = with self; [ requests six requests_oauthlib ];
-
-    meta = {
-      homepage = "https://github.com/tweepy/tweepy";
-      description = "Twitter library for python";
-      license = licenses.mit;
-      maintainers = with maintainers; [ garbas ];
-      platforms = platforms.linux;
-    };
-  });
+  tweepy = callPackage ../development/python-modules/tweepy { };
 
   twiggy = buildPythonPackage rec {
     name = "Twiggy-${version}";
@@ -16257,6 +16204,10 @@ EOF
     };
   };
 
+  libversion = callPackage ../development/python-modules/libversion {
+    inherit (pkgs) libversion;
+  };
+
   libvirt = callPackage ../development/python-modules/libvirt {
     inherit (pkgs) libvirt;
   };
@@ -16356,8 +16307,8 @@ EOF
     };
   };
 
-  # For backwards compatibility. Please use nixpkgs.udiskie instead.
-  udiskie = toPythonModule (pkgs.udiskie.override { pythonPackages = self; });
+  # added 2018-05-23, can be removed once 18.09 is branched off
+  udiskie = throw "pythonPackages.udiskie has been replaced by udiskie";
 
   # Should be bumped along with EFL!
   pythonefl = buildPythonPackage rec {
@@ -16991,6 +16942,11 @@ EOF
       url = "mirror://pypi/p/pyPEG2/pyPEG2-${version}.tar.gz";
       sha256 = "0v8ziaam2r637v94ra4dbjw6jzxz99gs5x4i585kgag1v204yb9b";
     };
+
+    checkPhase = ''
+      # The tests assume that test_xmlast does not run before test_pyPEG2.
+      python -m unittest pypeg2.test.test_pyPEG2 pypeg2.test.test_xmlast
+    '';
 
     #https://bitbucket.org/fdik/pypeg/issues/36/test-failures-on-py35
     doCheck = !isPy3k;
@@ -18175,6 +18131,8 @@ EOF
 
   voluptuous = callPackage ../development/python-modules/voluptuous { };
 
+  voluptuous-serialize = callPackage ../development/python-modules/voluptuous-serialize { };
+
   pysigset = callPackage ../development/python-modules/pysigset { };
 
   us = callPackage ../development/python-modules/us { };
@@ -18194,6 +18152,17 @@ EOF
   pyowm = callPackage ../development/python-modules/pyowm { };
 
   prometheus_client = callPackage ../development/python-modules/prometheus_client { };
+
+  pysdl2 = callPackage ../development/python-modules/pysdl2 { };
+
+  pyogg = callPackage ../development/python-modules/pyogg { };
+
+  rubymarshal = callPackage ../development/python-modules/rubymarshal { };
+
+  radio_beam = callPackage ../development/python-modules/radio_beam { };
+
+  spectral-cube = callPackage ../development/python-modules/spectral-cube { };
+
 });
 
 in fix' (extends overrides packages)

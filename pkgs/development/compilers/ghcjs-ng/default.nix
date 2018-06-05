@@ -14,7 +14,9 @@
 , xorg
 , gmp
 , pkgconfig
+, gcc
 , lib
+, nodePackages
 , ghcjsDepOverrides ? (_:_:{})
 }:
 
@@ -40,19 +42,18 @@ let
     inherit (bootGhcjs) version;
     isGhcjs = true;
 
+    socket-io = nodePackages."socket.io";
+
     # Relics of the old GHCJS build system
     stage1Packages = [];
     mkStage2 = _: {};
   };
 
   bootGhcjs = haskellLib.justStaticExecutables passthru.bootPkgs.ghcjs;
-  libexec =
-    if builtins.compareVersions bootGhcjs.version "8.3" <= 0
-      then "${bootGhcjs}/bin"
-      else "${bootGhcjs}/libexec/${stdenv.system}-${passthru.bootPkgs.ghc.name}/${bootGhcjs.name}";
+  libexec = "${bootGhcjs}/libexec/${builtins.replaceStrings ["darwin"] ["osx"] stdenv.system}-${passthru.bootPkgs.ghc.name}/${bootGhcjs.name}";
 
 in stdenv.mkDerivation {
-    name = "ghcjs";
+    name = bootGhcjs.name;
     src = passthru.configuredSrc;
     nativeBuildInputs = [
       bootGhcjs
@@ -63,10 +64,14 @@ in stdenv.mkDerivation {
       xorg.lndir
       gmp
       pkgconfig
+    ] ++ lib.optionals stdenv.isDarwin [
+      gcc # https://github.com/ghcjs/ghcjs/issues/663
     ];
     phases = ["unpackPhase" "buildPhase"];
     buildPhase = ''
       export HOME=$TMP
+      mkdir $HOME/.cabal
+      touch $HOME/.cabal/config
       cd lib/boot
 
       mkdir -p $out/bin

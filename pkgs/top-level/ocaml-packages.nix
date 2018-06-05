@@ -217,6 +217,8 @@ let
 
     earley = callPackage ../development/ocaml-modules/earley { };
 
+    earley_ocaml = callPackage ../development/ocaml-modules/earley_ocaml { };
+
     easy-format = callPackage ../development/ocaml-modules/easy-format { };
 
     eliom = callPackage ../development/ocaml-modules/eliom { };
@@ -268,6 +270,8 @@ let
     herelib = callPackage ../development/ocaml-modules/herelib { };
 
     higlo = callPackage ../development/ocaml-modules/higlo { };
+
+    imagelib = callPackage ../development/ocaml-modules/imagelib { };
 
     inotify = callPackage ../development/ocaml-modules/inotify { };
 
@@ -514,6 +518,8 @@ let
     ojquery = callPackage ../development/ocaml-modules/ojquery { };
 
     omd = callPackage ../development/ocaml-modules/omd { };
+
+    opam-file-format = callPackage ../development/ocaml-modules/opam-file-format { };
 
     otfm = callPackage ../development/ocaml-modules/otfm { };
 
