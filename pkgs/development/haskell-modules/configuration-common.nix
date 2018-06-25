@@ -342,12 +342,13 @@ self: super: {
   HTF = dontCheck super.HTF;
   htsn = dontCheck super.htsn;
   htsn-import = dontCheck super.htsn-import;
+  http-link-header = dontCheck super.http-link-header; # non deterministic failure https://hydra.nixos.org/build/75041105
   ihaskell = dontCheck super.ihaskell;
   influxdb = dontCheck super.influxdb;
   itanium-abi = dontCheck super.itanium-abi;
   katt = dontCheck super.katt;
   language-slice = dontCheck super.language-slice;
-  language-nix = overrideCabal super.language-nix (drv: { broken = pkgs.stdenv.isLinux && pkgs.stdenv.isi686; }); # Tests crash on 32-bit linux; see https://github.com/peti/language-nix/issues/4
+  language-nix = if pkgs.stdenv.isi686 then dontCheck super.language-nix else super.language-nix;
   ldap-client = dontCheck super.ldap-client;
   lensref = dontCheck super.lensref;
   lucid = dontCheck super.lucid; #https://github.com/chrisdone/lucid/issues/25
@@ -363,6 +364,7 @@ self: super: {
   notcpp = dontCheck super.notcpp;
   ntp-control = dontCheck super.ntp-control;
   numerals = dontCheck super.numerals;
+  odpic-raw = dontCheck super.odpic-raw; # needs a running oracle database server
   opaleye = dontCheck super.opaleye;
   openpgp = dontCheck super.openpgp;
   optional = dontCheck super.optional;
@@ -436,12 +438,6 @@ self: super: {
 
   # https://github.com/evanrinehart/mikmod/issues/1
   mikmod = addExtraLibrary super.mikmod pkgs.libmikmod;
-
-  # Version 0.21.2 calls its doctest suite with incorrect paths.
-  haskell-gi = appendPatch super.haskell-gi (pkgs.fetchpatch {
-    url = https://github.com/haskell-gi/haskell-gi/pull/163/commits/b876c4f351893370d4ae597aab6ecc0422e7f665.patch;
-    sha256 = "03vzpvnr3vnz2zgsr504iyf0n9aw6mkz8rkj6zhazfixl3dzfkyd";
-  });
 
   # https://github.com/basvandijk/threads/issues/10
   threads = dontCheck super.threads;
@@ -1048,6 +1044,18 @@ self: super: {
 
   # Work around overspecified constraint on github ==0.18.
   github-backup = doJailbreak super.github-backup;
+
+  # Work around large number of repeated arguments
+  # https://github.com/NixOS/nixpkgs/issues/40013
+  taffybar = super.taffybar.overrideDerivation (drv: {
+    strictDeps = true;
+  });
+
+  # dhall-json requires a very particular dhall version
+  dhall-json_1_2_0 = super.dhall-json_1_2_0.override { dhall = self.dhall_1_14_0; };
+
+  # https://github.com/fpco/streaming-commons/issues/49
+  streaming-commons = dontCheck super.streaming-commons;
 
 }
 

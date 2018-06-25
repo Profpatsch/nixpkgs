@@ -1,4 +1,4 @@
-{ stdenv, hostPlatform, fetchcvs, lib, groff, mandoc, zlib, coreutils
+{ stdenv, hostPlatform, fetchcvs, lib, groff, mandoc, zlib, buildPackages
 , yacc, flex, libressl, bash, less, writeText }:
 
 let
@@ -178,7 +178,7 @@ let
 
     # temporarily use gnuinstall for bootstrapping
     # bsdinstall will be built later
-    makeFlags = [ "INSTALL=${coreutils}/bin/install" ];
+    makeFlags = [ "INSTALL=${buildPackages.coreutils}/bin/install" ];
     installFlags = [];
     RENAME = "-D";
 
@@ -598,6 +598,13 @@ in rec {
     version = "7.1.2";
     sha256 = "1vyn30js14nnadlls55mg7g1gz8h14l75rbrrh8lgn49qg289665";
     makeFlags = [ "BINDIR=/share" ];
+  };
+
+  locale = netBSDDerivation {
+    path = "usr.bin/locale";
+    version = "7.1.2";
+    sha256 = "0kk6v9k2bygq0wf9gbinliqzqpzs9bgxn0ndyl2wcv3hh2bmsr9p";
+    patches = [ ./locale.patch ];
   };
 
 }

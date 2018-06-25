@@ -6,6 +6,7 @@
 , zlib, libuuid, python, attr, openssl
 , libtirpc
 , nfs-utils
+, gawk, gnugrep, gnused, systemd
 
 # Kernel dependencies
 , kernel ? null, spl ? null, splUnstable ? null, splLegacyCrypto ? null
@@ -76,12 +77,15 @@ let
         substituteInPlace ./cmd/zed/Makefile.am       --replace "\$(sysconfdir)"          "$out/etc"
         substituteInPlace ./module/Makefile.in        --replace "/bin/cp"                 "cp"
         substituteInPlace ./etc/systemd/system/zfs-share.service.in \
-          --replace "@bindir@/rm " "${coreutils}/bin/rm "
+          --replace "/bin/rm " "${coreutils}/bin/rm "
 
         for f in ./udev/rules.d/*
         do
           substituteInPlace "$f" --replace "/lib/udev/vdev_id" "$out/lib/udev/vdev_id"
         done
+        substituteInPlace ./cmd/vdev_id/vdev_id \
+          --replace "PATH=/bin:/sbin:/usr/bin:/usr/sbin" \
+          "PATH=${makeBinPath [ coreutils gawk gnused gnugrep systemd ]}"
 
         ./autogen.sh
         configureFlagsArray+=("--libexecdir=$out/libexec")

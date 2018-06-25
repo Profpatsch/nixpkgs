@@ -19,14 +19,12 @@ let
     in runCommand "${cmd}-${version}" {
       meta.platforms = map (n: { kernel.name = n; }) (pkgs.lib.attrNames providers);
     } ''
-      mkdir -p $out/bin
-
       if ! [ -x "${provider}" ]; then
         echo "Cannot find command ${cmd}"
         exit 1
       fi
 
-      ln -s "${provider}" "$out/bin/${cmd}"
+      install -D "${provider}" "$out/bin/${cmd}"
     '';
 
   # more is unavailable in darwin
@@ -82,6 +80,10 @@ let
     ifconfig = {
       linux = pkgs.nettools;
       darwin = pkgs.darwin.network_cmds;
+    };
+    locale = {
+      linux = pkgs.glibc;
+      darwin = pkgs.netbsd.locale;
     };
     logger = {
       linux = pkgs.utillinux;

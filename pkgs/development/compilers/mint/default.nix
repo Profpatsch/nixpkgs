@@ -28,13 +28,13 @@ let
   };
 in
 stdenv.mkDerivation rec {
-  version = "2018-05-27";
+  version = "0.0.4";
   name = "mint-${version}";
   src = fetchFromGitHub {
     owner = "mint-lang";
     repo = "mint";
-    rev = "a3f0c86f54b8b3a18dda5c39c2089bdb1d774b4f";
-    sha256 = "1bgs6jkwfc2ksq4gj55cl3h2l5g25f5bwlsjryiw9cbx5k4bp1kz";
+    rev = "0.0.4";
+    sha256 = "04zq6qqh2dbqgnywsy6qfpimsr2zg19gs3xls1bphbaygnb2yi3l";
   };
 
   buildInputs = [ crystal zlib openssl duktape ];
