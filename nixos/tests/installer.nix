@@ -43,7 +43,7 @@ let
           boot.loader.systemd-boot.enable = true;
         ''}
 
-        users.extraUsers.alice = {
+        users.users.alice = {
           isNormalUser = true;
           home = "/home/alice";
           description = "Alice Foobar";
@@ -237,7 +237,7 @@ let
                 libxml2.bin
                 libxslt.bin
                 docbook5
-                docbook5_xsl
+                docbook_xsl_ns
                 unionfs-fuse
                 ntp
                 nixos-artwork.wallpapers.gnome-dark

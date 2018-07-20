@@ -160,6 +160,9 @@ let
     "--enable-library-for-ghci" # TODO: Should this be configurable?
   ] ++ optionals (enableDeadCodeElimination && (stdenv.lib.versionOlder "8.0.1" ghc.version)) [
      "--ghc-option=-split-sections"
+  ] ++ optionals dontStrip [
+    "--disable-library-stripping"
+    "--disable-executable-stripping"
   ] ++ optionals isGhcjs [
     "--ghcjs"
   ] ++ optionals isCross ([
@@ -182,12 +185,14 @@ let
   depsBuildBuild = [ nativeGhc ];
   nativeBuildInputs = [ ghc removeReferencesTo ] ++ optional (allPkgconfigDepends != []) pkgconfig ++
                       setupHaskellDepends ++
-                      buildTools ++ libraryToolDepends ++ executableToolDepends;
+                      buildTools ++ libraryToolDepends ++ executableToolDepends ++
+                      optionals doCheck testToolDepends ++
+                      optionals doBenchmark benchmarkToolDepends;
   propagatedBuildInputs = buildDepends ++ libraryHaskellDepends ++ executableHaskellDepends ++ libraryFrameworkDepends;
   otherBuildInputs = extraLibraries ++ librarySystemDepends ++ executableSystemDepends ++ executableFrameworkDepends ++
                      allPkgconfigDepends ++
-                     optionals doCheck (testDepends ++ testHaskellDepends ++ testSystemDepends ++ testToolDepends ++ testFrameworkDepends) ++
-                     optionals doBenchmark (benchmarkDepends ++ benchmarkHaskellDepends ++ benchmarkSystemDepends ++ benchmarkToolDepends ++ benchmarkFrameworkDepends);
+                     optionals doCheck (testDepends ++ testHaskellDepends ++ testSystemDepends ++ testFrameworkDepends) ++
+                     optionals doBenchmark (benchmarkDepends ++ benchmarkHaskellDepends ++ benchmarkSystemDepends ++ benchmarkFrameworkDepends);
 
   allBuildInputs = propagatedBuildInputs ++ otherBuildInputs;
 
@@ -389,6 +394,9 @@ stdenv.mkDerivation ({
         local pkgId=$( ${gnused}/bin/sed -n -e 's|^id: ||p' $packageConfFile )
         mv $packageConfFile $packageConfDir/$pkgId.conf
       done
+
+      # delete confdir if there are no libraries
+      find $packageConfDir -maxdepth 0 -empty -delete;
     ''}
     ${optionalString isGhcjs ''
       for exeDir in "$out/bin/"*.jsexe; do

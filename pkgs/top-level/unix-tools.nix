@@ -16,6 +16,7 @@ let
 
   singleBinary = cmd: providers: let
       provider = "${lib.getBin providers.${hostPlatform.parsed.kernel.name}}/bin/${cmd}";
+      manpage = "${lib.getOutput "man" providers.${hostPlatform.parsed.kernel.name}}/share/man/man1/${cmd}.1.gz";
     in runCommand "${cmd}-${version}" {
       meta.platforms = map (n: { kernel.name = n; }) (pkgs.lib.attrNames providers);
     } ''
@@ -25,6 +26,10 @@ let
       fi
 
       install -D "${provider}" "$out/bin/${cmd}"
+
+      if [ -f "${manpage}" ]; then
+        install -D "${manpage}" $out/share/man/man1/${cmd}.1.gz
+      fi
     '';
 
   # more is unavailable in darwin
@@ -80,6 +85,10 @@ let
     ifconfig = {
       linux = pkgs.nettools;
       darwin = pkgs.darwin.network_cmds;
+    };
+    killall = {
+      linux = pkgs.psmisc;
+      darwin = pkgs.darwin.shell_cmds;
     };
     locale = {
       linux = pkgs.glibc;
@@ -142,6 +151,10 @@ let
     write = {
       linux = pkgs.utillinux;
       darwin = pkgs.darwin.basic_cmds;
+    };
+    xxd = {
+      linux = pkgs.vim;
+      darwin = pkgs.vim;
     };
   };
 

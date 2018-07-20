@@ -8,7 +8,7 @@
 , google_talk_plugin, fribid, gnome3/*.gnome-shell*/
 , esteidfirefoxplugin
 , browserpass, chrome-gnome-shell, uget-integrator, plasma-browser-integration
-, libudev
+, udev
 , kerberos
 }:
 
@@ -60,16 +60,17 @@ let
         );
       nativeMessagingHosts =
         ([ ]
-          ++ lib.optional (cfg.enableBrowserpass or false) browserpass
+          ++ lib.optional (cfg.enableBrowserpass or false) (lib.getBin browserpass)
           ++ lib.optional (cfg.enableGnomeExtensions or false) chrome-gnome-shell
           ++ lib.optional (cfg.enableUgetIntegrator or false) uget-integrator
           ++ lib.optional (cfg.enablePlasmaBrowserIntegration or false) plasma-browser-integration
           ++ extraNativeMessagingHosts
         );
-      libs = lib.optional ffmpegSupport ffmpeg
+      libs =   lib.optional stdenv.isLinux udev
+            ++ lib.optional ffmpegSupport ffmpeg
             ++ lib.optional gssSupport kerberos
             ++ lib.optionals (cfg.enableQuakeLive or false)
-            (with xorg; [ stdenv.cc libX11 libXxf86dga libXxf86vm libXext libXt alsaLib zlib libudev ])
+            (with xorg; [ stdenv.cc libX11 libXxf86dga libXxf86vm libXext libXt alsaLib zlib ])
             ++ lib.optional (enableAdobeFlash && (cfg.enableAdobeFlashDRM or false)) hal-flash
             ++ lib.optional (config.pulseaudio or true) libpulseaudio;
       gtk_modules = [ libcanberra-gtk2 ];

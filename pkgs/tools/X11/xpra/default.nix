@@ -3,7 +3,7 @@
 , makeWrapper, xkbcomp, xorgserver, getopt, xauth, utillinux, which, fontsConf
 , ffmpeg, x264, libvpx, libwebp
 , libfakeXinerama
-, gst_all_1, pulseaudioLight, gobjectIntrospection
+, gst_all_1, pulseaudio, gobjectIntrospection
 , pam }:
 
 with lib;
@@ -12,11 +12,11 @@ let
   inherit (python2Packages) python cython buildPythonApplication;
 in buildPythonApplication rec {
   name = "xpra-${version}";
-  version = "2.3.1";
+  version = "2.3.2";
 
   src = fetchurl {
-    url = "http://xpra.org/src/${name}.tar.xz";
-    sha256 = "0wghjmrw77pkh6agc5rz7ynr6s8yyc68qvj9rnp0vlwa3x1fl3ry";
+    url = "https://xpra.org/src/${name}.tar.xz";
+    sha256 = "02wpnlx43dwacaahpm8db5kbnjw2msm3ycq71gib0n2zamd71ni6";
   };
 
   nativeBuildInputs = [ pkgconfig ];
@@ -61,7 +61,7 @@ in buildPythonApplication rec {
       --set GI_TYPELIB_PATH "$GI_TYPELIB_PATH" \
       --set GST_PLUGIN_SYSTEM_PATH_1_0 "$GST_PLUGIN_SYSTEM_PATH_1_0" \
       --prefix LD_LIBRARY_PATH : ${libfakeXinerama}/lib  \
-      --prefix PATH : ${stdenv.lib.makeBinPath [ getopt xorgserver xauth which utillinux pulseaudioLight ]}
+      --prefix PATH : ${stdenv.lib.makeBinPath [ getopt xorgserver xauth which utillinux pulseaudio ]}
   '';
 
   preCheck = "exit 0";
