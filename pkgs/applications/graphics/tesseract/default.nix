@@ -44,6 +44,8 @@ stdenv.mkDerivation rec {
     sha256 = "11wrpcfl118wxsv2c3w2scznwb48c4547qml42s2bpdz079g8y30";
   };
 
+  outputs = [ "bin" "out" "dev" "man" ];
+
   enableParallelBuilding = true;
 
   nativeBuildInputs = [ pkgconfig autoreconfHook ];
