@@ -14,7 +14,7 @@ in stdenv.mkDerivation rec {
     sha256 = "1q0izb8ajzxl36fjpy4rn63sz01055r9s33fga99jprdmkkfzz6x";
   };
 
-  outputs = [ "bin" "out" "dev" "doc" ];
+  outputs = [ "bin" "lib" "dev" "doc" "out" ];
 
   dontDisableStatic = true;
 
@@ -22,19 +22,22 @@ in stdenv.mkDerivation rec {
 
   configureFlags = [
     "--enable-absolute-paths"
-    "--libdir=\${prefix}/lib"
-    "--includedir=\${prefix}/include"
-    "--with-sysdeps=${skalibs}/lib/skalibs/sysdeps"
-    "--with-include=${skalibs}/include"
-    "--with-lib=${skalibs}/lib"
-    "--with-dynlib=${skalibs}/lib"
+    "--libdir=\${lib}/lib"
+    "--dynlibdir=\${lib}/lib"
+    "--bindir=\${bin}/bin"
+    "--includedir=\${dev}/include"
+    "--with-sysdeps=${skalibs.lib}/lib/skalibs/sysdeps"
+    "--with-include=${skalibs.dev}/include"
+    "--with-lib=${skalibs.lib}/lib"
+    "--with-dynlib=${skalibs.lib}/lib"
   ]
   ++ (if stdenv.isDarwin then [ "--disable-shared" ] else [ "--enable-shared" ])
   ++ (stdenv.lib.optional stdenv.isDarwin "--build=${stdenv.system}");
 
   postInstall = ''
-    mkdir -p $doc/share/html/execline
-    mv doc/* $doc/share/html/execline
+    mkdir -p $doc/share/doc/execline
+    mv doc $doc/share/doc/execline/html
+    mv examples $doc/share/doc/execline/examples
   '';
 
   meta = {
