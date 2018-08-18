@@ -1,6 +1,12 @@
-{ lib, fetchFromGitHub, python3
+{ lib, fetchFromGitHub, fetchpatch, python3
+
+# Look up dependencies of specified components in component-packages.nix
 , extraComponents ? []
+
+# Additional packages to add to propagatedBuildInputs
 , extraPackages ? ps: []
+
+# Skip pip install of required packages on startup
 , skipPip ? true }:
 
 let
@@ -23,10 +29,10 @@ let
         };
       });
       voluptuous = super.voluptuous.overridePythonAttrs (oldAttrs: rec {
-        version = "0.11.1";
+        version = "0.11.5";
         src = oldAttrs.src.override {
           inherit version;
-          sha256 = "af7315c9fa99e0bfd195a21106c82c81619b42f0bd9b6e287b797c6b6b6a9918";
+          sha256 = "567a56286ef82a9d7ae0628c5842f65f516abcb496e74f3f59f1d7b28df314ef";
         };
       });
       attrs = super.attrs.overridePythonAttrs (oldAttrs: rec {
@@ -68,7 +74,7 @@ let
   extraBuildInputs = extraPackages py.pkgs;
 
   # Don't forget to run parse-requirements.py after updating
-  hassVersion = "0.73.2";
+  hassVersion = "0.75.2";
 
 in with py.pkgs; buildPythonApplication rec {
   pname = "homeassistant";
@@ -83,7 +89,7 @@ in with py.pkgs; buildPythonApplication rec {
     owner = "home-assistant";
     repo = "home-assistant";
     rev = version;
-    sha256 = "1hfxwm49hgikdh827jnlzgfz9h51rjz1gm841f5iz1vwz301l6sk";
+    sha256 = "1ib76wz3f6jfi7a0w2v561g8vf5w4p2b2d79667api6ynvbw2l9d";
   };
 
   propagatedBuildInputs = [

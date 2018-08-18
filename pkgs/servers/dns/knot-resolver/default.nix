@@ -12,11 +12,11 @@ inherit (stdenv.lib) optional concatStringsSep;
 
 unwrapped = stdenv.mkDerivation rec {
   name = "knot-resolver-${version}";
-  version = "2.4.0";
+  version = "2.4.1";
 
   src = fetchurl {
     url = "https://secure.nic.cz/files/knot-resolver/${name}.tar.xz";
-    sha256 = "8c88c73dd50dad6f371bfc170f49cd374022e59f8005ac1fa6cd99764f72b4d1";
+    sha256 = "e8044316cd897ad29b3c5284de06652e1568c4d5861e3147ec2191fbacd8d9ff";
   };
 
   outputs = [ "out" "dev" ];
@@ -65,7 +65,8 @@ wrapped-full = with luajitPackages; let
     luaPkgs =  [
       luasec luasocket # trust anchor bootstrap, prefill module
       lfs # prefill module
-      # TODO: cqueues and others for http2 module
+      # Almost all is for the 'http' module:
+      http cqueues fifo lpeg lpeg_patterns luaossl compat53 basexx
     ];
   in runCommand unwrapped.name
   {

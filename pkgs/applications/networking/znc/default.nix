@@ -24,15 +24,18 @@ stdenv.mkDerivation rec {
     ++ optional withTcl tcl
     ++ optional withCyrus cyrus_sasl;
 
-  configureFlags = optionalString withPerl "--enable-perl "
-    + optionalString withPython "--enable-python "
-    + optionalString withTcl "--enable-tcl --with-tcl=${tcl}/lib "
-    + optionalString withCyrus "--enable-cyrus ";
+  configureFlags = [
+    (stdenv.lib.enableFeature withPerl "perl")
+    (stdenv.lib.enableFeature withPython "python")
+    (stdenv.lib.enableFeature withTcl "tcl")
+    (stdenv.lib.withFeatureAs withTcl "tcl" "${tcl}/lib")
+    (stdenv.lib.enableFeature withCyrus "cyrus")
+  ];
 
   meta = with stdenv.lib; {
     description = "Advanced IRC bouncer";
     homepage = https://wiki.znc.in/ZNC;
-    maintainers = with maintainers; [ viric schneefux lnl7 ];
+    maintainers = with maintainers; [ schneefux lnl7 ];
     license = licenses.asl20;
     platforms = platforms.unix;
   };

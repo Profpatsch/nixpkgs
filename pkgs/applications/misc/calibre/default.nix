@@ -5,12 +5,12 @@
 }:
 
 stdenv.mkDerivation rec {
-  version = "3.28.0";
+  version = "3.29.0";
   name = "calibre-${version}";
 
   src = fetchurl {
     url = "https://download.calibre-ebook.com/${version}/${name}.tar.xz";
-    sha256 = "0b3vv03c6m6972sk8zj3zc5sq6b9837irnfgjlqhv9z5i75m0414";
+    sha256 = "1r29vi8j51r0nnzpjbg34ryvizzkn31sq1iz7z748wjfgr87wmyh";
   };
 
   patches = [
@@ -162,7 +162,7 @@ stdenv.mkDerivation rec {
     description = "Comprehensive e-book software";
     homepage = https://calibre-ebook.com;
     license = with licenses; if unrarSupport then unfreeRedistributable else gpl3;
-    maintainers = with maintainers; [ viric domenkozar pSub AndersonTorres ];
+    maintainers = with maintainers; [ domenkozar pSub AndersonTorres ];
     platforms = platforms.linux;
     inherit version;
   };
