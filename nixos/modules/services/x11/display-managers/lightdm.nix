@@ -115,7 +115,7 @@ in
 
       background = mkOption {
         type = types.str;
-        default = "${pkgs.nixos-artwork.wallpapers.gnome-dark}/share/artwork/gnome/Gnome_Dark.png";
+        default = "${pkgs.nixos-artwork.wallpapers.simple-dark-gray-bottom}/share/artwork/gnome/nix-wallpaper-simple-dark-gray_bottom.png";
         description = ''
           The background image or color to use.
         '';
@@ -191,15 +191,13 @@ in
       }
     ];
 
-    services.xserver.displayManager.slim.enable = false;
-
     services.xserver.displayManager.job = {
       logToFile = true;
 
       # lightdm relaunches itself via just `lightdm`, so needs to be on the PATH
       execCmd = ''
         export PATH=${lightdm}/sbin:$PATH
-        exec ${lightdm}/sbin/lightdm --log-dir=/var/log --run-dir=/run
+        exec ${lightdm}/sbin/lightdm
       '';
     };
 
@@ -248,11 +246,18 @@ in
     '';
 
     users.users.lightdm = {
-      createHome = true;
-      home = "/var/lib/lightdm-data";
+      home = "/var/lib/lightdm";
       group = "lightdm";
       uid = config.ids.uids.lightdm;
     };
+
+    systemd.tmpfiles.rules = [
+      "d /var/run/lightdm 0711 lightdm lightdm 0"
+      "d /var/cache/lightdm 0711 root lightdm -"
+      "d /var/lib/lightdm 1770 lightdm lightdm -"
+      "d /var/lib/lightdm-data 1775 lightdm lightdm -"
+      "d /var/log/lightdm 0711 root lightdm -"
+    ];
 
     users.groups.lightdm.gid = config.ids.gids.lightdm;
     services.xserver.tty     = null; # We might start multiple X servers so let the tty increment themselves..

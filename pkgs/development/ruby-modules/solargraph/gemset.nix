@@ -110,27 +110,27 @@
     dependencies = ["jaro_winkler" "parallel" "parser" "powerpack" "rainbow" "ruby-progressbar" "unicode-display_width"];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0fc1fw9z98qd91ipsh9hdvpcb401qvkhw518s35l8a67sv4vdnj3";
+      sha256 = "0hz4slfisbq8nqs83mvvh6yv5hb7z7zx9fxvv9cka6b9ldvr2i2b";
       type = "gem";
     };
-    version = "0.58.2";
+    version = "0.59.1";
   };
   ruby-progressbar = {
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1igh1xivf5h5g3y5m9b4i4j2mhz2r43kngh4ww3q1r80ch21nbfk";
+      sha256 = "1cv2ym3rl09svw8940ny67bav7b2db4ms39i4raaqzkf59jmhglk";
       type = "gem";
     };
-    version = "1.9.0";
+    version = "1.10.0";
   };
   solargraph = {
     dependencies = ["coderay" "eventmachine" "htmlentities" "kramdown" "parser" "reverse_markdown" "rubocop" "thor" "tilt" "yard"];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "01lh5vibr277vhhrgk6zl09ivb262c1qpk54ahzhc40zs309842b";
+      sha256 = "1wp4k6ayv9gv1rzxqccz6zb1fss7klszqwha9wvs6mj3c1vhghac";
       type = "gem";
     };
-    version = "0.23.6";
+    version = "0.27.1";
   };
   thor = {
     source = {
@@ -159,9 +159,9 @@
   yard = {
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "145pbc0x95s6x296kh1wp5ykwy6srfcz946dgj83s35g8p52z4q4";
+      sha256 = "0lmmr1839qgbb3zxfa7jf5mzy17yjl1yirwlgzdhws4452gqhn67";
       type = "gem";
     };
-    version = "0.9.15";
+    version = "0.9.16";
   };
 }

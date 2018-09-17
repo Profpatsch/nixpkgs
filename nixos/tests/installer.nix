@@ -233,13 +233,16 @@ let
               [ sudo
                 libxml2.bin
                 libxslt.bin
+                desktop-file-utils
                 docbook5
                 docbook_xsl_ns
                 unionfs-fuse
                 ntp
-                nixos-artwork.wallpapers.gnome-dark
+                nixos-artwork.wallpapers.simple-dark-gray-bottom
                 perlPackages.XMLLibXML
                 perlPackages.ListCompare
+                shared-mime-info
+                texinfo
                 xorg.lndir
 
                 # add curl so that rather than seeing the test attempt to download
@@ -560,6 +563,7 @@ in {
               "swapon -L swap",
               "mkfs.ext3 -L nixos /dev/sda2",
               "mount LABEL=nixos /mnt",
+              "mkdir -p /mnt/tmp",
           );
         '';
       grubVersion = 1;

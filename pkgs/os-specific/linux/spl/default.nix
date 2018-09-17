@@ -10,12 +10,13 @@ assert kernel != null;
 
 stdenv.mkDerivation rec {
   name = "spl-${version}-${kernel.version}";
+  version = "0.7.11";
 
   src = fetchFromGitHub {
     owner = "zfsonlinux";
     repo = "spl";
-    rev = "spl-0.7.9";
-    sha256 = "0540m1dv9jvrzk9kw61glg0h0cwj976mr9zb42y3nh17k47ywff0";
+    rev = "spl-${version}";
+    sha256 = "15h02g5k3i20y2cycc72vr6hdn8n70jmzqii8dmx9za6bl9nk2rm";
   };
 
   patches = [ ./install_prefix.patch ];
