@@ -1,6 +1,6 @@
 { stdenv, fetchurl, zlib, ncurses5, unzip, lib, makeWrapper
 , coreutils, file, findutils, gawk, gnugrep, gnused, jdk, which
-, platformTools, python3, libcxx, version, sha256, bash, runCommand
+, platformTools, python3, libcxx, version, sha1s, bash, runCommand
 , fullNDK ? false # set to true if you want other parts of the NDK
                   # that is not used by Nixpkgs like sources,
                   # examples, docs, or LLVM toolchains
@@ -16,10 +16,10 @@ let
     name = "android-ndk-r${version}";
     inherit version;
 
-    src = if stdenv.hostPlatform.system == "x86_64-linux" then fetchurl {
-      url = "https://dl.google.com/android/repository/${name}-linux-x86_64.zip";
-      inherit sha256;
-    } else throw "platform ${stdenv.hostPlatform.system} not supported!";
+    src = fetchurl {
+      url = "https://dl.google.com/android/repository/${name}-${stdenv.hostPlatform.parsed.kernel.name}-${stdenv.hostPlatform.parsed.cpu.name}.zip";
+      sha1 = sha1s.${stdenv.hostPlatform.system} or (throw "platform ${stdenv.hostPlatform.system} not supported!");
+    };
 
     phases = "buildPhase";
 
@@ -89,6 +89,16 @@ let
       do
           wrapProgram "$(pwd)/$i" --prefix PATH : "${runtime_paths}"
       done
+
+      ${stdenv.lib.optionalString (stdenv.hostPlatform.system == "x86_64-linux") ''
+        for i in ${pkg_path}/prebuilt/linux-x86_64/bin/*
+        do
+            if ! isELF $i; then continue; fi
+            patchelf --set-interpreter ${stdenv.cc.libc.out}/lib/ld-linux-x86-64.so.2 $i
+            patchelf --set-rpath ${stdenv.cc.cc.lib}/lib64 $i
+        done
+      ''}
+
       # make some executables available in PATH
       mkdir -pv ${bin_path}
       for i in \
@@ -99,7 +109,7 @@ let
     '';
 
     meta = {
-      platforms = stdenv.lib.platforms.linux;
+      platforms = builtins.attrNames sha1s;
       hydraPlatforms = [];
       license = stdenv.lib.licenses.asl20;
     };

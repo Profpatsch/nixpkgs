@@ -1,12 +1,19 @@
-{ stdenv, lib, fetchurl, writeText }:
+{ stdenv, lib, fetchurl, fetchFromGitHub, writeText }:
 
 let
   version = "0.75";
   sha256 = "1iajg55n47hqxcpdzmyq4g4aprx7bzxcp885i850h355k5vmf68r";
-  # To update the docs, bump the version and run
-  # $ bash $(nix-build -A cdb.update-docs '<nixpkgs>')
-  # (we have to check in the docs, because djb doesn’t provide
-  # them in the source distribution, only on his webserver)
+  # Please don’t forget to update the docs:
+  # clone https://github.com/Profpatsch/cdb-docs
+  # and create a pull request with the result of running
+  # ./update <version>
+  # from the repository’s root folder.
+  docRepo = fetchFromGitHub {
+    owner = "Profpatsch";
+    repo = "cdb-docs";
+    rev = "359b6c55c9e170ebfc88f3f38face8ae2315eacb";
+    sha256 = "1y0ivviy58i0pmavhvrpznc4yjigjknff298gnw9rkg5wxm0gbbq";
+  };
 
 in stdenv.mkDerivation {
   name = "cdb-${version}";
@@ -27,36 +34,24 @@ in stdenv.mkDerivation {
     # don't use make setup, but move the binaries ourselves
     mkdir -p $bin/bin
     install -m 755 -t $bin/bin/ cdbdump cdbget cdbmake cdbmake-12 cdbmake-sv cdbstats cdbtest
-    mkdir -p $doc/share/cdb/html
-    tar xvf ${./docs.tar.gz} -C $doc/share/cdb/html
-  '';
 
-  passthru.update-docs = writeText "cdb-update-docs" ''
-    set -euo pipefail
+    # patch paths in scripts
+    function cdbmake-subst {
+      substituteInPlace $bin/bin/$1 \
+        --replace /usr/local/bin/cdbmake $bin/bin/cdbmake
+    }
+    cdbmake-subst cdbmake-12
+    cdbmake-subst cdbmake-sv
 
-    tmp=$(mktemp -d)
-
-    wget \
-        --recursive \
-        --level=3 \
-        --convert-links \
-        --page-requisites \
-        --include-directories "*cdb*" \
-        --no-parent \
-        --directory-prefix "$tmp" \
-        https://cr.yp.to/cdb.html
-
-    pushd "$tmp"/cr.yp.to
-    # the source tar is always included, so remove
-    rm cdb/cdb-${version}.tar.gz
-
-    tar czvf "$tmp"/docs.tar.gz *
-    mv "$tmp"/docs.tar.gz '${toString ./docs.tar.gz}'
+    # docs
+    mkdir -p $doc/share/cdb
+    cp -r "${docRepo}/docs" $doc/share/cdb/html
   '';
 
   meta = {
     homepage = "https://cr.yp.to/cdb";
     license = lib.licenses.publicDomain;
-    maintainer = [ lib.maintainers.Profpatsch ];
+    maintainers = [ lib.maintainers.Profpatsch ];
+    platforms = [ lib.platforms.unix ];
   };
 }
