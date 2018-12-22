@@ -12,9 +12,9 @@
 
 # vim-go denpencies
 , asmfmt, delve, errcheck, godef, golint
-, gomodifytags, gotags, gotools, motion
+, gomodifytags, gotags, gotools, go-motion
 , gnused, reftools, gogetdoc, gometalinter
-, impl, iferr
+, impl, iferr, gocode, gocode-gomod, go-tools
 }:
 
 let
@@ -101,12 +101,15 @@ with generated;
     preFixup = ''
       substituteInPlace "$out"/share/vim-plugins/clang_complete/plugin/clang_complete.vim \
         --replace "let g:clang_library_path = '' + "''" + ''" "let g:clang_library_path='${llvmPackages.clang.cc.lib}/lib/libclang.so'"
+
+      substituteInPlace "$out"/share/vim-plugins/clang_complete/plugin/libclang.py \
+        --replace "/usr/lib/clang" "${llvmPackages.clang.cc}/lib/clang"
     '';
   });
 
   clighter8 = clighter8.overrideAttrs(old: {
     preFixup = ''
-      sed "/^let g:clighter8_libclang_path/s|')$|${llvmPackages.clang.cc}/lib/libclang.so')|" \
+      sed "/^let g:clighter8_libclang_path/s|')$|${llvmPackages.clang.cc.lib}/lib/libclang.so')|" \
         -i "$out"/share/vim-plugins/clighter8/plugin/clighter8.vim
     '';
   });
@@ -160,6 +163,10 @@ with generated;
 
   forms = forms.overrideAttrs(old: {
     dependencies = ["self"];
+  });
+
+  gist-vim = gist-vim.overrideAttrs(old: {
+    dependencies = ["webapi-vim"];
   });
 
   gitv = gitv.overrideAttrs(old: {
@@ -261,6 +268,10 @@ with generated;
       asmfmt
       delve
       errcheck
+      go-motion
+      go-tools
+      gocode
+      gocode-gomod
       godef
       gogetdoc
       golint
@@ -270,14 +281,13 @@ with generated;
       gotools
       iferr
       impl
-      motion
       reftools
     ];
     in {
     postPatch = ''
       ${gnused}/bin/sed \
-        -Ee 's@let go_bin_path = go#path#BinPath\(\)@let go_bin_path = "${binPath}"@g' \
-        -i autoload/go/path.vim
+        -Ee 's@"go_bin_path", ""@"go_bin_path", "${binPath}"@g' \
+        -i autoload/go/config.vim
     '';
   });
 

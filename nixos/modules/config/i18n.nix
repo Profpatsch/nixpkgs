@@ -42,16 +42,16 @@ in
         '';
       };
 
-      extraLocales = mkOption {
+      extraLocaleSettings = mkOption {
         type = types.attrsOf types.str;
         default = {};
-        example = { LC_TIME = "en_DK.UTF-8"; };
+        example = { LC_MESSAGES = "en_US.UTF-8"; LC_TIME = "de_DE.UTF-8"; };
         description = ''
-          Additional default locale variables (apart from LANG).
-          See <literal>man 7 locale</literal> for possible items.
+          A set of additional system-wide locale settings other than
+          <literal>LANG</literal> which can be configured with
+          <option>i18n.defaultLocale</option>.
         '';
       };
-
 
       supportedLocales = mkOption {
         type = types.listOf types.str;
@@ -148,7 +148,7 @@ in
     environment.sessionVariables =
       { LANG = config.i18n.defaultLocale;
         LOCALE_ARCHIVE = "/run/current-system/sw/lib/locale/locale-archive";
-      };
+      } // config.i18n.extraLocaleSettings;
 
     systemd.globalEnvironment = mkIf (config.i18n.supportedLocales != []) {
       LOCALE_ARCHIVE = "${config.i18n.glibcLocales}/lib/locale/locale-archive";
@@ -160,8 +160,7 @@ in
         source = pkgs.writeText "locale.conf"
           ''
             LANG=${config.i18n.defaultLocale}
-            ${concatStringsSep "\n" (mapAttrsToList
-                (k: v: "${k}=${v}") config.i18n.extraLocales)}
+            ${concatStringsSep "\n" (mapAttrsToList (n: v: ''${n}=${v}'') config.i18n.extraLocaleSettings)}
           '';
       };
 

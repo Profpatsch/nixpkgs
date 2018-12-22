@@ -1,10 +1,10 @@
 { stdenv, fetchurl, autoreconfHook, docbook_xml_dtd_412, docbook_xml_dtd_42, docbook_xml_dtd_43, docbook_xsl, which, libxml2
-, gobjectIntrospection, gtk-doc, intltool, libxslt, pkgconfig, xmlto, appstream-glib, substituteAll, glibcLocales, yacc, xdg-dbus-proxy, p11-kit
+, gobject-introspection, gtk-doc, intltool, libxslt, pkgconfig, xmlto, appstream-glib, substituteAll, glibcLocales, yacc, xdg-dbus-proxy, p11-kit
 , bubblewrap, bzip2, dbus, glib, gpgme, json-glib, libarchive, libcap, libseccomp, coreutils, python2, hicolor-icon-theme
 , libsoup, lzma, ostree, polkit, python3, systemd, xorg, valgrind, glib-networking, makeWrapper, gnome3 }:
 
 let
-  version = "1.0.4";
+  version = "1.0.5";
   desktop_schemas = gnome3.gsettings-desktop-schemas;
 in stdenv.mkDerivation rec {
   name = "flatpak-${version}";
@@ -14,7 +14,7 @@ in stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://github.com/flatpak/flatpak/releases/download/${version}/${name}.tar.xz";
-    sha256 = "1x1vqz6k8hhgyr46wg05gwr4zdv313q2hwcwp4nb6n1f7whc7yx0";
+    sha256 = "1wj88lp23bzz0c5n1i84nr2xff572i5cc10fqd9xh7qhj3ivk1w0";
   };
 
   patches = [
@@ -33,7 +33,7 @@ in stdenv.mkDerivation rec {
   ];
 
   nativeBuildInputs = [
-    autoreconfHook libxml2 docbook_xml_dtd_412 docbook_xml_dtd_42 docbook_xml_dtd_43 docbook_xsl which gobjectIntrospection
+    autoreconfHook libxml2 docbook_xml_dtd_412 docbook_xml_dtd_42 docbook_xml_dtd_43 docbook_xsl which gobject-introspection
     gtk-doc intltool libxslt pkgconfig xmlto appstream-glib yacc makeWrapper
   ];
 

@@ -3,7 +3,7 @@
 , wrapGAppsHook, xorgserver, getopt, xauth, utillinux, which
 , ffmpeg, x264, libvpx, libwebp
 , libfakeXinerama
-, gst_all_1, pulseaudio, gobjectIntrospection
+, gst_all_1, pulseaudio, gobject-introspection
 , pam }:
 
 with lib;
@@ -28,7 +28,7 @@ in buildPythonApplication rec {
     })
   ];
 
-  nativeBuildInputs = [ pkgconfig gobjectIntrospection wrapGAppsHook ];
+  nativeBuildInputs = [ pkgconfig gobject-introspection wrapGAppsHook ];
   buildInputs = [
     cython
 
@@ -86,6 +86,8 @@ in buildPythonApplication rec {
     description = "Persistent remote applications for X";
     platforms = platforms.linux;
     license = licenses.gpl2;
+    # https://github.com/NixOS/nixpkgs/pull/48872#issuecomment-433559636
+    broken = true;
     maintainers = with maintainers; [ tstrobel offline numinit ];
   };
 }

@@ -1,8 +1,8 @@
-{ stdenv, fetchFromGitHub, cmake, ninja, vala_0_40, pkgconfig, gobjectIntrospection, gnome3, gtk3, glib, gettext }:
+{ stdenv, fetchFromGitHub, cmake, ninja, vala_0_40, pkgconfig, gobject-introspection, gnome3, gtk3, glib, gettext }:
 
 stdenv.mkDerivation rec {
   pname = "granite";
-  version = "5.2.0";
+  version = "5.2.1";
 
   name = "${pname}-${version}";
 
@@ -10,7 +10,7 @@ stdenv.mkDerivation rec {
     owner = "elementary";
     repo = pname;
     rev = version;
-    sha256 = "1v1yhz6rp616xi417m9r8072s6mpz5i8vkdyj264b73p0lgjwh40";
+    sha256 = "18rw1lv6zk5w2cq8bv6b869z3cdikn9gzk30gw1s9f8n06bh737h";
   };
 
   cmakeFlags = [
@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     gettext
-    gobjectIntrospection
+    gobject-introspection
     ninja
     pkgconfig
     vala_0_40 # should be `elementary.vala` when elementary attribute set is merged

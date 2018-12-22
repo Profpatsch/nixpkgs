@@ -820,11 +820,11 @@ lib.makeScope newScope (self: with self; {
   }) {};
 
   libX11 = callPackage ({ stdenv, pkgconfig, fetchurl, inputproto, kbproto, libxcb, xextproto, xf86bigfontproto, xproto, xtrans }: stdenv.mkDerivation {
-    name = "libX11-1.6.6";
+    name = "libX11-1.6.7";
     builder = ./builder.sh;
     src = fetchurl {
-      url = mirror://xorg/individual/lib/libX11-1.6.6.tar.bz2;
-      sha256 = "0ks1mxlda7nxfmffihi15ljsn50q8dknl33i2xag8xzc80fiizk5";
+      url = mirror://xorg/individual/lib/libX11-1.6.7.tar.bz2;
+      sha256 = "0j0k5bjz4kd7rx6z09n5ggxbzbi84wf78xx25ikx6jmsxwq9w3li";
     };
     hardeningDisable = [ "bindnow" "relro" ];
     nativeBuildInputs = [ pkgconfig ];
@@ -1248,7 +1248,7 @@ lib.makeScope newScope (self: with self; {
     meta.platforms = stdenv.lib.platforms.unix;
   }) {};
 
-  libxcb = callPackage ({ stdenv, pkgconfig, fetchurl, libxslt, libpthreadstubs, python, libXau, xcbproto, libXdmcp }: stdenv.mkDerivation {
+  libxcb = callPackage ({ stdenv, pkgconfig, fetchurl, libxslt, libpthreadstubs, libXau, xcbproto, libXdmcp, python }: stdenv.mkDerivation {
     name = "libxcb-1.13.1";
     builder = ./builder.sh;
     src = fetchurl {
@@ -1256,8 +1256,8 @@ lib.makeScope newScope (self: with self; {
       sha256 = "1i27lvrcsygims1pddpl5c4qqs6z715lm12ax0n3vx0igapvg7x8";
     };
     hardeningDisable = [ "bindnow" "relro" ];
-    nativeBuildInputs = [ pkgconfig ];
-    buildInputs = [ libxslt libpthreadstubs python libXau xcbproto libXdmcp ];
+    nativeBuildInputs = [ pkgconfig python ];
+    buildInputs = [ libxslt libpthreadstubs libXau xcbproto libXdmcp ];
     meta.platforms = stdenv.lib.platforms.unix;
   }) {};
 
@@ -1594,8 +1594,8 @@ lib.makeScope newScope (self: with self; {
       sha256 = "1qdxw9syhbvswiqj5dvj278lrmfhs81apzmvx6205s4vcqg7563v";
     };
     hardeningDisable = [ "bindnow" "relro" ];
-    nativeBuildInputs = [ pkgconfig ];
-    buildInputs = [ python ];
+    nativeBuildInputs = [ pkgconfig python ];
+    buildInputs = [ ];
     meta.platforms = stdenv.lib.platforms.unix;
   }) {};
 
@@ -2467,6 +2467,19 @@ lib.makeScope newScope (self: with self; {
     hardeningDisable = [ "bindnow" "relro" ];
     nativeBuildInputs = [ pkgconfig ];
     buildInputs = [ randrproto videoproto xorgserver xproto ];
+    meta.platforms = stdenv.lib.platforms.unix;
+  }) {};
+
+  xf86videovboxvideo = callPackage ({ stdenv, pkgconfig, fetchurl, fontsproto, libpciaccess, randrproto, renderproto, xextproto, xorgserver, xproto }: stdenv.mkDerivation {
+    name = "xf86-video-vboxvideo-1.0.0";
+    builder = ./builder.sh;
+    src = fetchurl {
+      url = mirror://xorg/individual/driver/xf86-video-vboxvideo-1.0.0.tar.bz2;
+      sha256 = "195z1js3i51qgxvhfw4bxb4dw3jcrrx2ynpm2y3475dypjzs7dkz";
+    };
+    hardeningDisable = [ "bindnow" "relro" ];
+    nativeBuildInputs = [ pkgconfig ];
+    buildInputs = [ fontsproto libpciaccess randrproto renderproto xextproto xorgserver xproto ];
     meta.platforms = stdenv.lib.platforms.unix;
   }) {};
 
