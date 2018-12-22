@@ -5,8 +5,8 @@ with lib;
 let
 
   noLANGinExtraLocaleAssertion = {
-    assertion = !(config.i18n.extraLocales ? "LANG");
-    message = "Please don’t set LANG in i18n.extraLocales, use i18n.defaultLocale.";
+    assertion = !(config.i18n.extraLocaleSettings ? "LANG");
+    message = "Please don’t set LANG in i18n.extraLocaleSettings, use i18n.defaultLocale.";
   };
 
 in
