@@ -19,7 +19,7 @@ lib.makeScope pkgs.newScope (self: with self; {
   optionalPackages = with gnome3; [ baobab eog epiphany evince
     gucharmap nautilus totem vino yelp gnome-bluetooth
     gnome-calculator gnome-contacts gnome-font-viewer gnome-screenshot
-    gnome-system-log gnome-system-monitor simple-scan
+    gnome-system-monitor simple-scan
     gnome-terminal gnome-user-docs evolution file-roller gedit
     gnome-clocks gnome-music gnome-tweaks gnome-photos
     nautilus-sendto dconf-editor vinagre gnome-weather gnome-logs
@@ -38,7 +38,7 @@ lib.makeScope pkgs.newScope (self: with self; {
   inherit (pkgs) atk glib gobject-introspection gspell webkitgtk gtk3 gtkmm3
     libgtop libgudev libhttpseverywhere librsvg libsecret gdk_pixbuf gtksourceview gtksourceviewmm gtksourceview4
     easytag meld orca rhythmbox shotwell gnome-usage
-    clutter clutter-gst clutter-gtk cogl gtk-vnc libdazzle libgda;
+    clutter clutter-gst clutter-gtk cogl gtk-vnc libdazzle libgda libgit2-glib libgxps libgdata libgepub libcroco libpeas libgee geocode-glib libgweather librest libzapojit libmediaart gfbgraph gexiv2 folks totem-pl-parser gcr gsound libgnomekbd vte vte_290 vte-ng gnome-menus;
 
   libsoup = pkgs.libsoup.override { gnomeSupport = true; };
   libchamplain = pkgs.libchamplain.override { libsoup = libsoup; };
@@ -47,6 +47,7 @@ lib.makeScope pkgs.newScope (self: with self; {
   gtkmm = gtkmm3;
   vala = pkgs.vala_0_42;
   gegl_0_4 = pkgs.gegl_0_4.override { inherit gtk; };
+  rest = librest;
 
 # Simplify the nixos module and gnome packages
   defaultIconTheme = adwaita-icon-theme;
@@ -72,10 +73,6 @@ lib.makeScope pkgs.newScope (self: with self; {
   evince = callPackage ./core/evince { }; # ToDo: dbus would prevent compilation, enable tests
 
   evolution-data-server = callPackage ./core/evolution-data-server { };
-
-  geocode-glib = callPackage ./core/geocode-glib { };
-
-  gcr = callPackage ./core/gcr { }; # ToDo: tests fail
 
   gdm = callPackage ./core/gdm { };
 
@@ -107,15 +104,9 @@ lib.makeScope pkgs.newScope (self: with self; {
 
   gnome-font-viewer = callPackage ./core/gnome-font-viewer { };
 
-  gnome-menus = callPackage ./core/gnome-menus { };
-
   gnome-keyring = callPackage ./core/gnome-keyring { };
 
   libgnome-keyring = callPackage ./core/libgnome-keyring { };
-
-  libgnomekbd = callPackage ./core/libgnomekbd { };
-
-  folks = callPackage ./core/folks { };
 
   gnome-online-accounts = callPackage ./core/gnome-online-accounts { };
 
@@ -135,8 +126,6 @@ lib.makeScope pkgs.newScope (self: with self; {
 
   gnome-software = callPackage ./core/gnome-software { };
 
-  gnome-system-log = callPackage ./core/gnome-system-log { };
-
   gnome-system-monitor = callPackage ./core/gnome-system-monitor { };
 
   gnome-terminal = callPackage ./core/gnome-terminal { };
@@ -153,29 +142,11 @@ lib.makeScope pkgs.newScope (self: with self; {
 
   gsettings-desktop-schemas = callPackage ./core/gsettings-desktop-schemas { };
 
-  gsound = callPackage ./core/gsound { };
-
   gucharmap = callPackage ./core/gucharmap { };
 
   gvfs = pkgs.gvfs.override { gnome = gnome3; gnomeSupport = true; };
 
   eog = callPackage ./core/eog { };
-
-  libcroco = callPackage ./core/libcroco {};
-
-  libgee = callPackage ./core/libgee { };
-
-  libgepub = callPackage ./core/libgepub { };
-
-  libgdata = callPackage ./core/libgdata { };
-
-  libgxps = callPackage ./core/libgxps { };
-
-  libpeas = callPackage ./core/libpeas {};
-
-  libgweather = callPackage ./core/libgweather { };
-
-  libzapojit = callPackage ./core/libzapojit { };
 
   mutter = callPackage ./core/mutter { };
 
@@ -214,8 +185,6 @@ lib.makeScope pkgs.newScope (self: with self; {
     withGnome = true;
   };
 
-  rest = callPackage ./core/rest { };
-
   rygel = callPackage ./core/rygel { };
 
   simple-scan = callPackage ./core/simple-scan { };
@@ -224,17 +193,9 @@ lib.makeScope pkgs.newScope (self: with self; {
 
   totem = callPackage ./core/totem { };
 
-  totem-pl-parser = callPackage ./core/totem-pl-parser { };
-
   tracker = callPackage ./core/tracker { };
 
   tracker-miners = callPackage ./core/tracker-miners { };
-
-  vte = callPackage ./core/vte { };
-
-  vte_290 = callPackage ./core/vte/2.90.nix { };
-
-  vte-ng = callPackage ./core/vte/ng.nix { };
 
   vino = callPackage ./core/vino { };
 
@@ -359,21 +320,11 @@ lib.makeScope pkgs.newScope (self: with self; {
 
 #### Misc -- other packages on http://ftp.gnome.org/pub/GNOME/sources/
 
-  california = callPackage ./misc/california { };
-
   geary = callPackage ./misc/geary { };
-
-  gfbgraph = callPackage ./misc/gfbgraph { };
 
   gitg = callPackage ./misc/gitg { };
 
   libgnome-games-support = callPackage ./misc/libgnome-games-support { };
-
-  libgit2-glib = callPackage ./misc/libgit2-glib { };
-
-  libmediaart = callPackage ./misc/libmediaart { };
-
-  gexiv2 = callPackage ./misc/gexiv2 { };
 
   gnome-applets = callPackage ./misc/gnome-applets { };
 
