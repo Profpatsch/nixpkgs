@@ -202,6 +202,8 @@ let
       dir="$NIX_BUILD_TOP/go/bin"
       [ -e "$dir" ] && cp -r $dir $bin
 
+      mv $NIX_BUILD_TOP/go $deps-gopath
+
       runHook postInstall
     '';
 
@@ -229,7 +231,7 @@ let
     enableParallelBuilding = enableParallelBuilding;
 
     # I prefer to call this dev but propagatedBuildInputs expects $out to exist
-    outputs = args.outputs or [ "bin" "out" ];
+    outputs = args.outputs or [ "bin" "deps-gopath" "out" ];
 
     meta = {
       # Add default meta information
