@@ -1,10 +1,10 @@
-{ stdenv, lib, fetchurl, boost, cmake, ffmpeg, gettext, glew
+{ config, stdenv, lib, fetchurl, boost, cmake, ffmpeg, gettext, glew
 , ilmbase, libXi, libX11, libXext, libXrender
 , libjpeg, libpng, libsamplerate, libsndfile
 , libtiff, libGLU_combined, openal, opencolorio, openexr, openimageio, openjpeg_1, pythonPackages
 , zlib, fftw, opensubdiv, freetype, jemalloc, ocl-icd
 , jackaudioSupport ? false, libjack2
-, cudaSupport ? false, cudatoolkit
+, cudaSupport ? config.cudaSupport or false, cudatoolkit
 , colladaSupport ? true, opencollada
 , enableNumpy ? false, makeWrapper
 }:
@@ -51,9 +51,9 @@ stdenv.mkDerivation rec {
       "-DWITH_SYSTEM_OPENJPEG=ON"
       "-DWITH_PLAYER=ON"
       "-DWITH_OPENSUBDIV=ON"
-      "-DPYTHON_LIBRARY=${python.libPrefix}"
+      "-DPYTHON_LIBRARY=${python.libPrefix}m"
       "-DPYTHON_LIBPATH=${python}/lib"
-      "-DPYTHON_INCLUDE_DIR=${python}/include/${python.libPrefix}"
+      "-DPYTHON_INCLUDE_DIR=${python}/include/${python.libPrefix}m"
       "-DPYTHON_VERSION=${python.pythonVersion}"
       "-DWITH_PYTHON_INSTALL=OFF"
       "-DWITH_PYTHON_INSTALL_NUMPY=OFF"

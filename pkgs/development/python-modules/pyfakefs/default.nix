@@ -1,16 +1,12 @@
-{ stdenv, buildPythonPackage, fetchFromGitHub, python, pytest, glibcLocales }:
+{ stdenv, buildPythonPackage, fetchPypi, python, pytest, glibcLocales }:
 
 buildPythonPackage rec {
-  version = "3.5.5";
+  version = "3.5.7";
   pname = "pyfakefs";
 
-  # no tests in PyPI tarball
-  # https://github.com/jmcgeheeiv/pyfakefs/pull/361
-  src = fetchFromGitHub {
-    owner = "jmcgeheeiv";
-    repo = pname;
-    rev = "v${version}";
-    sha256 = "1pww444ih4bf84a0jgl1r446mjywhlls890mnw76flx8maahlik1";
+  src = fetchPypi {
+    inherit pname version;
+    sha256 = "8969435f8e7ca10f60c22096b02b15ad3af143de7d3bb4d73507b812bcdd8e37";
   };
 
   postPatch = ''
