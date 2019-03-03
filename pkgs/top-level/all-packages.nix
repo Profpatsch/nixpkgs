@@ -2674,6 +2674,8 @@ in
 
   fileschanged = callPackage ../tools/misc/fileschanged { };
 
+  filet = callPackage ../applications/misc/filet { };
+
   findutils = callPackage ../tools/misc/findutils { };
 
   finger_bsd = callPackage ../tools/networking/bsd-finger { };
@@ -8308,15 +8310,13 @@ in
 
   augeas = callPackage ../tools/system/augeas { };
 
-  inherit (callPackages ../tools/admin/ansible {})
-    ansible_2_4
+  inherit (callPackage ../tools/admin/ansible { })
+    ansible
     ansible_2_5
     ansible_2_6
-    ansible_2_7
-    ansible2
-    ansible;
+    ansible_2_7;
 
-  ansible-lint = callPackage ../development/tools/ansible-lint {};
+  ansible-lint = with python3.pkgs; toPythonApplication ansible-lint;
 
   antlr = callPackage ../development/tools/parsing/antlr/2.7.7.nix { };
 
@@ -13736,12 +13736,14 @@ in
     # We don't use `with` statement here on purpose!
     # See https://github.com/NixOS/nixpkgs/pull/10474/files#r42369334
     modules = [ nginxModules.rtmp nginxModules.dav nginxModules.moreheaders ];
+    openssl = openssl_1_1;
   };
 
   nginxMainline = callPackage ../servers/http/nginx/mainline.nix {
     # We don't use `with` statement here on purpose!
     # See https://github.com/NixOS/nixpkgs/pull/10474/files#r42369334
     modules = [ nginxModules.dav nginxModules.moreheaders ];
+    openssl = openssl_1_1;
   };
 
   nginxModules = callPackage ../servers/http/nginx/modules.nix { };
@@ -16389,6 +16391,8 @@ in
 
   catfish = callPackage ../applications/search/catfish { };
 
+  catimg = callPackage ../tools/misc/catimg { };
+
   cava = callPackage ../applications/audio/cava { };
 
   cb2bib = libsForQt5.callPackage ../applications/office/cb2bib { };
@@ -17606,6 +17610,7 @@ in
   hipchat = callPackage ../applications/networking/instant-messengers/hipchat { };
 
   hledger = haskell.lib.justStaticExecutables haskellPackages.hledger;
+  hledger-interest = haskell.lib.justStaticExecutables haskellPackages.hledger-interest;
   hledger-ui = haskell.lib.justStaticExecutables haskellPackages.hledger-ui;
   hledger-web = haskell.lib.justStaticExecutables haskellPackages.hledger-web;
 
@@ -18512,6 +18517,8 @@ in
   pig = callPackage ../applications/networking/cluster/pig { };
 
   pijul = callPackage ../applications/version-management/pijul {};
+
+  ping = callPackage ../applications/networking/ping { };
 
   piper = callPackage ../os-specific/linux/piper { };
 
