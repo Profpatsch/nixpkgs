@@ -49,11 +49,6 @@ mapAliases ({
   bashCompletion = bash-completion; # Added 2016-09-28
   bridge_utils = bridge-utils;  # added 2015-02-20
   btrfsProgs = btrfs-progs; # added 2016-01-03
-  buildbot = pythonPackages.buildbot; # added 2018-10-11
-  buildbot-full = pythonPackages.buildbot-full; # added 2018-10-11
-  buildbot-pkg = pythonPackages.buildbot-pkg; # added 2018-10-11
-  buildbot-ui = pythonPackages.buildbot-ui; # added 2018-10-11
-  buildbot-worker = pythonPackages.buildbot-worker; # added 2018-10-11
   buildPerlPackage = perlPackages.buildPerlPackage; # added 2018-10-12
   bundler_HEAD = bundler; # added 2015-11-15
   cantarell_fonts = cantarell-fonts; # added 2018-03-03
@@ -100,6 +95,7 @@ mapAliases ({
   firefoxWrapper = firefox;           # 2015-09
   flameGraph = flamegraph; # added 2018-04-25
   font-awesome-ttf = font-awesome; # 2018-02-25
+  font-droid = throw "font-droid has been deprecated by noto-fonts"; # 2019-04-12
   foomatic_filters = foomatic-filters;  # 2016-08
   fuse_exfat = exfat;                   # 2015-09-11
   fuseki = apache-jena-fuseki; # added 2018-04-25
@@ -234,6 +230,7 @@ mapAliases ({
   pidginwindowmerge = pidgin-window-merge; # added 2018-01-08
   piwik = matomo; # added 2018-01-16
   pltScheme = racket; # just to be sure
+  plexpy = tautulli; # plexpy got renamed to tautulli, added 2019-02-22
   pmtools = acpica-tools; # added 2018-11-01
   poppler_qt5 = libsForQt5.poppler;  # added 2015-12-19
   postgresql94 = postgresql_9_4;
@@ -265,6 +262,7 @@ mapAliases ({
   qwt6 = libsForQt5.qwt;  # added 2015-12-19
   rdiff_backup = rdiff-backup;  # added 2014-11-23
   rdmd = dtools;  # added 2017-08-19
+  rhc = throw "deprecated in 2019-04-09: abandoned by upstream.";
   rng_tools = rng-tools; # added 2018-10-24
   robomongo = robo3t; #added 2017-09-28
   rssglx = rss-glx; #added 2015-03-25
@@ -342,6 +340,7 @@ mapAliases ({
   vimprobable2Wrapper = vimprobable2; # added 2015-01
   virtviewer = virt-viewer; # added 2015-12-24
   vorbisTools = vorbis-tools; # added 2016-01-26
+  webkit = webkitgtk; # added 2019-03-05
   weechat-xmpp = weechatScripts.weechat-xmpp; # added 2018-09-06
   weechat-matrix-bridge = weechatScripts.weechat-matrix-bridge; # added 2018-09-06
   wineStaging = wine-staging; # added 2018-01-08
@@ -356,6 +355,8 @@ mapAliases ({
   xf86_video_nouveau = xorg.xf86videonouveau; # added 2015-09
   xlibs = xorg; # added 2015-09
   xpraGtk3 = xpra; # added 2018-09-13
+  yarn2nix = throw "Use upstream https://github.com/moretea/yarn2nix"; # added 2019-04-12
+  mkYarnPackage = yarn2nix; # added 2019-04-12
   youtubeDL = youtube-dl;  # added 2014-10-26
   zdfmediathk = mediathekview; # added 2019-01-19
 
