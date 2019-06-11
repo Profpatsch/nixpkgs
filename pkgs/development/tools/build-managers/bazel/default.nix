@@ -131,7 +131,12 @@ stdenv.mkDerivation rec {
           else "$HOME/.cache/bazel/_bazel_nixbld";
         in runLocal "bazel-extracted-homedir" { passthru.install_dir = install_dir; } ''
             export HOME=$(mktemp -d)
-            ${bazel}/bin/bazel version
+            touch WORKSPACE # yeah, everything sucks
+            install_base="$(${bazel}/bin/bazel info | grep install_base)"
+            # assert it’s actually below install_dir
+            [[ "$install_base" =~ ${install_dir} ]] \
+              || (echo "oh no! $install_base but we are \
+            trying to copy ${install_dir} to $out instead!"; exit 1)
             cp -R ${install_dir} $out
           '';
 
