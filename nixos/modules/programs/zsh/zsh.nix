@@ -12,7 +12,7 @@ let
 
   zshAliases = concatStringsSep "\n" (
     mapAttrsFlatten (k: v: "alias ${k}=${escapeShellArg v}")
-      (filterAttrs (k: v: !isNull v) cfg.shellAliases)
+      (filterAttrs (k: v: v != null) cfg.shellAliases)
   );
 
 in
@@ -69,9 +69,7 @@ in
 
       promptInit = mkOption {
         default = ''
-          if [ "$TERM" != dumb ]; then
-              autoload -U promptinit && promptinit && prompt walters
-          fi
+          autoload -U promptinit && promptinit && prompt walters && setopt prompt_sp
         '';
         description = ''
           Shell script code used to initialise the zsh prompt.
@@ -194,8 +192,6 @@ in
         HISTSIZE=${toString cfg.histSize}
         HISTFILE=${cfg.histFile}
 
-        ${optionalString (cfg.setOptions != []) "setopt ${concatStringsSep " " cfg.setOptions}"}
-
         HELPDIR="${pkgs.zsh}/share/zsh/$ZSH_VERSION/help"
 
         # Tell zsh how to find installed completions
@@ -209,9 +205,19 @@ in
 
         ${cfg.interactiveShellInit}
 
+        ${optionalString (cfg.setOptions != []) "setopt ${concatStringsSep " " cfg.setOptions}"}
+
         ${zshAliases}
 
         ${cfg.promptInit}
+
+        # Need to disable features to support TRAMP
+        if [ "$TERM" = dumb ]; then
+            unsetopt zle prompt_cr prompt_subst
+            unset RPS1 RPROMPT
+            PS1='$ '
+            PROMPT='$ '
+        fi
 
         # Read system-wide modifications.
         if test -f /etc/zshrc.local; then

@@ -1,10 +1,10 @@
 { stdenv, pkgconfig, fetchurl, buildPythonApplication
 , autoreconfHook, wrapGAppsHook, gobject-introspection
 , intltool, yelp-tools, itstool, libxmlxx3
-, python, pygobject3, gtk3, gnome3, substituteAll
+, python, pygobject3, gtk3, gnome3, substituteAll, hicolor-icon-theme
 , at-spi2-atk, at-spi2-core, pyatspi, dbus, dbus-python, pyxdg
 , xkbcomp, procps, lsof, coreutils, gsettings-desktop-schemas
-, speechd, brltty, setproctitle, gst_all_1, gst-python
+, speechd, brltty, liblouis, setproctitle, gst_all_1, gst-python
 }:
 
 buildPythonApplication rec {
@@ -31,12 +31,14 @@ buildPythonApplication rec {
   nativeBuildInputs = [
     autoreconfHook wrapGAppsHook pkgconfig libxmlxx3
     intltool yelp-tools itstool gobject-introspection
+    hicolor-icon-theme # setup-hook
   ];
 
   propagatedBuildInputs = [
-    # TODO: re-add liblouis when it is fixed
-    pygobject3 pyatspi dbus-python pyxdg brltty speechd gst-python setproctitle
+    pygobject3 pyatspi dbus-python pyxdg brltty liblouis speechd gst-python setproctitle
   ];
+
+  strictDeps = false;
 
   buildInputs = [
     python gtk3 at-spi2-atk at-spi2-core dbus gsettings-desktop-schemas

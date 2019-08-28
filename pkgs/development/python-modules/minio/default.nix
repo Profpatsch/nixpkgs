@@ -1,13 +1,13 @@
-{ stdenv, lib, buildPythonPackage, isPy3k, fetchPypi
+{ lib, buildPythonPackage, isPy3k, fetchPypi
 , urllib3, python-dateutil , pytz, faker, mock, nose }:
 
 buildPythonPackage rec {
   pname = "minio";
-  version = "4.0.13";
+  version = "4.0.17";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "1sbmv1lskm5cs3jmn8f2688pimgibly16g8ycc6fgnsjanyby35l";
+    sha256 = "0fb1faab701008a1ff05b9b2497b6ba52d1aff963323356ed86f2771b186db6b";
   };
 
   disabled = !isPy3k;

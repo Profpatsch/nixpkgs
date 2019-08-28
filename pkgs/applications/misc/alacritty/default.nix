@@ -2,27 +2,29 @@
   lib,
   fetchFromGitHub,
   rustPlatform,
+
   cmake,
+  gzip,
   makeWrapper,
   ncurses,
-  expat,
   pkgconfig,
-  freetype,
+  python3,
+
+  expat,
   fontconfig,
+  freetype,
+  libGL,
   libX11,
-  gzip,
   libXcursor,
-  libXxf86vm,
   libXi,
   libXrandr,
-  libGL,
-  xclip,
-  wayland,
+  libXxf86vm,
+  libxcb,
   libxkbcommon,
+  wayland,
+
   # Darwin Frameworks
-  cf-private,
   AppKit,
-  CoreFoundation,
   CoreGraphics,
   CoreServices,
   CoreText,
@@ -34,52 +36,45 @@ with rustPlatform;
 let
   rpathLibs = [
     expat
-    freetype
     fontconfig
+    freetype
+    libGL
     libX11
     libXcursor
-    libXxf86vm
-    libXrandr
-    libGL
     libXi
+    libXrandr
+    libXxf86vm
+    libxcb
   ] ++ lib.optionals stdenv.isLinux [
-    wayland
     libxkbcommon
+    wayland
   ];
 in buildRustPackage rec {
   pname = "alacritty";
-  version = "0.3.0";
+  version = "0.3.3";
 
   src = fetchFromGitHub {
     owner = "jwilm";
     repo = pname;
     rev = "v${version}";
-    sha256 = "0d9qnymi8v4aqm2p300ccdsgavrnd64sv7v0cz5dp0sp5c0vd7jl";
+    sha256 = "1h9zid7bi19qga3a8a2d4x3ma9wf1njmj74s4xnw7nzqqf3dh750";
   };
 
-  cargoSha256 = "11gpv0h15n12f97mcwjymlzcmkldbakkkb5h931qgm3mvhhq5ay5";
+  cargoSha256 = "1rxb5ljgvn881jkxm8772kf815mmp08ci7sqmn2x1jwdcrphhxr1";
 
   nativeBuildInputs = [
     cmake
-    makeWrapper
-    pkgconfig
-    ncurses
     gzip
+    makeWrapper
+    ncurses
+    pkgconfig
+    python3
   ];
 
   buildInputs = rpathLibs
-    ++ lib.optionals stdenv.isDarwin [
-      AppKit CoreFoundation CoreGraphics CoreServices CoreText Foundation OpenGL
-      # Needed for CFURLResourceIsReachable symbols.
-      cf-private
-    ];
+    ++ lib.optionals stdenv.isDarwin [ AppKit CoreGraphics CoreServices CoreText Foundation OpenGL ];
 
   outputs = [ "out" "terminfo" ];
-
-  postPatch = ''
-    substituteInPlace copypasta/src/x11.rs \
-      --replace Command::new\(\"xclip\"\) Command::new\(\"${xclip}/bin/xclip\"\)
-  '';
 
   postBuild = lib.optionalString stdenv.isDarwin "make app";
 
@@ -119,6 +114,6 @@ in buildRustPackage rec {
     homepage = https://github.com/jwilm/alacritty;
     license = with licenses; [ asl20 ];
     maintainers = with maintainers; [ mic92 ];
-    platforms = [ "x86_64-linux" "x86_64-darwin" ];
+    platforms = [ "x86_64-linux" "i686-linux" "x86_64-darwin" "aarch64-linux" ];
   };
 }

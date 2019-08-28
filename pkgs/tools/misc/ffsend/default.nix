@@ -1,34 +1,38 @@
 { stdenv, fetchFromGitLab, rustPlatform, cmake, pkgconfig, openssl
 , darwin
 
-, x11Support ? stdenv.isLinux
+, x11Support ? stdenv.isLinux || stdenv.hostPlatform.isBSD
 , xclip ? null, xsel ? null
 , preferXsel ? false # if true and xsel is non-null, use it instead of xclip
 }:
 
-assert (x11Support && stdenv.isLinux) -> xclip != null || xsel != null;
+let
+  usesX11 = stdenv.isLinux || stdenv.hostPlatform.isBSD;
+in
+
+assert (x11Support && usesX11) -> xclip != null || xsel != null;
 
 with rustPlatform;
 
 buildRustPackage rec {
-  name = "ffsend-${version}";
-  version = "0.2.42";
+  pname = "ffsend";
+  version = "0.2.50";
 
   src = fetchFromGitLab {
     owner = "timvisee";
     repo = "ffsend";
     rev = "v${version}";
-    sha256 = "0lsdn967rq6hf3fmkynznsvj8fcka5wi1mpcl3wfa7hf58r266yq";
+    sha256 = "06virzmg3prvwk5gilr19qrpi93wvv7jq096kgsbn3rmnv3ys1zh";
   };
 
-  cargoSha256 = "1f1npdr8v9vlv3xdraq1qang4l0j0w9slbws4da5ylw195nb4qx5";
+  cargoSha256 = "1g72nz3nha41cvsb514z4k78yw7xcsh3nm0bl2wqy9dvdzgp1lm1";
 
   nativeBuildInputs = [ cmake pkgconfig ];
   buildInputs = [ openssl ]
   ++ stdenv.lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [ CoreFoundation CoreServices Security AppKit ])
   ;
 
-  preBuild = stdenv.lib.optionalString (x11Support && stdenv.isLinux) (
+  preBuild = stdenv.lib.optionalString (x11Support && usesX11) (
     if preferXsel && xsel != null then ''
       export XSEL_PATH="${xsel}/bin/xsel"
     '' else ''
@@ -54,6 +58,6 @@ buildRustPackage rec {
     homepage = https://gitlab.com/timvisee/ffsend;
     license = licenses.gpl3;
     maintainers = [ maintainers.lilyball ];
-    platforms = platforms.darwin ++ platforms.linux;
+    platforms = platforms.unix;
   };
 }

@@ -3,13 +3,13 @@
 
 stdenv.mkDerivation rec {
   pname = "notes-up";
-  version = "2.0.0";
+  version = "2.0.2";
 
   src = fetchFromGitHub {
     owner = "Philip-Scott";
     repo = "Notes-up";
     rev = version;
-    sha256 = "16bb9ffsg2csps1cb636rff5vc6f1yyhg65g3y5b4wf2hlbmzgql";
+    sha256 = "0bklgp8qrrj9y5m77xqbpy1ld2d9ya3rlxklgzx3alffq5312i4s";
   };
 
   nativeBuildInputs = [

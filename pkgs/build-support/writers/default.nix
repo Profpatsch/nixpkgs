@@ -24,6 +24,9 @@ rec {
     }) ''
       echo "#! $interpreter" > $out
       cat "$contentPath" >> $out
+      ${optionalString (check != "") ''
+        ${check} $out
+      ''}
       chmod +x $out
       ${optionalString (types.path.check nameOrPath) ''
         mv $out tmp
@@ -94,8 +97,8 @@ rec {
         ]}
         gcc \
             ${optionalString (libraries != [])
-              "$(pkgs.pkgconfig}/bin/pkg-config --cflags --libs ${
-                concatMapStringsSep " " (lib: escapeShellArg (builtins.parseDrvName lib.name).name) (libraries)
+              "$(pkg-config --cflags --libs ${
+                concatMapStringsSep " " (pkg: "$(find ${escapeShellArg pkg}/lib/pkgsconfig -name \*.pc -exec basename {} \;)") libraries
               })"
             } \
             -O \

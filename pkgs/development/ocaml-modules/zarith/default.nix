@@ -29,13 +29,14 @@ stdenv.mkDerivation rec {
   configurePhase = ''
     ./configure -installdir $out/lib/ocaml/${ocaml.version}/site-lib
   '';
-  createFindlibDestdir = true;
+
+  preInstall = "mkdir -p $out/lib/ocaml/${ocaml.version}/site-lib/stublibs";
 
   meta = with stdenv.lib; {
     description = "Fast, arbitrary precision OCaml integers";
     homepage    = "http://forge.ocamlcore.org/projects/zarith";
     license     = licenses.lgpl2;
-    platforms   = ocaml.meta.platforms or [];
+    inherit (ocaml.meta) platforms;
     maintainers = with maintainers; [ thoughtpolice vbgl ];
   };
 }

@@ -2,16 +2,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "just";
-  version = "0.4.0";
+  version = "0.4.4";
 
   src = fetchFromGitHub {
     owner = "casey";
     repo = pname;
     rev = "v${version}";
-    sha256 = "1v42y8lc1akpnzad0gf89jywbxa74mmzimfsbvkdi7101z5q5qlp";
+    sha256 = "06k1pl2qmmr9q0ffw6l0dzqqfgpckmrdzjpzn9cw23shhihv99a8";
   };
 
-  cargoSha256 = "1kgkcl7qffh6vbjdpvrkw8ih1v8zrxs3f0a20mg6z97gdym6mm8g";
+  cargoSha256 = "1blsdl9dsq24vhm8cg1ja9m4b3h343lndibq6wz2kcwdq4i8jhd0";
 
   checkInputs = [ coreutils bash dash ];
 

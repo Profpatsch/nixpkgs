@@ -1,10 +1,10 @@
 { lib, buildGoPackage, fetchFromGitHub }:
 
 buildGoPackage rec {
-  name = "skaffold-${version}";
-  version = "0.26.0";
-  # rev is the 0.25.0 commit, mainly for skaffold version command output
-  rev = "d88680e9ede62da65500702670ef72fc9272a06f";
+  pname = "skaffold";
+  version = "0.36.0";
+  # rev is the 0.36.0 commit, mainly for skaffold version command output
+  rev = "1c054d4ffc7e14b4d81efcbea8b2022403ee4b89";
 
   goPackagePath = "github.com/GoogleContainerTools/skaffold";
   subPackages = ["cmd/skaffold"];
@@ -20,7 +20,7 @@ buildGoPackage rec {
     owner = "GoogleContainerTools";
     repo = "skaffold";
     rev = "v${version}";
-    sha256 = "151x7hs1876ij5kc1xlm1m7pyff6i22ddhfvjsgwb8sjl4h1ays5";
+    sha256 = "1d7z36r33lmxm5cv1kby6g9zbsr88prgsp32x4jcs9l1ifwblhng";
   };
 
   meta = {

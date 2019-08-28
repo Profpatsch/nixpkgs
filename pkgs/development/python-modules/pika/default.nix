@@ -13,11 +13,11 @@
 
 buildPythonPackage rec {
   pname = "pika";
-  version = "1.0.0";
+  version = "1.1.0";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "119lpjzw8wd7c6ikn35c0pvr3zzfy20rklpxdkcmp12wnf9i597v";
+    sha256 = "1gqx9avb9nwgiyw5nz08bf99v9b0hvzr1pmqn9wbhd2hnsj6p9wz";
   };
 
   # Tests require twisted which is only availalble for python-2.x

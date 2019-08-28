@@ -1,4 +1,4 @@
-{ fetchurl, stdenv, gettext, pth, libgpgerror }:
+{ fetchurl, stdenv, gettext, npth, libgpgerror, buildPackages }:
 
 stdenv.mkDerivation rec {
   pname = "libassuan";
@@ -12,7 +12,12 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "info" ];
   outputBin = "dev"; # libassuan-config
 
-  buildInputs = [ libgpgerror pth gettext];
+  depsBuildBuild = [ buildPackages.stdenv.cc ];
+  buildInputs = [ npth gettext ];
+
+  configureFlags = [
+    "--with-libgpg-error-prefix=${libgpgerror.dev}"
+  ];
 
   doCheck = true;
 
@@ -32,5 +37,6 @@ stdenv.mkDerivation rec {
     homepage = http://gnupg.org;
     license = licenses.lgpl2Plus;
     platforms = platforms.all;
+    maintainers = [ maintainers.erictapen ];
   };
 }

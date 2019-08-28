@@ -1,9 +1,9 @@
-{ stdenv, lib, buildPythonPackage, /*fetchPypi,*/ fetchFromGitHub, makeWrapper, isPy3k,
+{ stdenv, lib, buildPythonPackage, fetchPypi, makeWrapper, isPy3k,
   python, twisted, jinja2, zope_interface, future, sqlalchemy,
   sqlalchemy_migrate, dateutil, txaio, autobahn, pyjwt, pyyaml, treq,
-  txrequests, txgithub, pyjade, boto3, moto, mock, python-lz4, setuptoolsTrial,
+  txrequests, pyjade, boto3, moto, mock, python-lz4, setuptoolsTrial,
   isort, pylint, flake8, buildbot-worker, buildbot-pkg, parameterized,
-  glibcLocales }:
+  git, glibcLocales }:
 
 let
   withPlugins = plugins: buildPythonPackage {
@@ -25,28 +25,18 @@ let
 
   package = buildPythonPackage rec {
     pname = "buildbot";
-    version = "2.1.0";
+    version = "2.4.0";
 
-    /*src = fetchPypi {
+    src = fetchPypi {
       inherit pname version;
-      sha256 = "1745hj9s0c0fcdjv6w05bma76xqg1fv42v0dslmi4d8yz9phf37w";
-    };*/
-    # Temporarily use GitHub source because PyPi archive is missing some files
-    # needed for the tests to pass. This has been fixed upstream.
-    # See: https://github.com/buildbot/buildbot/commit/30f5927cf9a80f98ed909241a149469dec3ce68d
-    src = fetchFromGitHub {
-      owner = "buildbot";
-      repo = "buildbot";
-      rev = "v${version}";
-      sha256 = "022ybhdvp0hp2z0cwgx7n41jyh56bpxj3fwm4z7ppzj1qhm7lb65";
-    } + "/master";
+      sha256 = "141ad2g1j5y0n5cdnd18m55ss0gqjlz5ky85rb6qfn73dgw42vmz";
+    };
 
     propagatedBuildInputs = [
       # core
       twisted
       jinja2
       zope_interface
-      future
       sqlalchemy
       sqlalchemy_migrate
       dateutil
@@ -74,6 +64,7 @@ let
       buildbot-worker
       buildbot-pkg
       parameterized
+      git
       glibcLocales
     ];
 
@@ -104,7 +95,7 @@ let
     meta = with lib; {
       homepage = http://buildbot.net/;
       description = "Buildbot is an open-source continuous integration framework for automating software build, test, and release processes";
-      maintainers = with maintainers; [ nand0p ryansydnor ];
+      maintainers = with maintainers; [ nand0p ryansydnor lopsided98 ];
       license = licenses.gpl2;
     };
   };

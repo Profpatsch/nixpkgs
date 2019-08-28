@@ -4,8 +4,8 @@ with haskellLib;
 
 self: super: {
 
-  # This compiler version needs llvm 5.x.
-  llvmPackages = pkgs.llvmPackages_5;
+  # This compiler version needs llvm 6.x.
+  llvmPackages = pkgs.llvmPackages_6;
 
   # Disable GHC 8.6.x core libraries.
   array = null;
@@ -40,6 +40,9 @@ self: super: {
   transformers = null;
   unix = null;
   xhtml = null;
+
+  # Needs Cabal 3.0.x.
+  cabal-install = super.cabal-install.overrideScope (self: super: { Cabal = self.Cabal_3_0_0_0; });
 
   # https://github.com/tibbe/unordered-containers/issues/214
   unordered-containers = dontCheck super.unordered-containers;
@@ -87,5 +90,8 @@ self: super: {
     };
     version = "0.8.6.0-pre-release";
   };
+
+  # Newer versions don't compile.
+  resolv = self.resolv_0_1_1_2;
 
 }
