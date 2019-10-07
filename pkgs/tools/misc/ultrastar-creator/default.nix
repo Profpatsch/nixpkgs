@@ -1,5 +1,5 @@
 { stdenv, fetchFromGitHub
-, qmake, qtbase, pkgconfig, taglib, libbass, libbass_fx }:
+, qmake, qtbase, pkgconfig, taglib, libbass, libbass_fx, wrapQtAppsHook }:
 
 # TODO: get rid of (unfree) libbass
 # issue:https://github.com/UltraStar-Deluxe/UltraStar-Creator/issues/3
@@ -33,7 +33,7 @@ stdenv.mkDerivation rec {
     cd src
   '';
 
-  nativeBuildInputs = [ qmake pkgconfig ];
+  nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
   buildInputs = [ qtbase taglib libbass libbass_fx ];
 
   meta = with stdenv.lib; {

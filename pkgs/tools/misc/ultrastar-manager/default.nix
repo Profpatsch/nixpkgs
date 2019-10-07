@@ -1,10 +1,11 @@
 { stdenv, fetchFromGitHub, pkgconfig, symlinkJoin, qmake, diffPlugins
-, qtbase, qtmultimedia, taglib, libmediainfo, libzen, libbass }:
+, qtbase, qtmultimedia, wrapQtAppsHook, taglib, libmediainfo, libzen, libbass }:
 
 let
   version = "2019-04-23";
   rev = "ef4524e2239ddbb60f26e05bfba1f4f28cb7b54f";
   sha256 = "0dl2qp686vbs160b3i9qypb7sv37phy2wn21kgzljbk3wnci3yv4";
+
   buildInputs = [ qtbase qtmultimedia taglib libmediainfo libzen libbass ];
 
   plugins = [
@@ -108,7 +109,7 @@ in stdenv.mkDerivation {
     make install
   '';
 
-  nativeBuildInputs = [ pkgconfig ];
+  nativeBuildInputs = [ pkgconfig wrapQtAppsHook ];
   inherit buildInputs;
 
   meta = with stdenv.lib; {
