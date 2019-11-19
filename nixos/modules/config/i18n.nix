@@ -97,11 +97,7 @@ in
       };
 
       consoleKeyMap = mkOption {
-        type = mkOptionType {
-          name = "string or path";
-          check = t: (isString t || types.path.check t);
-        };
-
+        type = with types; either str path;
         default = "us";
         example = "fr";
         description = ''

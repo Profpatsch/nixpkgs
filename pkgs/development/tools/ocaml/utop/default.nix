@@ -7,12 +7,12 @@ then throw "utop is not available for OCaml ${ocaml.version}"
 else
 
 stdenv.mkDerivation rec {
-  version = "2.4.1";
-  name = "utop-${version}";
+  pname = "utop";
+  version = "2.4.2";
 
   src = fetchurl {
-    url = "https://github.com/diml/utop/archive/${version}.tar.gz";
-    sha256 = "0kbg7sfn7jaic7xcy7dm543yzsywirxbgpiv2rzwnp9ny2510f9g";
+    url = "https://github.com/ocaml-community/utop/releases/download/${version}/utop-${version}.tbz";
+    sha256 = "0y2v8rkfz19nlz8gh0lkh5wx5hyvw5gl4nw1kg8j2pw9jnilq5nb";
   };
 
   nativeBuildInputs = [ makeWrapper ];
@@ -28,8 +28,9 @@ stdenv.mkDerivation rec {
 
      # derivation of just runtime deps so env vars created by
      # setup-hooks can be saved for use at runtime
-     runtime = stdenv.mkDerivation rec {
-       name = "utop-runtime-env-${version}";
+     runtime = stdenv.mkDerivation {
+       pname = "utop-runtime-env";
+       inherit version;
 
        buildInputs = [ findlib ] ++ propagatedBuildInputs;
 

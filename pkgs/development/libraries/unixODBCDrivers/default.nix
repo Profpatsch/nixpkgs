@@ -1,14 +1,14 @@
-{ fetchurl, stdenv, unixODBC, cmake, postgresql, mysql, mariadb, sqlite, zlib, libxml2, dpkg, lib, kerberos, curl, libuuid, autoPatchelfHook }:
+{ fetchurl, stdenv, unixODBC, cmake, postgresql, mysql, libmysqlclient, sqlite, zlib, libxml2, dpkg, lib, openssl, kerberos, libuuid, patchelf }:
 
 # I haven't done any parameter tweaking.. So the defaults provided here might be bad
 
 {
   psql = stdenv.mkDerivation rec {
-    name = "psqlodbc-${version}";
+    pname = "psqlodbc";
     version = "10.01.0000";
 
     src = fetchurl {
-      url = "http://ftp.postgresql.org/pub/odbc/versions/src/${name}.tar.gz";
+      url = "http://ftp.postgresql.org/pub/odbc/versions/src/${pname}-${version}.tar.gz";
       sha256 = "1cyams7157f3gry86x64xrplqi2vyqrq3rqka59gv4lb4rpl7jl7";
     };
 
@@ -28,19 +28,24 @@
   };
 
   mariadb = stdenv.mkDerivation rec {
-    name = "mariadb-connector-odbc-${version}";
-    version = "2.0.10";
+    pname = "mariadb-connector-odbc";
+    version = "3.1.2";
 
     src = fetchurl {
-      url = "https://downloads.mariadb.org/interstitial/connector-odbc-${version}/src/${name}-ga-src.tar.gz";
-      sha256 = "0b6ximy0dg0xhqbrm1l7pn8hjapgpmddi67kh54h6i9cq9hqfdvz";
+      url = "https://downloads.mariadb.org/interstitial/connector-odbc-${version}/${pname}-${version}-ga-src.tar.gz";
+      sha256 = "0iibly2mbqijqyq4pzpb6dh40clqhvqrhgnj8knm4bw3nlksd0d5";
     };
 
     nativeBuildInputs = [ cmake ];
-    buildInputs = [ unixODBC mariadb.connector-c ];
+    buildInputs = [ unixODBC libmysqlclient openssl ];
 
     cmakeFlags = [
-      "-DMARIADB_INCLUDE_DIR=${mariadb.connector-c}/include/mariadb"
+      "-DWITH_OPENSSL=ON"
+    ];
+
+   NIX_CFLAGS_COMPILE = [
+     "-I${libmysqlclient}/include/mysql"
+     "-L${libmysqlclient}/lib/mysql"
     ];
 
     passthru = {
@@ -57,12 +62,12 @@
   };
 
   mysql = stdenv.mkDerivation rec {
-    name = "mysql-connector-odbc-${version}";
+    pname = "mysql-connector-odbc";
     majorVersion = "5.3";
     version = "${majorVersion}.6";
 
     src = fetchurl {
-      url = "https://dev.mysql.com/get/Downloads/Connector-ODBC/${majorVersion}/${name}-src.tar.gz";
+      url = "https://dev.mysql.com/get/Downloads/Connector-ODBC/${majorVersion}/${pname}-${version}-src.tar.gz";
       sha256 = "1smi4z49i4zm7cmykjkwlxxzqvn7myngsw5bc35z6gqxmi8c55xr";
     };
 
@@ -86,7 +91,7 @@
   };
 
   sqlite = stdenv.mkDerivation rec {
-    name = "sqlite-connector-odbc-${version}";
+    pname = "sqlite-connector-odbc";
     version = "0.9993";
  
     src = fetchurl {
@@ -121,7 +126,7 @@
   };
 
   msodbcsql17 = stdenv.mkDerivation rec {
-    name = "msodbcsql17-${version}";
+    pname = "msodbcsql17";
     version = "${versionMajor}.${versionMinor}.${versionAdditional}-1";
 
     versionMajor = "17";
@@ -133,8 +138,7 @@
       sha256 = "0jb16irr7qlgd2zshg0vyia7zqipd0pcvwfcr6z807pss1mnzj8w";
     };
 
-    nativeBuildInputs = [ autoPatchelfHook ];
-    buildInputs = [ unixODBC dpkg kerberos libuuid stdenv.cc.cc ];
+    nativeBuildInputs = [ dpkg patchelf ];
 
     unpackPhase = "dpkg -x $src ./";
     buildPhase = "";
@@ -143,6 +147,11 @@
       mkdir -p $out
       mkdir -p $out/lib
       cp -r opt/microsoft/msodbcsql${versionMajor}/lib64 opt/microsoft/msodbcsql${versionMajor}/share $out/
+    '';
+
+    postFixup = ''
+      patchelf --set-rpath ${lib.makeLibraryPath [ unixODBC openssl.out kerberos libuuid stdenv.cc.cc ]} \
+        $out/lib/libmsodbcsql-${versionMajor}.${versionMinor}.so.${versionAdditional}
     '';
 
     passthru = {

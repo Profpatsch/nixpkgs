@@ -75,7 +75,7 @@ in
 
         Note that this configuration will only be successful when a display manager
         for which the <option>services.xserver.displayManager.setupCommands</option>
-        option is supported is used; notably, SLiM is not supported.
+        option is supported is used.
       '';
     };
 
@@ -88,7 +88,7 @@ in
     };
 
     hardware.nvidia.optimus_prime.nvidiaBusId = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       default = "";
       example = "PCI:1:0:0";
       description = ''
@@ -98,7 +98,7 @@ in
     };
 
     hardware.nvidia.optimus_prime.intelBusId = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       default = "";
       example = "PCI:0:2:0";
       description = ''

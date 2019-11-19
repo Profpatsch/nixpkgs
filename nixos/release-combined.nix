@@ -68,6 +68,7 @@ in rec {
         nixos.tests.chromium.x86_64-linux or []
         (all nixos.tests.firefox)
         (all nixos.tests.firewall)
+        (all nixos.tests.fontconfig-default-fonts)
         (all nixos.tests.gnome3-xorg)
         (all nixos.tests.gnome3)
         (all nixos.tests.pantheon)
@@ -132,7 +133,6 @@ in rec {
         (all nixos.tests.proxy)
         (all nixos.tests.sddm.default)
         (all nixos.tests.simple)
-        (all nixos.tests.slim)
         (all nixos.tests.switchTest)
         (all nixos.tests.udisks2)
         (all nixos.tests.xfce)

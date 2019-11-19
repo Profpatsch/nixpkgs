@@ -1,7 +1,7 @@
 { stdenv, requireFile, unzip }:
 
-stdenv.mkDerivation rec {
-  name = "input-fonts-${version}";
+stdenv.mkDerivation {
+  pname = "input-fonts";
   version = "2017-08-10"; # date of the download and checksum
 
   src = requireFile {
@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
       generous spacing, large punctuation, and easily distinguishable
       characters — but without the limitations of a fixed width.
     '';
-    homepage = http://input.fontbureau.com;
+    homepage = https://input.fontbureau.com;
     license = licenses.unfree;
     maintainers = with maintainers; [ romildo ];
     platforms = platforms.all;
