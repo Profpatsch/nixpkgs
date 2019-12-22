@@ -394,6 +394,11 @@ self: super: {
   Random123 = dontCheck super.Random123;
   systemd = dontCheck super.systemd;
 
+  # use the correct version of network
+  systemd_2_2_0 = dontCheck (super.systemd_2_2_0.override {
+    network = self.network_3_1_1_1;
+  });
+
   # https://github.com/eli-frey/cmdtheline/issues/28
   cmdtheline = dontCheck super.cmdtheline;
 
@@ -511,7 +516,9 @@ self: super: {
      else dontCheck super.tasty-discover);
 
   # generic-deriving bound is too tight
-  aeson = doJailbreak super.aeson;
+  # aeson 1.4.6.0 needs Diff 0.4.0 to do tests but nixpkgs is still at 0.3.4
+  # https://github.com/bos/aeson/issues/740
+  aeson = dontCheck (doJailbreak super.aeson);
 
   # containers >=0.4 && <0.6 is too tight
   # https://github.com/RaphaelJ/friday/issues/34
@@ -1050,8 +1057,7 @@ self: super: {
     generateOptparseApplicativeCompletion "dhall" (
       dontCheck super.dhall
   );
-  dhall_1_27_0 = dontCheck super.dhall_1_27_0;
-
+  dhall_1_28_0 = dontCheck super.dhall_1_28_0;
 
   # Missing test files in source distribution, fixed once 1.4.0 is bumped
   # https://github.com/dhall-lang/dhall-haskell/pull/997
@@ -1078,6 +1084,7 @@ self: super: {
 
   # The test suite is broken. Break out of "base-compat >=0.9.3 && <0.10, hspec >=2.4.4 && <2.5".
   haddock-library = doJailbreak (dontCheck super.haddock-library);
+  haddock-library_1_8_0 = doJailbreak super.haddock-library_1_8_0;
 
   # Generate shell completion.
   cabal2nix = generateOptparseApplicativeCompletion "cabal2nix" super.cabal2nix;
@@ -1183,18 +1190,6 @@ self: super: {
   # test suite failure: https://github.com/jgm/pandoc/issues/5582
   pandoc = dontCheck super.pandoc;
 
-  # The latest release version is ancient. You really need this tool from git.
-  haskell-ci = generateOptparseApplicativeCompletion "haskell-ci"
-    (addBuildDepend (overrideSrc (dontCheck super.haskell-ci) {
-      version = "20190814-git";
-      src = pkgs.fetchFromGitHub {
-        owner = "haskell-CI";
-        repo = "haskell-ci";
-        rev = "70918d80b6fd43aca7e4d00ba0d2ea116b666556";
-        sha256 = "0bzp959qy74zmqq75f60rcixpjbvvyrb5a8zp2nyql3nm9vxzy5k";
-      };
-  }) (with self; [temporary lattices Cabal_3_0_0_0]));
-
   # Fix build with attr-2.4.48 (see #53716)
   xattr = appendPatch super.xattr ./patches/xattr-fix-build.patch;
 
@@ -1219,8 +1214,8 @@ self: super: {
   temporary-resourcet = doJailbreak super.temporary-resourcet;
 
   # Requires dhall >= 1.23.0
-  ats-pkg = super.ats-pkg.override { dhall = self.dhall_1_27_0; };
-  dhall-to-cabal = super.dhall-to-cabal.override { dhall = self.dhall_1_27_0; };
+  ats-pkg = super.ats-pkg.override { dhall = self.dhall_1_28_0; };
+  dhall-to-cabal = super.dhall-to-cabal.override { dhall = self.dhall_1_28_0; };
 
   # Test suite doesn't work with current QuickCheck
   # https://github.com/pruvisto/heap/issues/11
@@ -1230,7 +1225,7 @@ self: super: {
   constraints-deriving = dontCheck super.constraints-deriving;
 
   # need newer version of ghc-libparser
-  hlint = super.hlint.override { ghc-lib-parser = self.ghc-lib-parser_8_8_1; };
+  hlint = super.hlint.override { ghc-lib-parser = self.ghc-lib-parser_8_8_1_20191204; };
 
   # https://github.com/sol/hpack/issues/366
   hpack = self.hpack_0_33_0;
@@ -1251,7 +1246,7 @@ self: super: {
   });
 
   # The LTS-14.x version of their dependencies are too old.
-  cabal-plan = super.cabal-plan.override { optparse-applicative = self.optparse-applicative_0_15_1_0; };
+  cabal-plan = super.cabal-plan.overrideScope (self: super: { optparse-applicative = self.optparse-applicative_0_15_1_0; ansi-terminal = self.ansi-terminal_0_10_2; base-compat = self.base-compat_0_11_0; semialign = self.semialign_1_1; time-compat = doJailbreak super.time-compat; });
   hoogle = super.hoogle.override { haskell-src-exts = self.haskell-src-exts_1_22_0; };
 
   # Version bounds for http-client are too strict:
@@ -1317,5 +1312,19 @@ self: super: {
 
   # Needs the corresponding version of haskell-src-exts.
   haskell-src-exts-simple = super.haskell-src-exts-simple.override { haskell-src-exts = self.haskell-src-exts_1_22_0; };
+
+  # https://github.com/Daniel-Diaz/HaTeX/issues/144
+  HaTeX = dontCheck super.HaTeX;
+
+  # https://github.com/kazu-yamamoto/dns/issues/150
+  dns = dontCheck super.dns;
+
+  # needs newer version of the systemd package
+  spacecookie = super.spacecookie.override { systemd = self.systemd_2_2_0; };
+
+  # ghcide needs the latest versions of haskell-lsp.
+  ghcide = super.ghcide.override { haskell-lsp = self.haskell-lsp_0_18_0_0; lsp-test = self.lsp-test_0_8_2_0; };
+  haskell-lsp_0_18_0_0 = super.haskell-lsp_0_18_0_0.override { haskell-lsp-types = self.haskell-lsp-types_0_18_0_0; };
+  lsp-test_0_8_2_0 = (dontCheck super.lsp-test_0_8_2_0).override { haskell-lsp = self.haskell-lsp_0_18_0_0; };
 
 } // import ./configuration-tensorflow.nix {inherit pkgs haskellLib;} self super

@@ -21,6 +21,7 @@ let
     else {};
 in
 {
+  _3proxy = handleTest ./3proxy.nix {};
   acme = handleTestOn ["x86_64-linux"] ./acme.nix {};
   atd = handleTest ./atd.nix {};
   automysqlbackup = handleTest ./automysqlbackup.nix {};
@@ -28,7 +29,7 @@ in
   babeld = handleTest ./babeld.nix {};
   bcachefs = handleTestOn ["x86_64-linux"] ./bcachefs.nix {}; # linux-4.18.2018.10.12 is unsupported on aarch64
   beanstalkd = handleTest ./beanstalkd.nix {};
-  beegfs = handleTestOn ["x86_64-linux"] ./beegfs.nix {}; # beegfs is unsupported on aarch64
+  bees = handleTest ./bees.nix {};
   bind = handleTest ./bind.nix {};
   bittorrent = handleTest ./bittorrent.nix {};
   #blivet = handleTest ./blivet.nix {};   # broken since 2017-07024
@@ -48,15 +49,16 @@ in
   clickhouse = handleTest ./clickhouse.nix {};
   cloud-init = handleTest ./cloud-init.nix {};
   codimd = handleTest ./codimd.nix {};
+  consul = handleTest ./consul.nix {};
   containers-bridge = handleTest ./containers-bridge.nix {};
   containers-ephemeral = handleTest ./containers-ephemeral.nix {};
   containers-extra_veth = handleTest ./containers-extra_veth.nix {};
   containers-hosts = handleTest ./containers-hosts.nix {};
   containers-imperative = handleTest ./containers-imperative.nix {};
-  containers-ipv4 = handleTest ./containers-ipv4.nix {};
-  containers-ipv6 = handleTest ./containers-ipv6.nix {};
+  containers-ip = handleTest ./containers-ip.nix {};
   containers-macvlans = handleTest ./containers-macvlans.nix {};
   containers-physical_interfaces = handleTest ./containers-physical_interfaces.nix {};
+  containers-portforward = handleTest ./containers-portforward.nix {};
   containers-restart_networking = handleTest ./containers-restart_networking.nix {};
   containers-tmpfs = handleTest ./containers-tmpfs.nix {};
   couchdb = handleTest ./couchdb.nix {};
@@ -94,6 +96,7 @@ in
   gitea = handleTest ./gitea.nix {};
   gitlab = handleTest ./gitlab.nix {};
   gitolite = handleTest ./gitolite.nix {};
+  gitolite-fcgiwrap = handleTest ./gitolite-fcgiwrap.nix {};
   glusterfs = handleTest ./glusterfs.nix {};
   gnome3-xorg = handleTest ./gnome3-xorg.nix {};
   gnome3 = handleTest ./gnome3.nix {};
@@ -104,6 +107,7 @@ in
   grafana = handleTest ./grafana.nix {};
   graphite = handleTest ./graphite.nix {};
   graylog = handleTest ./graylog.nix {};
+  gvisor = handleTest ./gvisor.nix {};
   hadoop.hdfs = handleTestOn [ "x86_64-linux" ] ./hadoop/hdfs.nix {};
   hadoop.yarn = handleTestOn [ "x86_64-linux" ] ./hadoop/yarn.nix {};
   handbrake = handleTestOn ["x86_64-linux"] ./handbrake.nix {};
@@ -187,8 +191,9 @@ in
   networkingProxy = handleTest ./networking-proxy.nix {};
   nextcloud = handleTest ./nextcloud {};
   nexus = handleTest ./nexus.nix {};
-  nfs3 = handleTest ./nfs.nix { version = 3; };
-  nfs4 = handleTest ./nfs.nix { version = 4; };
+  # TODO: Test nfsv3 + Kerberos
+  nfs3 = handleTest ./nfs { version = 3; };
+  nfs4 = handleTest ./nfs { version = 4; };
   nghttpx = handleTest ./nghttpx.nix {};
   nginx = handleTest ./nginx.nix {};
   nginx-sso = handleTest ./nginx-sso.nix {};
@@ -206,7 +211,6 @@ in
   openstack-image-metadata = (handleTestOn ["x86_64-linux"] ./openstack-image.nix {}).metadata or {};
   orangefs = handleTest ./orangefs.nix {};
   os-prober = handleTestOn ["x86_64-linux"] ./os-prober.nix {};
-  osquery = handleTest ./osquery.nix {};
   osrm-backend = handleTest ./osrm-backend.nix {};
   overlayfs = handleTest ./overlayfs.nix {};
   packagekit = handleTest ./packagekit.nix {};
@@ -260,13 +264,16 @@ in
   syncthing-init = handleTest ./syncthing-init.nix {};
   syncthing-relay = handleTest ./syncthing-relay.nix {};
   systemd = handleTest ./systemd.nix {};
+  systemd-analyze = handleTest ./systemd-analyze.nix {};
   systemd-confinement = handleTest ./systemd-confinement.nix {};
   systemd-timesyncd = handleTest ./systemd-timesyncd.nix {};
   systemd-networkd-wireguard = handleTest ./systemd-networkd-wireguard.nix {};
+  systemd-nspawn = handleTest ./systemd-nspawn.nix {};
   pdns-recursor = handleTest ./pdns-recursor.nix {};
   taskserver = handleTest ./taskserver.nix {};
   telegraf = handleTest ./telegraf.nix {};
   tiddlywiki = handleTest ./tiddlywiki.nix {};
+  timezone = handleTest ./timezone.nix {};
   tinydns = handleTest ./tinydns.nix {};
   tor = handleTest ./tor.nix {};
   transmission = handleTest ./transmission.nix {};
@@ -284,11 +291,11 @@ in
   wordpress = handleTest ./wordpress.nix {};
   xautolock = handleTest ./xautolock.nix {};
   xfce = handleTest ./xfce.nix {};
-  xfce4-14 = handleTest ./xfce4-14.nix {};
   xmonad = handleTest ./xmonad.nix {};
   xrdp = handleTest ./xrdp.nix {};
   xss-lock = handleTest ./xss-lock.nix {};
   yabar = handleTest ./yabar.nix {};
   yggdrasil = handleTest ./yggdrasil.nix {};
+  zsh-history = handleTest ./zsh-history.nix {};
   zookeeper = handleTest ./zookeeper.nix {};
 }

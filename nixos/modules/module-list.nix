@@ -11,6 +11,7 @@
   ./config/xdg/mime.nix
   ./config/xdg/portal.nix
   ./config/appstream.nix
+  ./config/console.nix
   ./config/xdg/sounds.nix
   ./config/gtk/gtk-icon-cache.nix
   ./config/gnu.nix
@@ -35,7 +36,6 @@
   ./config/terminfo.nix
   ./config/unix-odbc-drivers.nix
   ./config/users-groups.nix
-  ./config/vpnc.nix
   ./config/vte.nix
   ./config/zram.nix
   ./hardware/acpilight.nix
@@ -255,8 +255,6 @@
   ./services/continuous-integration/jenkins/default.nix
   ./services/continuous-integration/jenkins/job-builder.nix
   ./services/continuous-integration/jenkins/slave.nix
-  ./services/databases/4store-endpoint.nix
-  ./services/databases/4store.nix
   ./services/databases/aerospike.nix
   ./services/databases/cassandra.nix
   ./services/databases/clickhouse.nix
@@ -308,6 +306,7 @@
   ./services/desktops/gnome3/sushi.nix
   ./services/desktops/gnome3/tracker.nix
   ./services/desktops/gnome3/tracker-miners.nix
+  ./services/desktops/neard.nix
   ./services/desktops/profile-sync-daemon.nix
   ./services/desktops/system-config-printer.nix
   ./services/desktops/telepathy.nix
@@ -445,6 +444,7 @@
   ./services/misc/logkeys.nix
   ./services/misc/leaps.nix
   ./services/misc/lidarr.nix
+  ./services/misc/mame.nix
   ./services/misc/mathics.nix
   ./services/misc/matrix-synapse.nix
   ./services/misc/mbpfan.nix
@@ -519,7 +519,6 @@
   ./services/monitoring/munin.nix
   ./services/monitoring/nagios.nix
   ./services/monitoring/netdata.nix
-  ./services/monitoring/osquery.nix
   ./services/monitoring/prometheus/default.nix
   ./services/monitoring/prometheus/alertmanager.nix
   ./services/monitoring/prometheus/exporters.nix
@@ -539,7 +538,6 @@
   ./services/monitoring/zabbix-agent.nix
   ./services/monitoring/zabbix-proxy.nix
   ./services/monitoring/zabbix-server.nix
-  ./services/network-filesystems/beegfs.nix
   ./services/network-filesystems/cachefilesd.nix
   ./services/network-filesystems/davfs2.nix
   ./services/network-filesystems/drbd.nix
@@ -560,6 +558,7 @@
   ./services/network-filesystems/yandex-disk.nix
   ./services/network-filesystems/xtreemfs.nix
   ./services/network-filesystems/ceph.nix
+  ./services/networking/3proxy.nix
   ./services/networking/amuled.nix
   ./services/networking/aria2.nix
   ./services/networking/asterisk.nix
@@ -724,6 +723,7 @@
   ./services/networking/tvheadend.nix
   ./services/networking/unbound.nix
   ./services/networking/unifi.nix
+  ./services/networking/v2ray.nix
   ./services/networking/vsftpd.nix
   ./services/networking/wakeonlan.nix
   ./services/networking/websockify.nix
@@ -869,6 +869,7 @@
   ./services/x11/hardware/digimend.nix
   ./services/x11/hardware/cmt.nix
   ./services/x11/gdk-pixbuf.nix
+  ./services/x11/imwheel.nix
   ./services/x11/redshift.nix
   ./services/x11/urxvtd.nix
   ./services/x11/window-managers/awesome.nix
@@ -939,7 +940,6 @@
   ./tasks/filesystems/vfat.nix
   ./tasks/filesystems/xfs.nix
   ./tasks/filesystems/zfs.nix
-  ./tasks/kbd.nix
   ./tasks/lvm.nix
   ./tasks/network-interfaces.nix
   ./tasks/network-interfaces-systemd.nix

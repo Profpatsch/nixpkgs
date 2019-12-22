@@ -69,7 +69,7 @@ in
 
   config = mkIf cfg.enable {
 
-    services.xserver.displayManager.extraSessionFilePackages = [ pkgs.pantheon.elementary-session-settings ];
+    services.xserver.displayManager.sessionPackages = [ pkgs.pantheon.elementary-session-settings ];
 
     # Ensure lightdm is used when Pantheon is enabled
     # Without it screen locking will be nonfunctional because of the use of lightlocker
@@ -81,9 +81,9 @@ in
 
     services.xserver.displayManager.lightdm.greeters.pantheon.enable = mkDefault true;
 
-    # If not set manually Pantheon session cannot be started
-    # Known issue of https://github.com/NixOS/nixpkgs/pull/43992
-    services.xserver.desktopManager.default = mkForce "pantheon";
+    # Without this, Elementary LightDM greeter will pre-select non-existent `default` session
+    # https://github.com/elementary/greeter/issues/368
+    services.xserver.displayManager.defaultSession = "pantheon";
 
     services.xserver.displayManager.sessionCommands = ''
       if test "$XDG_CURRENT_DESKTOP" = "Pantheon"; then
@@ -159,11 +159,11 @@ in
     # Override GSettings schemas
     environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
 
-    environment.sessionVariables.GNOME_SESSION_DEBUG = optionalString cfg.debug "1";
+    environment.sessionVariables.GNOME_SESSION_DEBUG = mkIf cfg.debug "1";
 
     # Settings from elementary-default-settings
     environment.sessionVariables.GTK_CSD = "1";
-    environment.sessionVariables.GTK_MODULES = "pantheon-filechooser-module";
+    environment.sessionVariables.GTK3_MODULES = [ "pantheon-filechooser-module" ];
     environment.etc."gtk-3.0/settings.ini".source = "${pkgs.pantheon.elementary-default-settings}/etc/gtk-3.0/settings.ini";
 
     environment.pathsToLink = [

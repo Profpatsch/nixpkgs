@@ -1,12 +1,12 @@
 { stdenv, fetchurl, makeWrapper, makeDesktopItem
-, atk, cairo, gdk-pixbuf, glib, gnome2, gtk2, libGLU_combined, pango, xorg
+, atk, cairo, gdk-pixbuf, glib, gnome2, gtk2, libGLU, libGL, pango, xorg
 , lsb-release, freetype, fontconfig, pangox_compat, polkit, polkit_gnome
 , pulseaudio }:
 
 let
   sha256 = {
-    x86_64-linux = "1zdbgbbdavaqx4y02sw9y7i1r9wkxqccrqkn0sp5847a26cpk9k9";
-    i386-linux   = "11qwyxvy3c3n7hvksmlsfl9vvqaqkv3kwbk5rgjyy7vy8vn4kjmk";
+    x86_64-linux = "1ysd8fwzm0360qs6ijr6l0y2agqb3njz20h7am1x4kxmhy8ravq9";
+    i386-linux   = "0vjxbg5hwkqkh600rr75xviwy848r1xw9mxwf6bb6l8b0isvlsgg";
   }.${stdenv.hostPlatform.system} or (throw "system ${stdenv.hostPlatform.system} not supported");
 
   arch = {
@@ -28,16 +28,19 @@ let
 
 in stdenv.mkDerivation rec {
   pname = "anydesk";
-  version = "5.4.1";
+  version = "5.5.1";
 
   src = fetchurl {
-    url = "https://download.anydesk.com/linux/${pname}-${version}-${arch}.tar.gz";
+    urls = [
+      "https://download.anydesk.com/linux/${pname}-${version}-${arch}.tar.gz"
+      "https://download.anydesk.com/linux/generic-linux/${pname}-${version}-${arch}.tar.gz"
+    ];
     inherit sha256;
   };
 
   buildInputs = [
     atk cairo gdk-pixbuf glib gtk2 stdenv.cc.cc pango
-    gnome2.gtkglext libGLU_combined freetype fontconfig
+    gnome2.gtkglext libGLU libGL freetype fontconfig
     pangox_compat polkit polkit_gnome pulseaudio
   ] ++ (with xorg; [
     libxcb libxkbfile libX11 libXdamage libXext libXfixes libXi libXmu
