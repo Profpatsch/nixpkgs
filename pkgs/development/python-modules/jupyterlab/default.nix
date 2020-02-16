@@ -8,12 +8,12 @@
 
 buildPythonPackage rec {
   pname = "jupyterlab";
-  version = "1.2.3";
+  version = "1.2.6";
   disabled = pythonOlder "3.5";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "2188a9bcaaf0b6a68ff9098a481f37ece8231634b862fd3c9adedc466aac79f2";
+    sha256 = "0mc3nrj7fc5q2ajr09m261j386jsp8qjljg8anghlh8czc9ln4s2";
   };
 
   propagatedBuildInputs = [ jupyterlab_server notebook ];

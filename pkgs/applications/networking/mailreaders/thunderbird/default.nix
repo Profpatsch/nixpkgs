@@ -72,13 +72,13 @@ assert waylandSupport -> gtk3Support == true;
 
 stdenv.mkDerivation rec {
   pname = "thunderbird";
-  version = "68.3.1";
+  version = "68.5.0";
 
   src = fetchurl {
     url =
       "mirror://mozilla/thunderbird/releases/${version}/source/thunderbird-${version}.source.tar.xz";
     sha512 =
-      "01vn2snp631lngfy0kz6fax6r6w5w2iqc27hqr3zsvkfsl6ji0rkxm17g4ifv2qvkqgrnhxicdh4gj80x7fkw2nmmsqsypdddp5a91f";
+      "15hi1193z6gp05dx6pqakxydyrxzls4xhfpvrk5qg458gxhdfj4qbgb33mcf944g7vf2hk5mk6nbgmdxlb9svw1n72ym2adyaca6n5v";
   };
 
   nativeBuildInputs = [
@@ -155,6 +155,8 @@ stdenv.mkDerivation rec {
   postPatch = ''
     rm -rf obj-x86_64-pc-linux-gnu
   '';
+
+  hardeningDisable = [ "format" ];
 
   preConfigure = ''
     # remove distributed configuration files

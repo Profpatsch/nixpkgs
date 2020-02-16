@@ -1,6 +1,6 @@
 { stdenv, lib, fetchFromGitHub
 , autoreconfHook, pkgconfig, wrapGAppsHook
-, gnome3, glib, intltool, gtk3, gnome-doc-utils
+, glib, gtk3, expat, gnome-doc-utils, which
 , at-spi2-core, dbus
 , libxslt, libxml2
 , speechSupport ? true, speechd ? null
@@ -30,17 +30,19 @@ stdenv.mkDerivation {
     autoreconfHook
     wrapGAppsHook
     pkgconfig
-    gnome3.gnome-common
-    glib
+    # doc generation
     gnome-doc-utils
-    intltool
+    which
+    libxslt libxml2
+  ];
+
+  buildInputs = [
+    glib
     gtk3
+    expat
     # at-spi2 needs dbus to be recognized by pkg-config
     at-spi2-core dbus
-    # doc generation
-    libxslt libxml2
-  ]
-  ++ lib.optional speechSupport speechd;
+  ] ++ lib.optional speechSupport speechd;
 
   meta = {
     homepage = http://www.inference.org.uk/dasher/;

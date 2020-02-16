@@ -3,11 +3,11 @@
 
 buildPythonPackage rec {
   pname = "google-cloud-core";
-  version = "1.0.3";
+  version = "1.2.0";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "10750207c1a9ad6f6e082d91dbff3920443bdaf1c344a782730489a9efa802f1";
+    sha256 = "0vfhvpiiigfldi3vb0730w13md1c90irpdx5kypmnfszrrzg7q2a";
   };
 
   propagatedBuildInputs = [ google_api_core grpcio setuptools ];

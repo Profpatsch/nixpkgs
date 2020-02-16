@@ -13,13 +13,13 @@ let
 
 in stdenv.mkDerivation rec {
   pname = "palemoon";
-  version = "28.7.2";
+  version = "28.8.2.1";
 
   src = fetchFromGitHub {
     owner  = "MoonchildProductions";
     repo   = "UXP";
     rev    = "PM${version}_Release";
-    sha256 = "08w90269mwcqsdhx4vvp18c5iccvzqhaaw6aw7w0nppf2f2k8lri";
+    sha256 = "1m7dfgy5vjw1ndjsh0aksvsp0ii2kj7gxn0sp3h0xgwi0yq7lwyb";
   };
 
   desktopItem = makeDesktopItem {
@@ -55,6 +55,7 @@ in stdenv.mkDerivation rec {
   configurePhase = ''
     export MOZBUILD_STATE_PATH=$(pwd)/mozbuild
     export MOZCONFIG=$(pwd)/mozconfig
+    export MOZ_NOSPAM=1
     export builddir=$(pwd)/pmbuild
 
     echo > $MOZCONFIG "

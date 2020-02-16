@@ -2,16 +2,19 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "dust";
-  version = "0.4.2";
+  version = "0.4.4";
 
   src = fetchFromGitHub {
     owner = "bootandy";
     repo = "dust";
     rev = "v${version}";
-    sha256 = "0z1vi5agaf1gcq1bdzgfc89v6vpk9kaxxy8f3rd2h6yzdrd2dhk7";
+    sha256 = "1qbh9vgdh0xmh4c78fm0rd1sgb01n656p3cr4my7ymsy81ypx9y7";
   };
 
-  cargoSha256 = "08c428rrana0llzhkg8ngzqs6vc773jrf4wql2qxdvm4l0nsx596";
+  # Delete this on next update; see #79975 for details
+  legacyCargoFetcher = true;
+
+  cargoSha256 = "07ynz6y1z3rz84662d4rfl2sw1sx46a3k48z8dckr0b3fqs2zj6a";
 
   doCheck = false;
 

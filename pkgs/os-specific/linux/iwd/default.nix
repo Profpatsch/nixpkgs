@@ -7,18 +7,18 @@
 , coreutils
 , docutils
 , readline
+, openssl
 , python3Packages
-, systemd
 }:
 
 stdenv.mkDerivation rec {
   pname = "iwd";
-  version = "1.2";
+  version = "1.5";
 
   src = fetchgit {
     url = https://git.kernel.org/pub/scm/network/wireless/iwd.git;
     rev = version;
-    sha256 = "10fwi31ym6hvn0vvh9fy0swzs3mfnpcwg95np4i5ksmw8k0kj0hf";
+    sha256 = "09viyfv5j2rl6ly52b2xlc2zbmb6i22dv89jc6823bzdjjimkrg6";
   };
 
   nativeBuildInputs = [
@@ -32,8 +32,9 @@ stdenv.mkDerivation rec {
     ell
     python3Packages.python
     readline
-    systemd
   ];
+
+  checkInputs = [ openssl ];
 
   pythonPath = [
     python3Packages.dbus-python
@@ -54,6 +55,8 @@ stdenv.mkDerivation rec {
   postUnpack = ''
     patchShebangs .
   '';
+
+  doCheck = true;
 
   postInstall = ''
     cp -a test/* $out/bin/

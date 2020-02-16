@@ -10,16 +10,19 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "vector";
-  version = "0.6.0";
+  version = "0.7.1";
 
   src = fetchFromGitHub {
     owner  = "timberio";
     repo   = pname;
     rev    = "refs/tags/v${version}";
-    sha256 = "0bb4552nwkdpnxhaq2mn4iz5w92ggqxc1b78jq2vjbh1317sj9hw";
+    sha256 = "1bqp1ms8y91mpcmxlc8kyncigxq7spxq1ygy6gviz35zq1cqkwnr";
   };
 
-  cargoSha256 = "1akyzrscc6pv7ggb1kna05vvxhfzrf1b4kji4bah1ry3yyqxdjsj";
+  # Delete this on next update; see #79975 for details
+  legacyCargoFetcher = true;
+
+  cargoSha256 = "01hynn8ccpwqrirr1bczqc7q7pqkzfjks2v6q4f32xbm50b31fky";
   buildInputs = [ openssl pkgconfig protobuf rdkafka ]
                 ++ stdenv.lib.optional stdenv.isDarwin [ Security libiconv ];
 

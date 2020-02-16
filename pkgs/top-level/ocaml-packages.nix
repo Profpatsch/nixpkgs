@@ -16,6 +16,8 @@ let
 
     buildDunePackage = callPackage ../build-support/ocaml/dune.nix {};
 
+    buildDune2Package = buildDunePackage.override { dune = dune_2; };
+
     alcotest = callPackage ../development/ocaml-modules/alcotest {};
 
     alcotest-lwt = callPackage ../development/ocaml-modules/alcotest/lwt.nix {};
@@ -189,6 +191,8 @@ let
 
     cppo = callPackage ../development/tools/ocaml/cppo { };
 
+    cpu = callPackage ../development/ocaml-modules/cpu { };
+
     cpuid = callPackage ../development/ocaml-modules/cpuid { };
 
     crunch = callPackage ../development/tools/ocaml/crunch { };
@@ -237,7 +241,15 @@ let
 
     duff = callPackage ../development/ocaml-modules/duff { };
 
+    dum = callPackage ../development/ocaml-modules/dum { };
+
     dune = callPackage ../development/tools/ocaml/dune { };
+
+    dune_2 = callPackage ../development/tools/ocaml/dune/2.nix { };
+
+    dune-configurator = callPackage ../development/ocaml-modules/dune-configurator { buildDunePackage = buildDune2Package; };
+
+    dune-private-libs = callPackage ../development/ocaml-modules/dune-private-libs { buildDunePackage = buildDune2Package; };
 
     earley = callPackage ../development/ocaml-modules/earley { };
 
@@ -327,6 +339,8 @@ let
       if lib.versionOlder "4.02" ocaml.version
       then callPackage ../development/ocaml-modules/ipaddr { }
       else ipaddr_p4;
+
+    irmin_1 = callPackage ../development/ocaml-modules/irmin/1.4.nix { };
 
     iso8601 = callPackage ../development/ocaml-modules/iso8601 { };
 
@@ -456,6 +470,8 @@ let
 
     lambdaTerm = callPackage ../development/ocaml-modules/lambda-term { };
 
+    lens = callPackage ../development/ocaml-modules/lens { };
+
     linenoise = callPackage ../development/ocaml-modules/linenoise { };
 
     llvm = callPackage ../development/ocaml-modules/llvm {
@@ -493,6 +509,8 @@ let
     lwt_ssl = callPackage ../development/ocaml-modules/lwt_ssl {
       lwt = ocaml_lwt;
     };
+
+    macaddr = callPackage ../development/ocaml-modules/macaddr { };
 
     macaque = callPackage ../development/ocaml-modules/macaque { };
 
@@ -540,9 +558,15 @@ let
       lwt = ocaml_lwt;
     };
 
+    npy = callPackage ../development/ocaml-modules/npy {
+      inherit (pkgs.python3Packages) numpy;
+    };
+
     num = if lib.versionOlder "4.06" ocaml.version
       then callPackage ../development/ocaml-modules/num {}
       else null;
+
+    parmap = callPackage ../development/ocaml-modules/parmap { };
 
     comparelib = callPackage ../development/ocaml-modules/comparelib { };
 
@@ -754,6 +778,8 @@ let
 
     pa_test = callPackage ../development/ocaml-modules/pa_test { };
 
+    parany = callPackage ../development/ocaml-modules/parany { };
+
     pipebang = callPackage ../development/ocaml-modules/pipebang { };
 
     pprint = callPackage ../development/ocaml-modules/pprint { };
@@ -820,6 +846,8 @@ let
     safepass = callPackage ../development/ocaml-modules/safepass { };
 
     sedlex = callPackage ../development/ocaml-modules/sedlex { };
+
+    sedlex_2 = callPackage ../development/ocaml-modules/sedlex/2.nix { };
 
     sodium = callPackage ../development/ocaml-modules/sodium { };
 
@@ -1213,6 +1241,8 @@ in let inherit (pkgs) callPackage; in rec
   ocamlPackages_4_08 = mkOcamlPackages (callPackage ../development/compilers/ocaml/4.08.nix { });
 
   ocamlPackages_4_09 = mkOcamlPackages (callPackage ../development/compilers/ocaml/4.09.nix { });
+
+  ocamlPackages_4_10 = mkOcamlPackages (callPackage ../development/compilers/ocaml/4.10.nix { });
 
   ocamlPackages_latest = ocamlPackages_4_09;
 
