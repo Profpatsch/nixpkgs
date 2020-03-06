@@ -10571,7 +10571,7 @@ in
 
   shards = callPackage ../development/tools/build-managers/shards { };
 
-  shellcheck = haskell.lib.justStaticExecutables haskellPackages.ShellCheck;
+  shellcheck = callPackage ../development/tools/shellcheck {};
 
   schemaspy = callPackage ../development/tools/database/schemaspy { };
 
