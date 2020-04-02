@@ -17,11 +17,11 @@ let
   vivaldiName = if isSnapshot then "vivaldi-snapshot" else "vivaldi";
 in stdenv.mkDerivation rec {
   pname = "vivaldi";
-  version = "2.11.1811.33-1";
+  version = "2.11.1811.49-1";
 
   src = fetchurl {
     url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}_amd64.deb";
-    sha256 = "1z0cscvmhxh1wjs7r0sjdr3f3mcg8i6avpal6spp0ymkxp2rn0h3";
+    sha256 = "0xn23jmh8pqp1hc0q6nysc8x9xgpypzqr4wz2rzqyald4asxj60v";
   };
 
   unpackPhase = ''

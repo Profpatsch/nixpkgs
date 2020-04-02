@@ -1,8 +1,9 @@
-{ lib, buildGoModule, fetchFromGitHub, packr }:
+{ stdenv, buildGoModule, fetchFromGitHub, packr, Security }:
 
 buildGoModule rec {
   pname = "argocd";
   version = "1.4.2";
+  commit = "48cced9d925b5bc94f6aa9fa4a8a19b2a59e128a";
 
   src = fetchFromGitHub {
     owner = "argoproj";
@@ -15,14 +16,24 @@ buildGoModule rec {
 
   nativeBuildInputs = [ packr ];
 
+  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
+
   patches = [ ./use-go-module.patch ];
+
+  buildFlagsArray = ''
+     -ldflags=
+      -X github.com/argoproj/argo-cd/common.version=${version}
+      -X github.com/argoproj/argo-cd/common.buildDate=unknown
+      -X github.com/argoproj/argo-cd/common.gitCommit=${commit}
+      -X github.com/argoproj/argo-cd/common.gitTreeState=clean
+  '';
  
   # run packr to embed assets
   preBuild = ''
     packr
   '';
   
-  meta = with lib; {
+  meta = with stdenv.lib; {
     description = "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes";
     homepage = "https://github.com/argoproj/argo";
     license = licenses.asl20;

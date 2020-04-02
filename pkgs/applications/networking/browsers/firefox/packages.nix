@@ -1,25 +1,16 @@
-{ config, lib, callPackage, fetchurl, fetchFromGitHub, overrideCC, gccStdenv, gcc6 }:
+{ config, lib, callPackage, fetchurl }:
 
 let
-
   common = opts: callPackage (import ./common.nix opts) {};
-
-  # Needed on older branches since rustc: 1.32.0 -> 1.33.0
-  missing-documentation-patch = fetchurl {
-    name = "missing-documentation.patch";
-    url = "https://aur.archlinux.org/cgit/aur.git/plain/deny_missing_docs.patch"
-        + "?h=firefox-esr&id=03bdd01f9cf";
-    sha256 = "1i33n3fgwc8d0v7j4qn7lbdax0an6swar12gay3q2nwrhg3ic4fb";
-  };
 in
 
 rec {
   firefox = common rec {
     pname = "firefox";
-    ffversion = "73.0";
+    ffversion = "74.0";
     src = fetchurl {
       url = "mirror://mozilla/firefox/releases/${ffversion}/source/firefox-${ffversion}.source.tar.xz";
-      sha512 = "2da2jn3gwck6qys3ys146jsjl9fgq10s3ii62y4ssnhl76ryir8f1mv9i1d6hyv8381hplasnxb553d5bgwnq87ymgqabakmr48n2p1";
+      sha512 = "245n2ilfgx3rd0xlxzpg4gcwddcy0cgaqnaf5pwixjx0n8py1imiylwlsbihf70s41cq5q8awckchs287yysr4v6pdfqqbj7s0f02ki";
     };
 
     patches = [
@@ -42,10 +33,10 @@ rec {
 
   firefox-esr-68 = common rec {
     pname = "firefox-esr";
-    ffversion = "68.5.0esr";
+    ffversion = "68.6.0esr";
     src = fetchurl {
       url = "mirror://mozilla/firefox/releases/${ffversion}/source/firefox-${ffversion}.source.tar.xz";
-      sha512 = "39i05r7r4rh2jvc8v4m2s2i6d33qaa075a1lc8m9gx7s3rw8yxja2c42cv5hq1imr9zc4dldbk88paz6lv1w8rhncm0dkxw8z6lxkqa";
+      sha512 = "2ipajk86s7hfz7qky9lh24i5fgzgpv9hl12invr1rr6jhpp0h6gbb44ffim0z9lmcj49cr01cgqis0swhb4vph8dl1jvgfq9rjmsml4";
     };
 
     patches = [
