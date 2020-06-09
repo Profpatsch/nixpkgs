@@ -46,8 +46,13 @@ stdenv.mkDerivation rec {
   };
 
   patches = [
-    # Remove gegl:simple / backend-file test that times out frequently
-    ./patches/no-simple-backend-file-test.patch
+    # Prevent deadlock making tests time-out
+    # https://gitlab.gnome.org/GNOME/gegl/issues/226
+    # https://gitlab.gnome.org/GNOME/glib/issues/1941
+    (fetchpatch {
+      url = "https://gitlab.gnome.org/GNOME/gegl/commit/1d530816266b52c8788bbe1504c5b2d6eceba036.patch";
+      sha256 = "1d8nhrzvwq35c5ws00xy9y6bfd9wsj3dm0301hiwkfi4niq59ygh";
+    })
   ];
 
   nativeBuildInputs = [
@@ -116,7 +121,7 @@ stdenv.mkDerivation rec {
 
   meta = with stdenv.lib; {
     description = "Graph-based image processing framework";
-    homepage = http://www.gegl.org;
+    homepage = "http://www.gegl.org";
     license = licenses.gpl3;
     maintainers = with maintainers; [ jtojnar ];
     platforms = platforms.unix;

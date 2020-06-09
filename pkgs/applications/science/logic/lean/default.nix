@@ -1,14 +1,14 @@
-{ stdenv, fetchFromGitHub, cmake, gmp }:
+{ stdenv, fetchFromGitHub, cmake, gmp, coreutils }:
 
 stdenv.mkDerivation rec {
   pname = "lean";
-  version = "3.7.2";
+  version = "3.15.0";
 
   src = fetchFromGitHub {
     owner  = "leanprover-community";
     repo   = "lean";
     rev    = "v${version}";
-    sha256 = "0d9lz0mbxyaaykkvk2p8w2hcif9cx0ksihgh7qhxf417bz6msgc1";
+    sha256 = "0fl8v8n53fr5qdnabici1mj3zpmjrkssx970y3q4m48s68q665v6";
   };
 
   nativeBuildInputs = [ cmake ];
@@ -17,6 +17,11 @@ stdenv.mkDerivation rec {
 
   preConfigure = ''
     cd src
+  '';
+
+  postInstall = stdenv.lib.optionalString stdenv.isDarwin ''
+    substituteInPlace $out/bin/leanpkg \
+      --replace "greadlink" "${coreutils}/bin/readlink"
   '';
 
   meta = with stdenv.lib; {

@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   pname = "rakudo";
-  version = "2020.02.1";
+  version = "2020.05.1";
 
   src = fetchurl {
     url    = "https://www.rakudo.org/dl/rakudo/rakudo-${version}.tar.gz";
-    sha256 = "1qfaiqfclqd6zz04xl90yiqkvmm610r905nnbd6gszgyq1k77ckv";
+    sha256 = "1m4xpghhgi7iijbzvr7bzkay7k93bwpvdg58jp31csrwdzz4q5z1";
   };
 
   buildInputs = [ icu zlib gmp perl ];
@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
 
   meta = with stdenv.lib; {
     description = "Raku implementation on top of Moar virtual machine";
-    homepage    = https://www.rakudo.org;
+    homepage    = "https://www.rakudo.org";
     license     = licenses.artistic2;
     platforms   = platforms.unix;
     maintainers = with maintainers; [ thoughtpolice vrthra sgo ];

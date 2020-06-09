@@ -22,7 +22,7 @@ let
     makeFlags = [
       "platform=${{
         linux = "unix";
-        darwin = "unix";
+        darwin = "osx";
         windows = "win";
       }.${stdenv.hostPlatform.parsed.kernel.name} or stdenv.hostPlatform.parsed.kernel.name}"
       "ARCH=${{
@@ -51,7 +51,7 @@ let
     meta = with stdenv.lib; {
       inherit (a) description license;
       broken = a.broken or false;
-      homepage = https://www.libretro.com/;
+      homepage = "https://www.libretro.com/";
       maintainers = with maintainers; [ edwtjo hrdinka MP2E ];
       platforms = platforms.unix;
     };
@@ -716,6 +716,25 @@ in with stdenv.lib.licenses;
     license = gpl2;
     makefile = "Makefile";
     preBuild = "cd libretro";
+  };
+
+  np2kai = mkLibRetroCore rec {
+    core = "np2kai";
+    src = fetchFromGitHub rec {
+      owner = "AZO234";
+      repo = "NP2kai";
+      rev = "4a317747724669343e4c33ebdd34783fb7043221";
+      sha256 = "0kxysxhx6jyk82mx30ni0ydzmwdcbnlxlnarrlq018rsnwb4md72";
+    };
+    description = "Neko Project II kai libretro port";
+    license = mit;
+    makefile = "Makefile.libretro";
+    preBuild = ''
+      cd sdl2
+      substituteInPlace ${makefile} \
+        --replace 'GIT_VERSION :=' 'GIT_VERSION ?='
+      export GIT_VERSION=${builtins.substring 0 7 src.rev}
+    '';
   };
 
   o2em = mkLibRetroCore rec {

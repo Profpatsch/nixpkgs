@@ -19,14 +19,14 @@ buildGoPackage rec {
   };
 
   postInstall = ''
-    mv $bin/bin/cli $bin/bin/wally
+    mv $out/bin/cli $out/bin/wally
   '';
 
   goDeps = ./deps.nix;
 
   meta = with lib; {
     description = "A tool to flash firmware to mechanical keyboards";
-    homepage = https://ergodox-ez.com/pages/wally-planck;
+    homepage = "https://ergodox-ez.com/pages/wally-planck";
     license = licenses.mit;
     maintainers = [ maintainers.spacekookie ];
   };

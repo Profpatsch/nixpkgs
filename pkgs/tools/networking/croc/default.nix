@@ -1,24 +1,23 @@
-{ stdenv, buildGoModule, fetchFromGitHub, Security }:
+{ stdenv, buildGoModule, fetchFromGitHub }:
 
 buildGoModule rec {
   pname = "croc";
-  version = "8.0.4";
+  version = "8.0.11";
 
   src = fetchFromGitHub {
     owner = "schollz";
     repo = pname;
     rev = "v${version}";
-    sha256 = "0dc6h102jr5dkg6r3xxma51g702dnyd3d6s5rilwv1fivxn3bj43";
+    sha256 = "09yx7xjhvpyvzwsf859b9yfrxzg01ak3dfavfhmx3h97lrdxprgi";
   };
 
-  modSha256 = "0ng4x9zmwax2vskbcadra4pdkgy1p1prmgkg1bjmh3b8rwsrhr0q";
-
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
+  vendorSha256 = "1lqlrsd90475b1wp1krfppi635q5gw1ka8x4d8haanmnlnxkniqf";
 
   subPackages = [ "." ];
 
   meta = with stdenv.lib; {
-    description = "Easily and securely send things from one computer to another";
+    description =
+      "Easily and securely send things from one computer to another";
     homepage = "https://github.com/schollz/croc";
     license = licenses.mit;
     maintainers = with maintainers; [ hugoreeves equirosa ];

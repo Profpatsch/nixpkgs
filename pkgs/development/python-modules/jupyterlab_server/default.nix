@@ -11,12 +11,12 @@
 
 buildPythonPackage rec {
   pname = "jupyterlab_server";
-  version = "1.0.7";
+  version = "1.1.3";
   disabled = pythonOlder "3.5";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "1qnqxy6812py7xklg7xfrkadm0v4z8x6n1035i26h2z7y891ff0j";
+    sha256 = "17eac20af10167abebbeca72e7e390b9c19a400b8fffa158b5cfdcac344253d4";
   };
 
   checkInputs = [ requests pytest ];

@@ -1,4 +1,4 @@
-{ stdenv, buildGoModule, fetchFromGitHub, packr, Security }:
+{ lib, buildGoModule, fetchFromGitHub, packr }:
 
 buildGoModule rec {
   pname = "argocd";
@@ -12,11 +12,9 @@ buildGoModule rec {
     sha256 = "01vsyrks1k5yfvrarv8ia0isr7snilr21b7lfiy860si82r2r8hj";
   };
 
-  modSha256 = "1qivg7yy7ymmgkrvl365x29d8jnsphbz18j1ykgwwysyw3n4jkdg";
+  vendorSha256 = "0r2nh7v00m6zbdnhsgjn01q9pkiz41ckkqgfnpqmkxaqmjz31iyj";
 
   nativeBuildInputs = [ packr ];
-
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
 
   patches = [ ./use-go-module.patch ];
 
@@ -33,7 +31,7 @@ buildGoModule rec {
     packr
   '';
   
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes";
     homepage = "https://github.com/argoproj/argo";
     license = licenses.asl20;

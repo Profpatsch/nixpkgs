@@ -1,4 +1,4 @@
-{ buildGoModule, fetchFromGitHub, stdenv, Security }:
+{ buildGoModule, fetchFromGitHub, lib }:
 
 buildGoModule {
   pname = "protoc-gen-doc-unstable";
@@ -11,11 +11,9 @@ buildGoModule {
     sha256 = "004axh2gqc4f115mdxxg59d19hph3rr0bq9d08n3nyl315f590kj";
   };
 
-  modSha256 = "1952ycdkgl00q2s3qmhislhhim15nn6nmlkwbfdvrsfzznqj47rd";
+  vendorSha256 = "17qdpsff8jk7ks5v6ix1rb966x3yvq03vk5bs2zbnxfdra7bv3n6";
 
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Documentation generator plugin for Google Protocol Buffers";
     longDescription = ''
       This is a documentation generator plugin for the Google Protocol Buffers

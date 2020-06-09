@@ -8,13 +8,13 @@ let
 
 in rustPlatform.buildRustPackage rec {
   pname = "bitwarden_rs";
-  version = "1.14";
+  version = "1.15.0";
 
   src = fetchFromGitHub {
     owner = "dani-garcia";
     repo = pname;
     rev = version;
-    sha256 = "1ck0l0167kw1i5fjn507g4d18x2krbpk2ks0lnw9vzg0bwnzzwwd";
+    sha256 = "12mr7d0mjlh7za4nc3s7cizzbd6v0zfmd7q9s0f7pqz56vw5m21s";
   };
 
   nativeBuildInputs = [ pkgconfig ];
@@ -25,7 +25,7 @@ in rustPlatform.buildRustPackage rec {
 
   RUSTC_BOOTSTRAP = 1;
 
-  cargoSha256 = "0cgk61dmc057p82g0apd4sx6a8vhvcipxikrdb0hds4frhqsr6i8";
+  cargoSha256 = "0nacc8xvbkdzbyx4c17hdh03v9ykpis74pbpxkn6v95njw14wq53";
   cargoBuildFlags = [ featuresFlag ];
 
   checkPhase = ''

@@ -1,10 +1,10 @@
-{ stdenv, buildGoModule, fetchFromGitHub, Security }:
+{ stdenv, buildGoModule, fetchFromGitHub }:
 
 buildGoModule rec {
   pname = "shiori";
   version = "1.5.0";
 
-  modSha256 = "1z6q5lv0j433p8lc3nxlw1rds5x1kvs1vzl63jf3disxw7ppyai3";
+  vendorSha256 = "1ik5faysc880kz7nymvbmjj006l1fsqfy76036szwzg314v78643";
 
   src = fetchFromGitHub {
     owner = "go-shiori";
@@ -12,8 +12,6 @@ buildGoModule rec {
     rev = "v${version}";
     sha256 = "13and7gh2882khqppwz3wwq44p7az4bfdfjvlnqcpqyi8xa28pmq";
   };
-
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
 
   meta = with stdenv.lib; {
     description = "Simple bookmark manager built with Go";

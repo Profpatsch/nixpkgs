@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
     owner = "PurpleI2P";
     repo = pname;
     rev = version;
-    sha256 = "nGl7c5UY9kJPRaMveMF+aIf8T11WFrB//37oKzREdvM=";
+    sha256 = "1wvn8hs2ps3yzxzv05jnbm7zr1v8gv0phbx38m7l5xhqjmrpnscw";
   };
 
   buildInputs = with stdenv.lib; [ boost zlib openssl ]
@@ -32,7 +32,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with stdenv.lib; {
-    homepage = https://i2pd.website;
+    homepage = "https://i2pd.website";
     description = "Minimal I2P router written in C++";
     license = licenses.bsd3;
     maintainers = with maintainers; [ edwtjo ];

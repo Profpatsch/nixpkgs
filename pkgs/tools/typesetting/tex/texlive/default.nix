@@ -1,6 +1,6 @@
 /* TeX Live user docs
   - source: ../../../../../doc/languages-frameworks/texlive.xml
-  - current html: http://nixos.org/nixpkgs/manual/#sec-language-texlive
+  - current html: https://nixos.org/nixpkgs/manual/#sec-language-texlive
 */
 { stdenv, lib, fetchurl, runCommand, writeText, buildEnv
 , callPackage, ghostscriptX, harfbuzz, poppler_min
@@ -111,8 +111,8 @@ let
       # (https://tug.org/historic/).
       urlPrefixes = args.urlPrefixes or [
         # tlnet-final snapshot
-        http://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2019/tlnet-final/archive
-        ftp://tug.org/texlive/historic/2019/tlnet-final/archive
+        "http://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2019/tlnet-final/archive"
+        "ftp://tug.org/texlive/historic/2019/tlnet-final/archive"
 
         # Daily snapshots hosted by one of the texlive release managers
         #https://texlive.info/tlnet-archive/2019/10/19/tlnet/archive
@@ -175,7 +175,7 @@ in
             description = "TeX Live environment for ${pname}";
             platforms = lib.platforms.all;
             hydraPlatforms = lib.optionals
-              (lib.elem pname ["scheme-small" "scheme-basic"]) platforms;
+              (!lib.elem pname ["scheme-infraonly"]) platforms;
             maintainers = with lib.maintainers;  [ veprbl ];
           }
           (combine {

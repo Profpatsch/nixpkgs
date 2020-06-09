@@ -1,20 +1,18 @@
-{ stdenv, fetchFromGitHub, buildGoModule, Security }:
+{ lib, fetchFromGitHub, buildGoModule }:
 
 buildGoModule rec {
   pname = "gortr";
-  version = "0.14.1";
+  version = "0.14.4";
 
   src = fetchFromGitHub {
     owner = "cloudflare";
     repo = pname;
     rev = "v${version}";
-    sha256 = "03wxlras2akk2ig8sxzs89nvbc6zr2kbcmjlqldjdfhs1rcg82ra";
+    sha256 = "1srwlpl8g0pzrxb2nyp6xvg10cidm2i6qb9m08k2g296hfgdqqq3";
   };
-  modSha256 = "157dpalfz3z1s3mxq63xy6lrkwzyy9xzmvn7wsxkwznjq4djv1a1";
+  vendorSha256 = "1nwrzbpqycr4ixk8a90pgaxcwakv5nlfnql6hmcc518qrva198wp";
 
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "The RPKI-to-Router server used at Cloudflare";
     homepage = "https://github.com/cloudflare/gortr/";
     license = licenses.gpl3;

@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, buildGoModule, Security }:
+{ stdenv, fetchFromGitHub, buildGoModule }:
 
 buildGoModule rec {
   pname = "shadowfox";
@@ -11,9 +11,9 @@ buildGoModule rec {
     sha256 = "125mw70jidbp436arhv77201jdp6mpgqa2dzmrpmk55f9bf29sg6";
   };
 
-  modSha256 = "0hcc87mzacqwbw10l49kx0sxl4mivdr88c40wh6hdfvrbam2w86r";
+  goPackagePath = "github.com/SrKomodo/shadowfox-updater";
 
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
+  vendorSha256 = "06ar9ivry9b01609izjbl6hqgg0cy7aqd8n2cqpyq0g7my0l0lbj";
 
   buildFlags = [ "--tags" "release" ];
 

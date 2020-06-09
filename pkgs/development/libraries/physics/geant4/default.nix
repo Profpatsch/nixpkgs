@@ -36,12 +36,12 @@
 }:
 
 stdenv.mkDerivation rec {
-  version = "10.6.1";
+  version = "10.6.2";
   pname = "geant4";
 
   src = fetchurl{
-    url = "https://geant4-data.web.cern.ch/geant4-data/releases/geant4.10.06.p01.tar.gz";
-    sha256 = "0ssxg7dd7vxljb3fdyb0llg7gsxack21qjfsb3n23k107a19yibk";
+    url = "https://geant4-data.web.cern.ch/geant4-data/releases/geant4.10.06.p02.tar.gz";
+    sha256 = "0vznm3pjlbihjy1wsxc4gj229k0dzc283wvil2xghyl08vwdpnpc";
   };
 
   cmakeFlags = [
@@ -99,7 +99,7 @@ stdenv.mkDerivation rec {
       Its areas of application include high energy, nuclear and accelerator physics, as well as studies in medical and space science.
       The two main reference papers for Geant4 are published in Nuclear Instruments and Methods in Physics Research A 506 (2003) 250-303, and IEEE Transactions on Nuclear Science 53 No. 1 (2006) 270-278.
     '';
-    homepage = http://www.geant4.org;
+    homepage = "http://www.geant4.org";
     license = licenses.g4sl;
     maintainers = with maintainers; [ tmplt omnipotententity ];
     platforms = platforms.linux;

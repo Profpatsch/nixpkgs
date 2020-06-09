@@ -1,24 +1,21 @@
-{ stdenv, buildGoModule, fetchFromGitHub, installShellFiles, Security }:
+{ stdenv, buildGoModule, fetchFromGitHub, installShellFiles }:
 
 buildGoModule rec {
   pname = "helm";
-  version = "3.1.2";
+  version = "3.2.1";
 
   src = fetchFromGitHub {
     owner = "helm";
     repo = "helm";
     rev = "v${version}";
-    sha256 = "0pg5cwgyfb4isy2fn233kj3bdn0i8qqp90yzix0khs5maalpnrk1";
+    sha256 = "1453qkd9s4z4r0xzmv8ym7qfg33szf6gizfkb5zxj590fcbsgnd7";
   };
-  modSha256 = "0618zzi4x37ahsrazsr82anghhfva8yaryzb3p5d737p3ixbiyv8";
+  vendorSha256 = "0j25m56cwzjd9b75v7xlb26q81bsmln77k23h9n8v2f2gqwwpkrl";
 
   subPackages = [ "cmd/helm" ];
   buildFlagsArray = [ "-ldflags=-w -s -X helm.sh/helm/v3/internal/version.version=v${version}" ];
 
   nativeBuildInputs = [ installShellFiles ];
-
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
-
   postInstall = ''
     $out/bin/helm completion bash > helm.bash
     $out/bin/helm completion zsh > helm.zsh
@@ -26,7 +23,7 @@ buildGoModule rec {
   '';
 
   meta = with stdenv.lib; {
-    homepage = https://github.com/kubernetes/helm;
+    homepage = "https://github.com/kubernetes/helm";
     description = "A package manager for kubernetes";
     license = licenses.asl20;
     maintainers = with maintainers; [ rlupton20 edude03 saschagrunert Frostman ];

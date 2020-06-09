@@ -172,16 +172,16 @@ in ''
      set +e
      EXTRA_BUILD=$(sed -n "s/^cargo:rustc-flags=\(.*\)/\1/p" target/build/${crateName}.opt | tr '\n' ' ' | sort -u)
      EXTRA_FEATURES=$(sed -n "s/^cargo:rustc-cfg=\(.*\)/--cfg \1/p" target/build/${crateName}.opt | tr '\n' ' ')
-     EXTRA_LINK=$(sed -n "s/^cargo:rustc-link-lib=\(.*\)/\1/p" target/build/${crateName}.opt | tr '\n' ' ' | sort -u)
+     EXTRA_LINK=$(sed -n "s/^cargo:rustc-link-lib=\(.*\)/\1/p" target/build/${crateName}.opt | tr '\n' ' ')
      EXTRA_LINK_SEARCH=$(sed -n "s/^cargo:rustc-link-search=\(.*\)/\1/p" target/build/${crateName}.opt | tr '\n' ' ' | sort -u)
 
      for env in $(sed -n "s/^cargo:rustc-env=\(.*\)/\1/p" target/build/${crateName}.opt); do
        export $env
      done
 
-     CRATENAME=$(echo ${crateName} | sed -e "s/\(.*\)-sys$/\U\1/")
+     CRATENAME=$(echo ${crateName} | sed -e "s/\(.*\)-sys$/\U\1/" -e "s/-/_/g")
      grep -P "^cargo:(?!(rustc-|warning=|rerun-if-changed=|rerun-if-env-changed))" target/build/${crateName}.opt \
-       | sed -e "s/cargo:\([^=]*\)=\(.*\)/export DEP_$(echo $CRATENAME)_\U\1\E=\2/" > target/env
+       | awk -F= "/^cargo:/ { sub(/^cargo:/, \"\", \$1); gsub(/-/, \"_\", \$1); print \"export \" toupper(\"DEP_$(echo $CRATENAME)_\" \$1) \"=\" \$2 }" > target/env
      set -e
   fi
   runHook postConfigure

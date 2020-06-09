@@ -69,10 +69,11 @@ buildPythonApplication rec {
       --replace "serverlessrepo==0.1.9" "serverlessrepo~=0.1.9" \
       --replace "python-dateutil~=2.6, <2.8.1" "python-dateutil~=2.6" \
       --replace "tomlkit==0.5.8" "tomlkit~=0.5.8" \
+      --replace "requests==2.22.0" "requests~=2.22"
   '';
 
   meta = with lib; {
-    homepage = https://github.com/awslabs/aws-sam-cli;
+    homepage = "https://github.com/awslabs/aws-sam-cli";
     description = "CLI tool for local development and testing of Serverless applications";
     license = licenses.asl20;
     maintainers = with maintainers; [ andreabedini lo1tuma ];

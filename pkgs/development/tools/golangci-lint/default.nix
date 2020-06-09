@@ -1,22 +1,20 @@
-{ buildGoModule, fetchFromGitHub, stdenv, Security }:
+{ buildGoModule, fetchFromGitHub, lib }:
 
 buildGoModule rec {
   pname = "golangci-lint";
-  version = "1.24.0";
+  version = "1.27.0";
 
   src = fetchFromGitHub {
     owner = "golangci";
     repo = "golangci-lint";
     rev = "v${version}";
-    sha256 = "0m7mcppbgpx2kyl5f9nk61x521v49h18az5l4ads1f3jkkyiya6s";
+    sha256 = "1capiw8af4wmx3wpfslb30xivfyh72x5kj12f8p5pwhl6id31931";
   };
 
-  modSha256 = "0ab1s8pqkpss15rd9brin39lzx2fqkvq2v3nhk8kfrgpari2addk";
+  vendorSha256 = "16wr8ixicbvdpg5mg6q07sa1b03ydpwdbvbjl3r9qihdqkhhzlr1";
   subPackages = [ "cmd/golangci-lint" ];
 
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Linters Runner for Go. 5x faster than gometalinter. Nice colored output.";
     homepage = "https://golangci.com/";
     license = licenses.agpl3;

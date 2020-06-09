@@ -1,11 +1,11 @@
-{ stdenv, fetchFromGitHub, buildGoModule, Security }:
+{ stdenv, fetchFromGitHub, buildGoModule }:
 
 buildGoModule rec {
   name = "drone.io-${version}";
   version = "1.6.5";
   goPackagePath = "github.com/drone/drone";
 
-  modSha256 = "1fyb9218s52w8c6c3v6rgivbyzy5hz4q4z8r75ng2yrmjmmiv2gr";
+  vendorSha256 = "1dvf8vz3jr9smki3jql0kvd8z8rwdq93y7blbr2yjjfsdvx6lxl1";
 
   src = fetchFromGitHub {
     owner = "drone";
@@ -13,8 +13,6 @@ buildGoModule rec {
     rev = "v${version}";
     sha256 = "05cgd72qyss836fby0adhrm5p8g7639psk2yslhg6pmz0cqfbq9m";
   };
-
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
 
   meta = with stdenv.lib; {
     maintainers = with maintainers; [ elohmeier vdemeester ];

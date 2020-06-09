@@ -1,7 +1,6 @@
 { buildGoModule
 , fetchFromGitHub
-, stdenv
-, Security
+, lib
 }:
 
 buildGoModule rec {
@@ -15,11 +14,9 @@ buildGoModule rec {
     sha256 = "0q8ighqykh8qyvidnm6az6dc9mp32bbmhkmkqzl1ybbw6paa8pym";
   };
 
-  modSha256 = "0jq0z5s05vqdvq7v1gdjwlqqwbl1j2rv9f16k52idl50vdiqviql";
+  vendorSha256 = "0kr9i2nm5csf3070hwaiss137pfa3088xbw2zigp7aqb2naky036";
 
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Tool used to brute-force URIs, DNS subdomains, Virtual Host names on target web servers";
     homepage = "https://github.com/OJ/gobuster";
     license = licenses.asl20;

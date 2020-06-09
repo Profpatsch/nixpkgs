@@ -8,19 +8,19 @@ let
     inherit (gnome2) GConf gnome_vfs;
   };
   stableVersion = {
-    version = "3.6.1.0"; # "Android Studio 3.6.1"
-    build = "192.6241897";
-    sha256Hash = "1mwzk18224bl8hbw9cdxwzgj5cfain4y70q64cpj4p0snffxqm77";
+    version = "4.0.0.16"; # "Android Studio 4.0"
+    build = "193.6514223";
+    sha256Hash = "1sqj64vddwfrr9821habfz7dms9csvbp7b8gf1d027188b2lvh3h";
   };
   betaVersion = {
-    version = "4.0.0.12"; # "Android Studio 4.0 Beta 3"
-    build = "193.6296804";
-    sha256Hash = "072rvh20xkn7izh6f2r2bspy06jrvcibj2hc12hz76m8cwzf4v0m";
+    version = "4.0.0.16"; # "Android Studio 4.0"
+    build = "193.6514223";
+    sha256Hash = "1sqj64vddwfrr9821habfz7dms9csvbp7b8gf1d027188b2lvh3h";
   };
   latestVersion = { # canary & dev
-    version = "4.1.0.4"; # "Android Studio 4.1 Canary 4"
-    build = "193.6325121";
-    sha256Hash = "19b4a03qfljdisn7cw44qzab85hib000m9mgswzssjh6ylkd9arw";
+    version = "4.1.0.10"; # "Android Studio 4.1 Canary 10"
+    build = "201.6507185";
+    sha256Hash = "19yawwsjsdqc0brr0ahviljv4v4p085k3izdpmm915c0bjm89y72";
   };
 in {
   # Attributes are named by their corresponding release channels

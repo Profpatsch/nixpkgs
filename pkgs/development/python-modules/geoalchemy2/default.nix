@@ -7,17 +7,17 @@
 
 buildPythonPackage rec {
   pname = "GeoAlchemy2";
-  version = "0.7.0";
+  version = "0.8.0";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "0lnmj9jky9pz227scmjxgvd8243higl24ndc0cc668mm36cnwapc";
+    sha256 = "0kqxm9imqjbhjj5imvf2kl57di454xmnnsr3i0cs66ibq90nx5m8";
   };
 
   propagatedBuildInputs = [ sqlalchemy shapely ];
 
   meta = with stdenv.lib; {
-    homepage =  http://geoalchemy.org/;
+    homepage =  "http://geoalchemy.org/";
     license = licenses.mit;
     description = "Toolkit for working with spatial databases";
   };

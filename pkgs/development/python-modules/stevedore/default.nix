@@ -2,11 +2,11 @@
 
 buildPythonPackage rec {
   pname = "stevedore";
-  version = "1.31.0";
+  version = "1.32.0";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "054apq55yg7058pmbnyc8jhrcpi9clmi0sm7znhwg0d676brywz0";
+    sha256 = "02shnm8r8c0bv494m8sjnrrlqy0pz5q5xrzpq069bx9sc8fszbqq";
   };
 
   doCheck = false;
@@ -15,7 +15,7 @@ buildPythonPackage rec {
 
   meta = with stdenv.lib; {
     description = "Manage dynamic plugins for Python applications";
-    homepage = https://pypi.python.org/pypi/stevedore;
+    homepage = "https://pypi.python.org/pypi/stevedore";
     license = licenses.asl20;
   };
 }

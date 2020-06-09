@@ -20,14 +20,14 @@
 with python3Packages;
 buildPythonApplication rec {
   pname = "kitty";
-  version = "0.17.1";
+  version = "0.17.4";
   format = "other";
 
   src = fetchFromGitHub {
     owner = "kovidgoyal";
     repo = "kitty";
     rev = "v${version}";
-    sha256 = "1ydli1phgcy17iz6jxgixn8yc86dp8q2yfxk08c8lwh7gxjnjz7f";
+    sha256 = "1rbyj84y8r6h7qd6w7cw58v2abspippignj458ihv2m26i4als2x";
   };
 
   buildInputs = [
@@ -122,7 +122,7 @@ buildPythonApplication rec {
   '';
 
   meta = with stdenv.lib; {
-    homepage = https://github.com/kovidgoyal/kitty;
+    homepage = "https://github.com/kovidgoyal/kitty";
     description = "A modern, hackable, featureful, OpenGL based terminal emulator";
     license = licenses.gpl3;
     platforms = platforms.darwin ++ platforms.linux;

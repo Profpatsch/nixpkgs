@@ -1,21 +1,21 @@
-{ stdenv, buildGoPackage, fetchFromGitHub }:
+{ stdenv, buildGoModule, fetchFromGitHub }:
 
-buildGoPackage rec {
+buildGoModule rec {
   pname = "gotop";
-  version = "3.0.0";
-
-  goPackagePath = "github.com/cjbassi/gotop";
+  version = "3.5.3";
 
   src = fetchFromGitHub {
-    owner = "cjbassi";
+    owner = "xxxserxxx";
     repo = pname;
-    rev = version;
-    sha256 = "1kndj5qjaqgizjakh642fay2i0i1jmfjlk1p01gnjbh2b0yzvj1r";
+    rev = "v${version}";
+    sha256 = "0m1a5bdqjgsm9fy3d2c6r4nil013cizqyqf19k6r4p9bq8rajnzp";
   };
+
+  vendorSha256 = "1pxp0a1hldkdmh174adhq8q0wyz005g7wm8yxknchvp7krxi9r0v";
 
   meta = with stdenv.lib; {
     description = "A terminal based graphical activity monitor inspired by gtop and vtop";
-    homepage = https://github.com/cjbassi/gotop;
+    homepage = "https://github.com/xxxserxxx/gotop";
     license = licenses.agpl3;
     maintainers = [ maintainers.magnetophon ];
     platforms = platforms.unix;

@@ -85,8 +85,6 @@ CHAR_TO_KEY = {
 }
 
 # Forward references
-nr_tests: int
-failed_tests: list
 log: "Logger"
 machines: "List[Machine]"
 
@@ -102,10 +100,12 @@ def make_command(args: list) -> str:
 def create_vlan(vlan_nr: str) -> Tuple[str, str, "subprocess.Popen[bytes]", Any]:
     global log
     log.log("starting VDE switch for network {}".format(vlan_nr))
-    vde_socket = os.path.abspath("./vde{}.ctl".format(vlan_nr))
+    vde_socket = tempfile.mkdtemp(
+        prefix="nixos-test-vde-", suffix="-vde{}.ctl".format(vlan_nr)
+    )
     pty_master, pty_slave = pty.openpty()
     vde_process = subprocess.Popen(
-        ["vde_switch", "-s", vde_socket, "--dirmode", "0777"],
+        ["vde_switch", "-s", vde_socket, "--dirmode", "0700"],
         bufsize=1,
         stdin=pty_slave,
         stdout=subprocess.PIPE,
@@ -143,7 +143,7 @@ class Logger:
         self.logfile = os.environ.get("LOGFILE", "/dev/null")
         self.logfile_handle = codecs.open(self.logfile, "wb")
         self.xml = XMLGenerator(self.logfile_handle, encoding="utf-8")
-        self.queue: "Queue[Dict[str, str]]" = Queue(1000)
+        self.queue: "Queue[Dict[str, str]]" = Queue()
 
         self.xml.startDocument()
         self.xml.startElement("logfile", attrs={})
@@ -369,7 +369,7 @@ class Machine:
             q = q.replace("'", "\\'")
             return self.execute(
                 (
-                    "su -l {} -c "
+                    "su -l {} --shell /bin/sh -c "
                     "$'XDG_RUNTIME_DIR=/run/user/`id -u` "
                     "systemctl --user {}'"
                 ).format(user, q)
@@ -385,17 +385,17 @@ class Machine:
             if state != require_state:
                 raise Exception(
                     "Expected unit ‘{}’ to to be in state ".format(unit)
-                    + "'active' but it is in state ‘{}’".format(state)
+                    + "'{}' but it is in state ‘{}’".format(require_state, state)
                 )
 
     def execute(self, command: str) -> Tuple[int, str]:
         self.connect()
 
-        out_command = "( {} ); echo '|!EOF' $?\n".format(command)
+        out_command = "( {} ); echo '|!=EOF' $?\n".format(command)
         self.shell.send(out_command.encode())
 
         output = ""
-        status_code_pattern = re.compile(r"(.*)\|\!EOF\s+(\d+)")
+        status_code_pattern = re.compile(r"(.*)\|\!=EOF\s+(\d+)")
 
         while True:
             chunk = self.shell.recv(4096).decode(errors="ignore")
@@ -598,11 +598,8 @@ class Machine:
                 shutil.copytree(host_src, host_intermediate)
             else:
                 shutil.copy(host_src, host_intermediate)
-            self.succeed("sync")
             self.succeed(make_command(["mkdir", "-p", vm_target.parent]))
             self.succeed(make_command(["cp", "-r", vm_intermediate, vm_target]))
-        # Make sure the cleanup is synced into VM
-        self.succeed("sync")
 
     def copy_from_vm(self, source: str, target_dir: str = "") -> None:
         """Copy a file from the VM (specified by an in-VM source path) to a path
@@ -620,7 +617,6 @@ class Machine:
             # Copy the file to the shared directory inside VM
             self.succeed(make_command(["mkdir", "-p", vm_shared_temp]))
             self.succeed(make_command(["cp", "-r", vm_src, vm_intermediate]))
-            self.succeed("sync")
             abs_target = out_dir / target_dir / vm_src.name
             abs_target.parent.mkdir(exist_ok=True, parents=True)
             # Copy the file from the shared directory outside VM
@@ -628,8 +624,6 @@ class Machine:
                 shutil.copytree(intermediate, abs_target)
             else:
                 shutil.copy(intermediate, abs_target)
-        # Make sure the cleanup is synced into VM
-        self.succeed("sync")
 
     def dump_tty_contents(self, tty: str) -> None:
         """Debugging: Dump the contents of the TTY<n>
@@ -880,33 +874,16 @@ def run_tests() -> None:
         if machine.is_up():
             machine.execute("sync")
 
-    if nr_tests != 0:
-        nr_succeeded = nr_tests - len(failed_tests)
-        eprint("{} out of {} tests succeeded".format(nr_succeeded, nr_tests))
-        if len(failed_tests) > 0:
-            eprint(
-                "The following tests have failed:\n - {}".format(
-                    "\n - ".join(failed_tests)
-                )
-            )
-            sys.exit(1)
-
 
 @contextmanager
 def subtest(name: str) -> Iterator[None]:
-    global nr_tests
-    global failed_tests
-
     with log.nested(name):
-        nr_tests += 1
         try:
             yield
             return True
         except Exception as e:
-            failed_tests.append(
-                'Test "{}" failed with error: "{}"'.format(name, str(e))
-            )
-            log.log("error: {}".format(str(e)))
+            log.log(f'Test "{name}" failed with error: "{e}"')
+            raise e
 
     return False
 
@@ -926,9 +903,6 @@ if __name__ == "__main__":
     ]
     exec("\n".join(machine_eval))
 
-    nr_tests = 0
-    failed_tests = []
-
     @atexit.register
     def clean_up() -> None:
         with log.nested("cleaning up"):
@@ -939,7 +913,7 @@ if __name__ == "__main__":
                 machine.process.kill()
 
             for _, _, process, _ in vde_sockets:
-                process.kill()
+                process.terminate()
         log.close()
 
     tic = time.time()

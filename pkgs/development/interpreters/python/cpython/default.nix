@@ -28,6 +28,8 @@
 , stripTkinter ? false
 , rebuildBytecode ? true
 , stripBytecode ? false
+, includeSiteCustomize ? true
+, static ? false
 }:
 
 assert x11Support -> tcl != null
@@ -101,7 +103,11 @@ in with passthru; stdenv.mkDerivation {
   ] ++ optionals isPy35 [
     # Backports support for LD_LIBRARY_PATH from 3.6
     ./3.5/ld_library_path.patch
-  ] ++ optionals (isPy37 || isPy38) [
+  ] ++ optionals (isPy35 || isPy36 || isPy37) [
+    # Backport a fix for discovering `rpmbuild` command when doing `python setup.py bdist_rpm` to 3.5, 3.6, 3.7.
+    # See: https://bugs.python.org/issue11122
+    ./3.7/fix-hardcoded-path-checking-for-rpmbuild.patch
+  ] ++ optionals (isPy37 || isPy38 || isPy39) [
     # Fix darwin build https://bugs.python.org/issue34027
     ./3.7/darwin-libutil.patch
   ] ++ optionals (isPy3k && hasDistutilsCxxPatch) [
@@ -112,7 +118,7 @@ in with passthru; stdenv.mkDerivation {
     (
       if isPy35 then
         ./3.5/python-3.x-distutils-C++.patch
-      else if isPy37 || isPy38 then
+      else if isPy37 || isPy38 || isPy39 then
         ./3.7/python-3.x-distutils-C++.patch
       else
         fetchpatch {
@@ -130,7 +136,7 @@ in with passthru; stdenv.mkDerivation {
   CPPFLAGS = concatStringsSep " " (map (p: "-I${getDev p}/include") buildInputs);
   LDFLAGS = concatStringsSep " " (map (p: "-L${getLib p}/lib") buildInputs);
   LIBS = "${optionalString (!stdenv.isDarwin) "-lcrypt"} ${optionalString (ncurses != null) "-lncurses"}";
-  NIX_LDFLAGS = optionalString stdenv.isLinux "-lgcc_s";
+  NIX_LDFLAGS = optionalString (stdenv.isLinux && !stdenv.hostPlatform.isMusl) "-lgcc_s" + optionalString stdenv.hostPlatform.isMusl "-lgcc_eh";
   # Determinism: We fix the hashes of str, bytes and datetime objects.
   PYTHONHASHSEED=0;
 
@@ -169,7 +175,7 @@ in with passthru; stdenv.mkDerivation {
     # Never even try to use lchmod on linux,
     # don't rely on detecting glibc-isms.
     "ac_cv_func_lchmod=no"
-  ];
+  ] ++ optional static "LDFLAGS=-static";
 
   preConfigure = ''
     for i in /usr /sw /opt /pkg; do	# improve purity
@@ -237,7 +243,7 @@ in with passthru; stdenv.mkDerivation {
     '' + optionalString stripTests ''
     # Strip tests
     rm -R $out/lib/python*/test $out/lib/python*/**/test{,s}
-    '' + ''
+    '' + optionalString includeSiteCustomize ''
     # Include a sitecustomize.py file
     cp ${../sitecustomize.py} $out/${sitePackages}/sitecustomize.py
     '' + optionalString rebuildBytecode ''
@@ -262,7 +268,7 @@ in with passthru; stdenv.mkDerivation {
   # Enforce that we don't have references to the OpenSSL -dev package, which we
   # explicitly specify in our configure flags above.
   disallowedReferences =
-    stdenv.lib.optionals (openssl != null) [ openssl.dev ]
+    stdenv.lib.optionals (openssl != null && !static) [ openssl.dev ]
     ++ stdenv.lib.optionals (stdenv.hostPlatform != stdenv.buildPlatform) [
     # Ensure we don't have references to build-time packages.
     # These typically end up in shebangs.
@@ -274,7 +280,7 @@ in with passthru; stdenv.mkDerivation {
   enableParallelBuilding = true;
 
   meta = {
-    homepage = http://python.org;
+    homepage = "http://python.org";
     description = "A high-level dynamically-typed programming language";
     longDescription = ''
       Python is a remarkably powerful dynamic programming language that

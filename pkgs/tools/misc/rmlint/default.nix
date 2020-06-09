@@ -5,13 +5,13 @@
 with stdenv.lib;
 stdenv.mkDerivation rec {
   pname = "rmlint";
-  version = "2.9.0";
+  version = "2.10.0";
 
   src = fetchFromGitHub {
     owner = "sahib";
     repo = "rmlint";
     rev = "v${version}";
-    sha256 = "1b5cziam14h80xrfb285fmfrzz2rligxcpsq1xsig14xf4l2875i";
+    sha256 = "1r7j1bmm83p6wdw0jhvkm4sa568r534zsy45bvas7qq4433jl019";
   };
 
   CFLAGS="-I${stdenv.lib.getDev utillinux}/include";
@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
 
   meta = {
     description = "Extremely fast tool to remove duplicates and other lint from your filesystem";
-    homepage = https://rmlint.readthedocs.org;
+    homepage = "https://rmlint.readthedocs.org";
     platforms = platforms.linux;
     license = licenses.gpl3;
     maintainers = [ maintainers.koral ];

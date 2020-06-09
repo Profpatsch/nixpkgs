@@ -6,12 +6,13 @@ let
   allBass = {
     bass = {
       h = "bass.h";
+      version = "2.4.15";
       so = {
         i686_linux = "libbass.so";
         x86_64-linux = "x64/libbass.so";
       };
-      urlpath = "bass${version}-linux.zip";
-      sha256 = "1hjxp1akj8367qlglv5rqpwq2dimfz3bkllwq39abavz4sp8smjz";
+      urlpath = "bass24-linux.zip";
+      sha256 = "1z01im0l2ydi608vc0n0c1cfyp1vrh6681zn2zkhg98vvs20y805";
     };
 
     bass_fx = {
@@ -51,7 +52,7 @@ let
 
     meta = with stdenv.lib; {
       description = "Shareware audio library";
-      homepage = https://www.un4seen.com/;
+      homepage = "https://www.un4seen.com/";
       license = licenses.unfreeRedistributable;
       platforms = builtins.attrNames bass.so;
     };

@@ -1,4 +1,4 @@
-{ stdenv, fetchurl }:
+{ stdenv, fetchurl, nixosTests }:
 
 let
   generic = { version, sha256, insecure ? false }: stdenv.mkDerivation rec {
@@ -10,6 +10,8 @@ let
       inherit sha256;
     };
 
+    passthru.tests = nixosTests.nextcloud;
+
     installPhase = ''
       mkdir -p $out/
       cp -R . $out/
@@ -17,7 +19,7 @@ let
 
     meta = with stdenv.lib; {
       description = "Sharing solution for files, calendars, contacts and more";
-      homepage = https://nextcloud.com;
+      homepage = "https://nextcloud.com";
       maintainers = with maintainers; [ schneefux bachp globin fpletz ma27 ];
       license = licenses.agpl3Plus;
       platforms = with platforms; unix;
@@ -26,12 +28,12 @@ let
   };
 in {
   nextcloud17 = generic {
-    version = "17.0.4";
-    sha256 = "0cj5mng0nmj3hz30pyz3g19kj3mkm5ca8si3sw3arv61dmw6c5g6";
+    version = "17.0.6";
+    sha256 = "0qq7lkgzsn1zakfym5bjqzpcisxmgfcdd927ddqlhddy3zvgxrxx";
   };
 
   nextcloud18 = generic {
-    version = "18.0.2";
-    sha256 = "10fbdq0366iai2kpw6v6p78mnn9gz8x0xzsbqrp109yx4c4nccyh";
+    version = "18.0.4";
+    sha256 = "0aa3f4xbkzacfw0h9aic0ywk5mqlwka83qaszizj8lmk68kf3n7s";
   };
 }

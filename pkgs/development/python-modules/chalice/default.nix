@@ -19,11 +19,11 @@
 
 buildPythonPackage rec {
   pname = "chalice";
-  version = "1.12.0";
+  version = "1.13.1";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "f8f929f26df77285a202fb93174400230f8912c5b9c1fb061c7836a78413e325";
+    sha256 = "c898c8726ed008615f0b1988b9cd1e1f74fd230e7b24bca53bfd5f96af6e55a1";
   };
 
   checkInputs = [ watchdog pytest hypothesis mock ];
@@ -58,7 +58,7 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Python Serverless Microframework for AWS";
-    homepage = https://github.com/aws/chalice;
+    homepage = "https://github.com/aws/chalice";
     license = licenses.asl20;
     maintainers = [ maintainers.costrouc ];
   };

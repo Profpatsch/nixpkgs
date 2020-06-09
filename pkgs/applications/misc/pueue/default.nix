@@ -1,19 +1,29 @@
-{ lib, rustPlatform, fetchFromGitHub }:
+{ lib, rustPlatform, fetchFromGitHub, installShellFiles }:
 
 rustPlatform.buildRustPackage rec {
   pname = "pueue";
-  version = "0.2.1";
+  version = "0.5.1";
 
   src = fetchFromGitHub {
     owner = "Nukesor";
     repo = pname;
     rev = "v${version}";
-    sha256 = "1yx69pwdal0p5dfhabjdns9z6z3fa41wh7bxa4dpsjx37ziglcsp";
+    sha256 = "1n85b41kvx7x7qdizdnq1p0zrkap4gkwnnvhh4pz6j9njxj8d9ir";
   };
 
-  cargoSha256 = "1ksr5fw9p3j1bnlgfimb5nsryb4si8ic2x4prsra1mwkc91hr7x3";
+  cargoSha256 = "0hkkz74hllc5dzmgls6bgdxsdr871df2fn51sa3shv68ah0avxff";
 
-  checkPhase = "cargo test -- --skip test_single_huge_payload";
+  nativeBuildInputs = [ installShellFiles ];
+
+  checkFlagsArray = [ "--skip=test_single_huge_payload" ];
+
+  postInstall = ''
+    # zsh completion generation fails. See: https://github.com/Nukesor/pueue/issues/57
+    for shell in bash fish; do
+      $out/bin/pueue completions $shell .
+      installShellCompletion pueue.$shell
+    done
+  '';
 
   meta = with lib; {
     description = "A daemon for managing long running shell commands";

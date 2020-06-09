@@ -1,19 +1,30 @@
-{ stdenv, buildGoModule, fetchFromGitHub, libobjc, Foundation, IOKit }:
+{ stdenv, buildGoModule, fetchFromGitHub }:
 
 buildGoModule rec {
   pname = "saml2aws";
-  version = "2.24.0";
+  version = "2.25.0";
 
   src = fetchFromGitHub {
     owner = "Versent";
     repo = "saml2aws";
     rev = "v${version}";
-    sha256 = "15zxi64s1hgpm3rxk0m7z5363jc7h80g91bfx8vg7nw680lday4w";
+    sha256 = "12aidylamrq4rvy2cfdz669lr1p20yqrshigcc5x1hrlhh9y64xc";
   };
 
-  modSha256 = "0qxf2i06spjig3ynixh3xmbxpghh222jhfqcg71i4i79x4ycp5wx";
+  hid = fetchFromGitHub {
+    owner = "karalabe";
+    repo = "hid";
+    rev = "9c14560f9ee858c43f40b5cd01392b167aacf4e8";
+    sha256 = "0xc7b8mwha64j7l2fr2g5zy8pz7cqi0vrxx60gii52b6ii31xncx";
+  };
 
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ libobjc Foundation IOKit ];
+  vendorSha256 = "0mns5clykvj33krf29yjh8lkf05nih42ka5ji7miq0iaikqyyc78";
+  overrideModAttrs = (_: {
+      postBuild = ''
+      cp -r --reflink=auto ${hid}/libusb vendor/github.com/karalabe/hid
+      cp -r --reflink=auto ${hid}/hidapi vendor/github.com/karalabe/hid
+      '';
+    });
 
   subPackages = [ "." "cmd/saml2aws" ];
 

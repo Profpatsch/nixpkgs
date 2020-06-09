@@ -1,8 +1,8 @@
-{ stdenv, buildGoModule, fetchFromGitHub, Security }:
+{ stdenv, buildGoModule, fetchFromGitHub }:
 
 buildGoModule rec {
   pname = "coredns";
-  version = "1.6.7";
+  version = "1.6.9";
 
   goPackagePath = "github.com/coredns/coredns";
 
@@ -10,12 +10,10 @@ buildGoModule rec {
     owner = "coredns";
     repo = "coredns";
     rev = "v${version}";
-    sha256 = "05r0dm8h23s5dafxisya48izc2ywpn5ywvhf9q6m20qkpwr8gd10";
+    sha256 = "18c02ss0sxxg8lkhdmyaac2x5alfxsizf6jqhck8bqkf6hiyv5hc";
   };
 
-  modSha256 = "0wlffk6wkcyn2lphw2vmdsmzag0wxljcxrvm7sv3i124x2x3yvy4";
-
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
+  vendorSha256 = "0ykhqsz4a7bkkxcg7w23jl3qs36law1f8l1b5r3i26qlamibqxl7";
 
   meta = with stdenv.lib; {
     homepage = "https://coredns.io";

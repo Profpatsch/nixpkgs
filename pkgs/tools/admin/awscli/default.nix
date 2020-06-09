@@ -19,11 +19,11 @@ let
 
 in with py.pkgs; buildPythonApplication rec {
   pname = "awscli";
-  version = "1.17.13"; # N.B: if you change this, change botocore to a matching version too
+  version = "1.18.56"; # N.B: if you change this, change botocore to a matching version too
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "c42fc35d4e9f82ce72b2a8b8d54df3a57fe363b0763a473e72d0006b0d1e06ff";
+    sha256 = "3a442ea0d18d8a60228f1115850b5b8bdc739cd436d34a279bdf711fb918aaa0";
   };
 
   postPatch = ''
@@ -57,7 +57,7 @@ in with py.pkgs; buildPythonApplication rec {
   passthru.python = py; # for aws_shell
 
   meta = with lib; {
-    homepage = https://aws.amazon.com/cli/;
+    homepage = "https://aws.amazon.com/cli/";
     description = "Unified tool to manage your AWS services";
     license = licenses.asl20;
     maintainers = with maintainers; [ muflax ];

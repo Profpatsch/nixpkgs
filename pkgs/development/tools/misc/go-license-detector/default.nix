@@ -1,4 +1,4 @@
-{ stdenv, buildGoModule, fetchFromGitHub, Security }:
+{ lib, buildGoModule, fetchFromGitHub }:
 
 buildGoModule rec {
   pname = "go-license-detector";
@@ -11,11 +11,9 @@ buildGoModule rec {
     sha256 = "0ln1z3y9q5igf9djkxw05ql2hb1ijcvvz0mrbwz11cdv9xrsa4z4";
   };
 
-  modSha256 = "163f1kiy7kqrnaazb8ydaaiz57lv30jyjkvv6i7pczvcg9yfhmdb";
+  vendorSha256 = "0gan5l7vsq0hixxcymhhs8p07v92w60r0lhgvrr9a99nic12vmia";
 
-  buildInputs = stdenv.lib.optionals stdenv.isDarwin [ Security ];
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Reliable project licenses detector";
     homepage = "https://github.com/src-d/go-license-detector";
     license = licenses.asl20;
