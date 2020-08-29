@@ -5,6 +5,10 @@ let
     url = "https://spdx.org/licenses/${lic.spdxId}.html";
   };
 
+  deprecated = lic: lic // {
+    deprecated = true;
+  };
+
 in
 
 lib.mapAttrs (n: v: v // { shortName = n; }) {
@@ -794,14 +798,14 @@ lib.mapAttrs (n: v: v // { shortName = n; }) {
   };
 } // {
   # TODO: remove legacy aliases
-  agpl3 = lib.licenses.agpl3Only;
-  fdl11 = lib.licenses.fdl11Only;
-  fdl12 = lib.licenses.fdl12Only;
-  fdl13 = lib.licenses.fdl13Only;
-  gpl1 = lib.licenses.gpl1Only;
-  gpl2 = lib.licenses.gpl2Only;
-  gpl3 = lib.licenses.gpl3Only;
-  lgpl2 = lib.licenses.lgpl2Only;
-  lgpl21 = lib.licenses.lgpl21Only;
-  lgpl3 = lib.licenses.lgpl3Only;
+  agpl3 = deprecated lib.licenses.agpl3Only;
+  fdl11 = deprecated lib.licenses.fdl11Only;
+  fdl12 = deprecated lib.licenses.fdl12Only;
+  fdl13 = deprecated lib.licenses.fdl13Only;
+  gpl1 = deprecated lib.licenses.gpl1Only;
+  gpl2 = deprecated lib.licenses.gpl2Only;
+  gpl3 = deprecated lib.licenses.gpl3Only;
+  lgpl2 = deprecated lib.licenses.lgpl2Only;
+  lgpl21 = deprecated lib.licenses.lgpl21Only;
+  lgpl3 = deprecated lib.licenses.lgpl3Only;
 }

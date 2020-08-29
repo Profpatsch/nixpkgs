@@ -163,6 +163,15 @@ let
         else throw;
     in handler msg;
 
+  licenseT =
+    lib.types.attrs
+    // {
+      description = "non-deprecated license";
+      check = x: false &&
+        lib.types.attrs.check x
+        && (! (x.deprecated or false));
+      };
+
 
   metaTypes = with lib.types; rec {
     # These keys are documented
@@ -172,7 +181,7 @@ let
     homepage = either (listOf str) str;
     downloadPage = str;
     changelog = either (listOf str) str;
-    license = either (listOf lib.types.attrs) (either lib.types.attrs str);
+    license = either (listOf licenseT) (either licenseT str);
     maintainers = listOf (attrsOf str);
     priority = int;
     platforms = listOf str;
