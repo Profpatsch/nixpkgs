@@ -7,6 +7,10 @@ let
   inherit (darwin.apple_sdk.frameworks) CoreFoundation Security;
 in
 {
+  anyhow = attrs: {
+    buildInputs = lib.optionals stdenv.isDarwin [ libiconv ];
+  };
+
   cairo-rs = attrs: {
     buildInputs = [ cairo ];
   };
