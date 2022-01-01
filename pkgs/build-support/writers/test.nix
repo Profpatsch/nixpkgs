@@ -4,6 +4,7 @@
 , nodePackages
 , perlPackages
 , pypy2Packages
+, python2Packages
 , python3Packages
 , pypy3Packages
 , runCommand
@@ -56,6 +57,17 @@ let
     '';
 
     pypy2 = writePyPy2Bin "test-writers-pypy2-bin" { libraries = [ pypy2Packages.enum ]; } ''
+      from enum import Enum
+
+
+      class Test(Enum):
+          a = "success"
+
+
+      print Test.a
+    '';
+
+    python2 = writePython2Bin "test-writers-python2-bin" { libraries = [ python2Packages.enum ]; } ''
       from enum import Enum
 
 
@@ -121,6 +133,17 @@ let
       print "success\n" if true;
     '';
 
+    python2 = writePython2 "test-writers-python2" { libraries = [ python2Packages.enum ]; } ''
+      from enum import Enum
+
+
+      class Test(Enum):
+          a = "success"
+
+
+      print Test.a
+    '';
+
     pypy2 = writePyPy2 "test-writers-pypy2" { libraries = [ pypy2Packages.enum ]; } ''
       from enum import Enum
 
@@ -148,6 +171,10 @@ let
         - test: success
       """)
       print(y[0]['test'])
+    '';
+
+    python2NoLibs = writePython2 "test-writers-python2-no-libs" {} ''
+      print("success")
     '';
 
     pypy2NoLibs = writePyPy2 "test-writers-pypy2-no-libs" {} ''
@@ -200,4 +227,3 @@ in runCommand "test-writers" {
   echo 'nix-writers successfully tested' >&2
   touch $out
 ''
-

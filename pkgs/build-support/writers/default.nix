@@ -1,9 +1,7 @@
-{ pkgs, config, buildPackages, lib, stdenv, libiconv, gawk, gnused, gixy }:
+{ pkgs, buildPackages, lib, stdenv, libiconv, gawk, gnused, gixy }:
 
-let
-  aliases = if (config.allowAliases or true) then (import ./aliases.nix lib) else prev: {};
-
-  writers = with lib; rec {
+with lib;
+rec {
   # Base implementation for non-compiled executables.
   # Takes an interpreter, for example `${pkgs.bash}/bin/bash`
   #
@@ -247,6 +245,24 @@ let
     '');
   } name;
 
+  # writePython2 takes a name an attributeset with libraries and some python2 sourcecode and
+  # returns an executable
+  #
+  # Example:
+  # writePython2 "test_python2" { libraries = [ pkgs.python2Packages.enum ]; } ''
+  #   from enum import Enum
+  #
+  #   class Test(Enum):
+  #       a = "success"
+  #
+  #   print Test.a
+  # ''
+  writePython2 = makePythonWriter pkgs.python2 pkgs.python2Packages;
+
+  # writePython2Bin takes the same arguments as writePython2 but outputs a directory (like writeScriptBin)
+  writePython2Bin = name:
+    writePython2 "/bin/${name}";
+
   # writePyPy2 takes a name an attributeset with libraries and some pypy2 sourcecode and
   # returns an executable
   #
@@ -264,6 +280,7 @@ let
   # writePyPy2Bin takes the same arguments as writePyPy2 but outputs a directory (like writeScriptBin)
   writePyPy2Bin = name:
     writePyPy2 "/bin/${name}";
+
 
   # writePython3 takes a name an attributeset with libraries and some python3 sourcecode and
   # returns an executable
@@ -301,6 +318,4 @@ let
   writePyPy3Bin = name:
     writePyPy3 "/bin/${name}";
 
-};
-in
-writers // (aliases writers)
+}
