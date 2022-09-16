@@ -55,6 +55,7 @@ let
     concatMapStringsSep
     concatStringsSep
     escapeNixString
+    hasInfix
     isCoercibleToString
     ;
   inherit (lib.trivial)
@@ -226,11 +227,11 @@ rec {
     };
 
     int = mkOptionType {
-        name = "int";
-        description = "signed integer";
-        check = isInt;
-        merge = mergeEqualOption;
-      };
+      name = "int";
+      description = "signed integer";
+      check = isInt;
+      merge = mergeEqualOption;
+    };
 
     # Specialized subdomains of int
     ints =
@@ -291,10 +292,34 @@ rec {
     port = ints.u16;
 
     float = mkOptionType {
-        name = "float";
-        description = "floating point number";
-        check = isFloat;
-        merge = mergeEqualOption;
+      name = "float";
+      description = "floating point number";
+      check = isFloat;
+      merge = mergeEqualOption;
+    };
+
+    number = either int float;
+
+    numbers = let
+      betweenDesc = lowest: highest:
+        "${builtins.toJSON lowest} and ${builtins.toJSON highest} (both inclusive)";
+    in {
+      between = lowest: highest:
+        assert lib.assertMsg (lowest <= highest)
+          "numbers.between: lowest must be smaller than highest";
+        addCheck number (x: x >= lowest && x <= highest) // {
+          name = "numberBetween";
+          description = "integer or floating point number between ${betweenDesc lowest highest}";
+        };
+
+      nonnegative = addCheck number (x: x >= 0) // {
+        name = "numberNonnegative";
+        description = "nonnegative integer or floating point number, meaning >=0";
+      };
+      positive = addCheck number (x: x > 0) // {
+        name = "numberPositive";
+        description = "positive integer or floating point number, meaning >0";
+      };
     };
 
     str = mkOptionType {
@@ -358,6 +383,11 @@ rec {
     string = separatedString "" // {
       name = "string";
       deprecationMessage = "See https://github.com/NixOS/nixpkgs/pull/66346 for better alternative types.";
+    };
+
+    passwdEntry = entryType: addCheck entryType (str: !(hasInfix ":" str || hasInfix "\n" str)) // {
+      name = "passwdEntry ${entryType.name}";
+      description = "${entryType.description}, not containing newlines or colons";
     };
 
     attrs = mkOptionType {

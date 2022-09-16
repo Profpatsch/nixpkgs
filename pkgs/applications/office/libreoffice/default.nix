@@ -121,7 +121,7 @@ let
     optional optionals optionalString;
 
   jre' = jre_minimal.override {
-    modules = [ "java.base" "java.desktop" "java.logging" ];
+    modules = [ "java.base" "java.desktop" "java.logging" "java.sql" ];
   };
 
   importVariant = f: import (./. + "/src-${variant}/${f}");
@@ -205,6 +205,8 @@ in
 
     # Fix build with poppler 22.04
     ./poppler-22-04-0.patch
+
+    ./gpgme-1.18.patch
   ];
 
   ### QT/KDE

@@ -46,10 +46,10 @@ with lib;
 # Those pieces of software we entirely ignore upstream's handling of, and just
 # make sure they're in the path if desired.
 let
-  k3sVersion = "1.24.1+k3s1";     # k3s git tag
-  k3sCommit = "0581808f5c160b0c0cafec5b8f20430835f34f44"; # k3s git commit at the above version
-  k3sRepoSha256 = "0zh60nav50s0viiaqxdaajhywh28zqckjnpyazlk2fdb077dyi65";
-  k3sVendorSha256 = "sha256-7cJ728vV9GA4/MDUBsnrR12gGf3DXzka3czrdHjsNIM=";
+  k3sVersion = "1.24.4+k3s1";     # k3s git tag
+  k3sCommit = "c3f830e9b9ed8a4d9d0e2aa663b4591b923a296e"; # k3s git commit at the above version
+  k3sRepoSha256 = "00ns6n7jxnacah8ahndhgdb160prgsqhswbb5809kkgvig7k8b27";
+  k3sVendorSha256 = "sha256-ReZvJCgxqffG2H39JlynGPUBSV5ngPkRtAoZ++OQZZI=";
 
   # taken from ./manifests/traefik.yaml, extracted from '.spec.chart' https://github.com/k3s-io/k3s/blob/v1.23.3%2Bk3s1/scripts/download#L9
   # The 'patch' and 'minor' versions are currently hardcoded as single digits only, so ignore the trailing two digits. Weird, I know.
@@ -323,7 +323,7 @@ buildGoModule rec {
 
   passthru.updateScript = ./update.sh;
 
-  passthru.tests = { inherit (nixosTests) k3s-single-node; };
+  passthru.tests = nixosTests.k3s;
 
   meta = baseMeta;
 }

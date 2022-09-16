@@ -13,19 +13,19 @@
 # function correctly.
 rustPlatform.buildRustPackage rec {
   pname = "prisma-engines";
-  version = "3.15.1";
+  version = "4.2.1";
 
   src = fetchFromGitHub {
     owner = "prisma";
     repo = "prisma-engines";
     rev = version;
-    sha256 = "sha256-p636B8NUu/XncHLTQTiAYfvBaMbiopLVRwGrFf45BW8=";
+    sha256 = "sha256-TlKjAfpygQq2c77d6ZoMIBtWC0bAiMiKygFkh5GrBBc=";
   };
 
   # Use system openssl.
   OPENSSL_NO_VENDOR = 1;
 
-  cargoSha256 = "sha256-miDdP4kokRwhR9tif6llI1PI+F4O6tC4pAWucRRyLNQ=";
+  cargoSha256 = "sha256-KkCq7h6qqh37LvA4wQYjLk/LPKCg5Wgl6tEhH55qh8M=";
 
   nativeBuildInputs = [ pkg-config ];
 
@@ -59,7 +59,7 @@ rustPlatform.buildRustPackage rec {
     homepage = "https://www.prisma.io/";
     license = licenses.asl20;
     platforms = platforms.unix;
-    maintainers = with maintainers; [ pamplemousse pimeys superherointj ];
+    maintainers = with maintainers; [ pamplemousse pimeys superherointj tomhoule ];
   };
 }
 

@@ -33,7 +33,6 @@ let
     luasocket
     luautf8
     penlight
-    stdlib
     vstruct
   ] ++ lib.optionals (lib.versionOlder lua.luaversion "5.2") [
     bit32
@@ -44,11 +43,11 @@ in
 
 stdenv.mkDerivation rec {
   pname = "sile";
-  version = "0.13.1";
+  version = "0.14.3";
 
   src = fetchurl {
     url = "https://github.com/sile-typesetter/sile/releases/download/v${version}/${pname}-${version}.tar.xz";
-    sha256 = "09mvydgv81pkp2nz9rkz32n3df21cfc2aslpqrivf3svr6sp9hxy";
+    sha256 = "1n7nlrvhdp6ilpx6agb5w6flss5vbflbldv0495h19fy5fxkb5vz";
   };
 
   configureFlags = [

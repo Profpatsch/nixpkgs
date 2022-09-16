@@ -1,6 +1,6 @@
 { lib
+, stdenv
 , buildGoModule
-, buildGo118Module
 , fetchFromGitHub
 , callPackage
 , config
@@ -17,7 +17,7 @@ let
      , rev
      , version
      , sha256
-     , vendorSha256 ? throw "vendorSha256 missing: please use `buildGoModule`" /* added 2022/01 */
+     , vendorSha256
      , deleteVendor ? false
      , proxyVendor ? false
      , mkProviderGoModule ? buildGoModule
@@ -58,11 +58,8 @@ let
   # These are the providers that don't fall in line with the default model
   special-providers =
     {
-      brightbox = automated-providers.brightbox.override { mkProviderGoModule = buildGo118Module; };
-      # mkisofs needed to create ISOs holding cloud-init data,
-      # and wrapped to terraform via deecb4c1aab780047d79978c636eeb879dd68630
+      # mkisofs needed to create ISOs holding cloud-init data and wrapped to terraform via deecb4c1aab780047d79978c636eeb879dd68630
       libvirt = automated-providers.libvirt.overrideAttrs (_: { propagatedBuildInputs = [ cdrtools ]; });
-      linode = automated-providers.linode.override { mkProviderGoModule = buildGo118Module; };
     };
 
   # Put all the providers we not longer support in this list.
@@ -73,6 +70,8 @@ let
     in
     lib.optionalAttrs config.allowAliases {
       b2 = removed "b2" "2022/06";
+      dome9 = removed "dome9" "2022/08";
+      ncloud = removed "ncloud" "2022/08";
       opc = archived "opc" "2022/05";
       oraclepaas = archived "oraclepaas" "2022/05";
       template = archived "template" "2022/05";

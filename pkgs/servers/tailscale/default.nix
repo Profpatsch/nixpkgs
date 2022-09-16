@@ -1,16 +1,16 @@
-{ lib, stdenv, buildGoModule, fetchFromGitHub, makeWrapper, iptables, iproute2, procps }:
+{ lib, stdenv, buildGoModule, fetchFromGitHub, makeWrapper, iptables, iproute2, procps, shadow, getent }:
 
 buildGoModule rec {
   pname = "tailscale";
-  version = "1.26.1";
+  version = "1.30.1";
 
   src = fetchFromGitHub {
     owner = "tailscale";
     repo = "tailscale";
     rev = "v${version}";
-    sha256 = "sha256-3WBvJI9uyzreUbk8ROYxXQgvttZ95OEepdzA4ZhdaJ0=";
+    sha256 = "sha256-sR1DB8Hc/JkCFaoj9FRRJhTeUWWoGUee2kx0EreUbWE=";
   };
-  vendorSha256 = "sha256-NHmMkYfGgAEFjvFvKaPoaAuzeDbTJAw+85fZcxVA2jY=";
+  vendorSha256 = "sha256-+7Cr7wmt4PheHJRAlyKhRd6QRIZBqrbVtn5I94h8lLo=";
 
   nativeBuildInputs = lib.optionals stdenv.isLinux [ makeWrapper ];
 
@@ -23,7 +23,7 @@ buildGoModule rec {
   doCheck = false;
 
   postInstall = lib.optionalString stdenv.isLinux ''
-    wrapProgram $out/bin/tailscaled --prefix PATH : ${lib.makeBinPath [ iproute2 iptables ]}
+    wrapProgram $out/bin/tailscaled --prefix PATH : ${lib.makeBinPath [ iproute2 iptables getent shadow ]}
     wrapProgram $out/bin/tailscale --suffix PATH : ${lib.makeBinPath [ procps ]}
 
     sed -i -e "s#/usr/sbin#$out/bin#" -e "/^EnvironmentFile/d" ./cmd/tailscaled/tailscaled.service

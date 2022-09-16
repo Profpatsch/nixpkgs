@@ -2,8 +2,9 @@
 , stdenv
 , buildPythonPackage
 , fetchPypi
-, python
+, unittestCheckHook
 , pythonOlder
+, isPy3k
 }:
 
 buildPythonPackage rec {
@@ -11,7 +12,8 @@ buildPythonPackage rec {
   version = "3.5";
   format = "setuptools";
 
-  disabled = pythonOlder "3.7";
+  # Supports Python 2.7 and 3.4+
+  disabled = isPy3k && pythonOlder "3.4";
 
   src = fetchPypi {
     inherit pname version;
@@ -25,11 +27,9 @@ buildPythonPackage rec {
 
   doCheck = !stdenv.hostPlatform.isDarwin; # broken on darwin
 
-  checkPhase = ''
-    runHook preCheck
-    ${python.interpreter} -m unittest discover -s test
-    runHook postCheck
-  '';
+  checkInputs = [ unittestCheckHook ];
+
+  unittestFlagsArray = [ "-s" "test" ];
 
   pythonImportsCheck = [
     "serial"

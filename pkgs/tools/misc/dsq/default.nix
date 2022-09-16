@@ -15,16 +15,16 @@
 
 buildGoModule rec {
   pname = "dsq";
-  version = "0.20.1";
+  version = "0.22.0";
 
   src = fetchFromGitHub {
     owner = "multiprocessio";
     repo = "dsq";
-    rev = version;
-    hash = "sha256-zTrIs6Q/+PW6CKCx1L8VaXhc1ZAqbb+Od+LJNjPCOTs=";
+    rev = "v${version}";
+    hash = "sha256-aFSal+MDJ7W50ZMgBkkyLaJjJoNeSGubylaRK0tbAzY=";
   };
 
-  vendorSha256 = "sha256-bLaBBWChK2RKXd/rX9m9UfHu8zt0j8TOm5S2M02U91A=";
+  vendorSha256 = "sha256-RW6DdMQeuKVP4rFN13Azq+zAx6dVXmdnIA6aDMCygcI=";
 
   ldflags = [ "-X" "main.Version=${version}" ];
 
@@ -56,8 +56,5 @@ buildGoModule rec {
     homepage = "https://github.com/multiprocessio/dsq";
     license = licenses.asl20;
     maintainers = with maintainers; [ liff ];
-    # TODO: Remove once nixpkgs uses macOS SDK 10.14+ for x86_64-darwin
-    # Undefined symbols for architecture x86_64: "_SecTrustEvaluateWithError"
-    broken = stdenv.isDarwin && stdenv.isx86_64;
   };
 }

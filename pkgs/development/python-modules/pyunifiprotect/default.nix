@@ -5,6 +5,7 @@
 , buildPythonPackage
 , fetchFromGitHub
 , ipython
+, orjson
 , packaging
 , pillow
 , poetry-core
@@ -21,11 +22,12 @@
 , pytz
 , termcolor
 , typer
+, ffmpeg
 }:
 
 buildPythonPackage rec {
   pname = "pyunifiprotect";
-  version = "3.9.2";
+  version = "4.2.0";
   format = "pyproject";
 
   disabled = pythonOlder "3.9";
@@ -34,13 +36,21 @@ buildPythonPackage rec {
     owner = "briis";
     repo = pname;
     rev = "refs/tags/v${version}";
-    hash = "sha256-IQ+mjiNxfxG0Zq543Rn5rK/BNPzLGVX9jVTtyW7W9cs=";
+    hash = "sha256-DBOPHeSEdM6cev2BZs1AwXmzNPVsekNklu9c+KhECiI=";
   };
+
+  postPatch = ''
+    substituteInPlace pyproject.toml \
+      --replace "--cov=pyunifiprotect --cov-append" ""
+    substituteInPlace setup.cfg \
+      --replace "pydantic!=1.9.1" "pydantic"
+  '';
 
   propagatedBuildInputs = [
     aiofiles
     aiohttp
     aioshutil
+    orjson
     packaging
     pillow
     pydantic
@@ -58,6 +68,7 @@ buildPythonPackage rec {
   };
 
   checkInputs = [
+    ffmpeg # Required for command ffprobe
     pytest-aiohttp
     pytest-asyncio
     pytest-benchmark
@@ -66,22 +77,12 @@ buildPythonPackage rec {
     pytestCheckHook
   ];
 
-  postPatch = ''
-    substituteInPlace pyproject.toml \
-      --replace "--cov=pyunifiprotect --cov-append" ""
-  '';
-
   pythonImportsCheck = [
     "pyunifiprotect"
   ];
 
   pytestFlagsArray = [
     "--benchmark-disable"
-  ];
-
-  disabledTests = [
-    # Tests require ffprobe
-    "test_get_camera_video"
   ];
 
   meta = with lib; {

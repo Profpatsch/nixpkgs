@@ -2,7 +2,7 @@
 , acme
 , aiohttp
 , asynctest
-, atomicwrites
+, atomicwrites-homeassistant
 , attrs
 , buildPythonPackage
 , fetchFromGitHub
@@ -15,13 +15,13 @@
 
 buildPythonPackage rec {
   pname = "hass-nabucasa";
-  version = "0.54.0";
+  version = "0.55.0";
 
   src = fetchFromGitHub {
     owner = "nabucasa";
     repo = pname;
     rev = version;
-    sha256 = "sha256-UL7HPmii65p+WO22y0qv8zq3yICKarRORqE+FK1u7OE=";
+    sha256 = "sha256-3r955nZu/nNHnFQJy8bSswtd4N0JxGZA8RLU0CXZT7o=";
   };
 
   postPatch = ''
@@ -35,7 +35,7 @@ buildPythonPackage rec {
   propagatedBuildInputs = [
     acme
     aiohttp
-    atomicwrites
+    atomicwrites-homeassistant
     attrs
     pycognito
     snitun

@@ -15,7 +15,7 @@
 
 buildPythonPackage rec {
   pname = "pyoverkiz";
-  version = "1.4.2";
+  version = "1.5.2";
   format = "pyproject";
 
   disabled = pythonOlder "3.7";
@@ -24,7 +24,7 @@ buildPythonPackage rec {
     owner = "iMicknl";
     repo = "python-overkiz-api";
     rev = "refs/tags/v${version}";
-    hash = "sha256-o6qAeZSjXK/V5TKFCsnVvCbDH6lQTts1ClJ5scmDeVQ=";
+    hash = "sha256-UIArc0NBg4FM2FjW7r798xbvw5S8gsGiTq7RdQp969E=";
   };
 
   nativeBuildInputs = [
@@ -44,6 +44,11 @@ buildPythonPackage rec {
     pytest-asyncio
     pytestCheckHook
   ];
+
+  postPatch = ''
+    substituteInPlace pyproject.toml \
+      --replace 'backoff = "^1.10.0"' 'backoff = "*"'
+  '';
 
   pythonImportsCheck = [
     "pyoverkiz"

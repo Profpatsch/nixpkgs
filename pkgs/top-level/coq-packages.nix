@@ -11,7 +11,7 @@ let
 
       metaFetch = import ../build-support/coq/meta-fetch/default.nix
         {inherit lib stdenv fetchzip; };
-      mkCoqDerivation = callPackage ../build-support/coq {};
+      mkCoqDerivation = lib.makeOverridable (callPackage ../build-support/coq {});
 
       contribs = recurseIntoAttrs
         (callPackage ../development/coq-modules/contribs {});
@@ -36,6 +36,7 @@ let
       coq-record-update = callPackage ../development/coq-modules/coq-record-update { };
       coqeal = callPackage ../development/coq-modules/coqeal {};
       coqhammer = callPackage ../development/coq-modules/coqhammer {};
+      coqide = callPackage ../development/coq-modules/coqide {};
       coqprime = callPackage ../development/coq-modules/coqprime {};
       coqtail-math = callPackage ../development/coq-modules/coqtail-math {};
       coquelicot = callPackage ../development/coq-modules/coquelicot {};
@@ -81,6 +82,10 @@ let
       mathcomp-zify = callPackage ../development/coq-modules/mathcomp-zify {};
       mathcomp-tarjan = callPackage ../development/coq-modules/mathcomp-tarjan {};
       metacoq = callPackage ../development/coq-modules/metacoq { };
+      metacoq-template-coq = self.metacoq.template-coq;
+      metacoq-pcuic        = self.metacoq.pcuic;
+      metacoq-safechecker  = self.metacoq.safechecker;
+      metacoq-erasure      = self.metacoq.erasure;
       metalib = callPackage ../development/coq-modules/metalib { };
       multinomials = callPackage ../development/coq-modules/multinomials {};
       odd-order = callPackage ../development/coq-modules/odd-order { };

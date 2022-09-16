@@ -5,20 +5,22 @@
 , installShellFiles
 , btrfs-progs
 , glibc
+, testers
+, werf
 }:
 
 buildGoModule rec {
   pname = "werf";
-  version = "1.2.114";
+  version = "1.2.168";
 
   src = fetchFromGitHub {
     owner = "werf";
     repo = "werf";
     rev = "v${version}";
-    sha256 = "sha256-+QCKVXuROd7QB6P5tSSINWtdw5OvVnmE1+ttoBnCO1g=";
+    hash = "sha256-/Shmnnpme1ffN7GMTryb4ddPlcAsruyWhFdjr1PJ3HM=";
   };
 
-  vendorSha256 = "sha256-VuburDiYqePFvS7/aTM+krkK2UhTHhfbvGOLY3I3DN8=";
+  vendorHash = "sha256-E5yDk48O7zze8QTeLQ999QmB8XLkpKNZ8JQ2wVRMGCU=";
 
   proxyVendor = true;
 
@@ -26,6 +28,8 @@ buildGoModule rec {
 
   nativeBuildInputs = [ installShellFiles ];
   buildInputs = lib.optionals stdenv.isLinux [ btrfs-progs glibc.static ];
+
+  CGO_ENABLED = if stdenv.isLinux then 1 else 0;
 
   ldflags = [
     "-s"
@@ -48,14 +52,28 @@ buildGoModule rec {
     "static_build"
   ];
 
-  # There are no tests for cmd/werf.
-  doCheck = false;
+  preCheck = ''
+    # Test all targets.
+    unset subPackages
+
+    # Remove tests that require external services.
+    rm -rf \
+      integration/suites \
+      pkg/true_git/*test.go \
+      test/e2e
+  '';
 
   postInstall = ''
     installShellCompletion --cmd werf \
       --bash <($out/bin/werf completion --shell=bash) \
       --zsh <($out/bin/werf completion --shell=zsh)
   '';
+
+  passthru.tests.version = testers.testVersion {
+    package = werf;
+    command = "werf version";
+    version = "v${version}";
+  };
 
   meta = with lib; {
     description = "GitOps delivery tool";

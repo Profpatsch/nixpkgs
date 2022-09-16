@@ -12,23 +12,22 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "rust-analyzer-unwrapped";
-  version = "2022-06-13";
-  cargoSha256 = "sha256-pNYhX6Jh/NPIVf7labyDKxk8siHFABMSsJ3ZVBWowUo=";
+  version = "2022-09-12";
+  cargoSha256 = "sha256-mi6Ab3CyOfz1ZYViYbJwJCIew/N+IPt37bkq7x/N7IY=";
 
   src = fetchFromGitHub {
     owner = "rust-lang";
     repo = "rust-analyzer";
     rev = version;
-    sha256 = "sha256-IArOOdvfz+864Rs7fgHolfYfcjYTlvWebeEsJgnfyqI=";
+    sha256 = "sha256-1LkSsXzI1JTAmP/GMTz4fTJd8y/tw8R79l96q+h7mu8=";
   };
 
-  patches = [
-    # Code format and git history check require more dependencies but don't really matter for packaging.
-    # So just ignore them.
-    ./ignore-git-and-rustfmt-tests.patch
-  ];
+  cargoBuildFlags = [ "--bin" "rust-analyzer" "--bin" "rust-analyzer-proc-macro-srv" ];
+  cargoTestFlags = [ "--package" "rust-analyzer" "--package" "proc-macro-srv-cli" ];
 
-  buildAndTestSubdir = "crates/rust-analyzer";
+  # Code format check requires more dependencies but don't really matter for packaging.
+  # So just ignore it.
+  checkFlags = ["--skip=tidy::check_code_formatting"];
 
   nativeBuildInputs = lib.optional useMimalloc cmake;
 

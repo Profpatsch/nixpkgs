@@ -27,6 +27,9 @@ stdenv.mkDerivation rec {
     # based on without requiring the setup.py rework
     # https://git.kernel.org/pub/scm/utils/dtc/dtc.git/commit/?id=383e148b70a47ab15f97a19bb999d54f9c3e810f
     ./python-3.10.patch
+
+    # fix dtc static building
+    ./0001-Depend-on-.a-instead-of-.so-when-building-static.patch
   ];
 
   nativeBuildInputs = [ flex bison pkg-config which ]
@@ -38,8 +41,12 @@ stdenv.mkDerivation rec {
     patchShebangs pylibfdt/
   '';
 
-  makeFlags = [ "PYTHON=python" ];
+  makeFlags = [ "PYTHON=python" "STATIC_BUILD=${toString stdenv.hostPlatform.isStatic}" ];
   installFlags = [ "INSTALL=install" "PREFIX=$(out)" "SETUP_PREFIX=$(out)" ];
+
+  postFixup = lib.optionalString stdenv.isDarwin ''
+    install_name_tool -id $out/lib/libfdt.dylib $out/lib/libfdt-${version}.dylib
+  '';
 
   # Checks are broken on aarch64 darwin
   # https://github.com/NixOS/nixpkgs/pull/118700#issuecomment-885892436

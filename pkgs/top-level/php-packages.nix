@@ -31,6 +31,7 @@
 , net-snmp
 , oniguruma
 , openldap
+, openssl_1_1
 , openssl
 , pam
 , pcre2
@@ -66,8 +67,8 @@ lib.makeScope pkgs.newScope (self: with self; {
   #
   # Build inputs is used for extra deps that may be needed. And zendExtension
   # will mark the extension as a zend extension or not.
-  mkExtension =
-    { name
+  mkExtension = lib.makeOverridable
+    ({ name
     , configureFlags ? [ "--enable-${name}" ]
     , internalDeps ? [ ]
     , postPhpize ? ""
@@ -151,7 +152,7 @@ lib.makeScope pkgs.newScope (self: with self; {
         description = "PHP upstream extension: ${name}";
         inherit (php.meta) maintainers homepage license;
       };
-    });
+    }));
 
   php = phpPackage;
 
@@ -215,6 +216,8 @@ lib.makeScope pkgs.newScope (self: with self; {
     igbinary = callPackage ../development/php-packages/igbinary { };
 
     imagick = callPackage ../development/php-packages/imagick { };
+
+    inotify = callPackage ../development/php-packages/inotify { };
 
     mailparse = callPackage ../development/php-packages/mailparse { };
 
@@ -407,7 +410,7 @@ lib.makeScope pkgs.newScope (self: with self; {
         }
         {
           name = "openssl";
-          buildInputs = [ openssl ];
+          buildInputs = if (lib.versionAtLeast php.version "8.1") then [ openssl ] else [ openssl_1_1 ];
           configureFlags = [ "--with-openssl" ];
           doCheck = false;
         }

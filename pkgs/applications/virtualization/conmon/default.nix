@@ -11,13 +11,13 @@
 
 stdenv.mkDerivation rec {
   pname = "conmon";
-  version = "2.1.2";
+  version = "2.1.4";
 
   src = fetchFromGitHub {
     owner = "containers";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-WxRMY43Z9OytY1kc91VVmqLn5cl0UC/0Zj8x3vpsaBQ=";
+    sha256 = "sha256-d7fXbzbrqhP6zLVZo3gO+FyvZg7Z3AGlNSNLy0PD6EE=";
   };
 
   nativeBuildInputs = [ pkg-config ];
@@ -32,6 +32,9 @@ stdenv.mkDerivation rec {
     install -D bin/conmon -t $out/bin
     runHook postInstall
   '';
+
+  enableParallelBuilding = true;
+  strictDeps = true;
 
   passthru.tests = { inherit (nixosTests) cri-o podman; };
 
