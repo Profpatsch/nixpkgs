@@ -5,11 +5,13 @@
 , lib
 , patchelf
 , stdenv
+, runCommand
+, expect
 }:
 let
-  inherit (dotnetCorePackages) sdk_6_0;
+  inherit (dotnetCorePackages) sdk_6_0 runtime_6_0;
 in
-buildDotnetModule rec {
+let finalPackage = buildDotnetModule rec {
   pname = "omnisharp-roslyn";
   version = "1.39.1";
 
@@ -35,7 +37,7 @@ buildDotnetModule rec {
     "-property:AssemblyVersion=${version}.0"
     "-property:FileVersion=${version}.0"
     "-property:InformationalVersion=${version}"
-    "-property:RuntimeFrameworkVersion=6.0.0-preview.7.21317.1"
+    "-property:RuntimeFrameworkVersion=${runtime_6_0.version}"
     "-property:RollForward=LatestMajor"
   ];
 
@@ -72,6 +74,43 @@ buildDotnetModule rec {
     rm $out/lib/omnisharp-roslyn/System.Configuration.ConfigurationManager.dll
   '';
 
+  passthru.tests = {
+    no-sdk = runCommand "no-sdk" { nativeBuildInputs = [ finalPackage expect ]; meta.timeout = 60; } ''
+      HOME=$TMPDIR
+      expect <<"EOF"
+        spawn OmniSharp
+        expect_before timeout {
+          send_error "timeout!\n"
+          exit 1
+        }
+        expect "\"ERROR\",\"Name\":\"OmniSharp.MSBuild.Discovery.Providers.SdkInstanceProvider\""
+        expect eof
+        catch wait result
+        if { [lindex $result 3] == 0 } {
+          exit 1
+        }
+      EOF
+      touch $out
+    '';
+
+    with-sdk = runCommand "with-sdk" { nativeBuildInputs = [ finalPackage sdk_6_0 expect ]; meta.timeout = 60; } ''
+      HOME=$TMPDIR
+      expect <<"EOF"
+        spawn OmniSharp
+        expect_before timeout {
+          send_error "timeout!\n"
+          exit 1
+        }
+        expect "{\"Event\":\"started\","
+        send \x03
+        expect eof
+        catch wait result
+        exit [lindex $result 3]
+      EOF
+      touch $out
+    '';
+  };
+
   meta = with lib; {
     description = "OmniSharp based on roslyn workspaces";
     homepage = "https://github.com/OmniSharp/omnisharp-roslyn";
@@ -83,4 +122,4 @@ buildDotnetModule rec {
     maintainers = with maintainers; [ tesq0 ericdallo corngood mdarocha ];
     mainProgram = "OmniSharp";
   };
-}
+}; in finalPackage

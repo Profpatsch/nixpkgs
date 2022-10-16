@@ -1,8 +1,7 @@
 { lib
-, autoreconfHook
+, bash
 , bash-completion
 , bridge-utils
-, cmake
 , coreutils
 , curl
 , darwin
@@ -10,7 +9,6 @@
 , dnsmasq
 , docutils
 , fetchFromGitLab
-, fetchurl
 , gettext
 , glib
 , gnutls
@@ -33,6 +31,7 @@
 , readline
 , rpcsvc-proto
 , stdenv
+, substituteAll
 , xhtml1
 , yajl
 , writeScript
@@ -114,18 +113,24 @@ stdenv.mkDerivation rec {
   # NOTE: You must also bump:
   # <nixpkgs/pkgs/development/python-modules/libvirt/default.nix>
   # SysVirt in <nixpkgs/pkgs/top-level/perl-packages.nix>
-  version = "8.7.0";
+  version = "8.8.0";
 
   src = fetchFromGitLab {
     owner = pname;
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-5F6Ibp3k7I1mwv8DNZ7rsW0wOw5q3vHtCUc7jJUNzrs=";
+    sha256 = "sha256-p7z+paiSeIm2cWnc6n9Hrd++BDmccGj+EOhqHNsJiXw=";
     fetchSubmodules = true;
   };
 
   patches = [
     ./0001-meson-patch-in-an-install-prefix-for-building-on-nix.patch
+  ] ++ lib.optionals enableZfs [
+    (substituteAll {
+      src = ./0002-substitute-zfs-and-zpool-commands.patch;
+      zfs = "${zfs}/bin/zfs";
+      zpool = "${zfs}/bin/zpool";
+    })
   ];
 
   # remove some broken tests
@@ -134,6 +139,14 @@ stdenv.mkDerivation rec {
     sed -i '/virnetsockettest/d' tests/meson.build
     # delete only the first occurrence of this
     sed -i '0,/qemuxml2argvtest/{/qemuxml2argvtest/d;}' tests/meson.build
+
+    for binary in mount umount mkfs; do
+      substituteInPlace meson.build \
+        --replace "find_program('$binary'" "find_program('${lib.getBin util-linux}/bin/$binary'"
+    done
+
+    substituteInPlace meson.build \
+      --replace "'dbus-daemon'," "'${lib.getBin dbus}/bin/dbus-daemon',"
   '' + optionalString isLinux ''
     sed -i 's,define PARTED "parted",define PARTED "${parted}/bin/parted",' \
       src/storage/storage_backend_disk.c \
@@ -150,35 +163,32 @@ stdenv.mkDerivation rec {
   strictDeps = true;
 
   nativeBuildInputs = [
-    meson # needs to be first
-
-    cmake
+    meson
     docutils
     libxml2 # for xmllint
     libxslt # for xsltproc
+    gettext
     makeWrapper
     ninja
-    perl
     pkg-config
-    util-linux # for mount
+    perl
+    perlPackages.XMLXPath
   ]
   ++ optional (!isDarwin) rpcsvc-proto
   # NOTE: needed for rpcgen
   ++ optional isDarwin darwin.developer_cmds;
 
   buildInputs = [
+    bash
     bash-completion
     curl
     dbus
-    gettext
     glib
     gnutls
     libgcrypt
     libpcap
     libtasn1
     libxml2
-    perlPackages.XMLXPath
-    pkg-config
     python3
     readline
     xhtml1

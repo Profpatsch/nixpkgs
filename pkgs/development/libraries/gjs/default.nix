@@ -2,13 +2,14 @@
 , lib
 , stdenv
 , meson
+, mesonEmulatorHook
 , ninja
 , pkg-config
 , gnome
 , gtk3
 , atk
 , gobject-introspection
-, spidermonkey_91
+, spidermonkey_102
 , pango
 , cairo
 , readline
@@ -31,13 +32,13 @@ let
   ];
 in stdenv.mkDerivation rec {
   pname = "gjs";
-  version = "1.72.2";
+  version = "1.74.0";
 
   outputs = [ "out" "dev" "installedTests" ];
 
   src = fetchurl {
     url = "mirror://gnome/sources/gjs/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-    sha256 = "sha256-3e43m9xafTA6XYlL4rKBvrisVFCGBOfT8geBqGnaOXc=";
+    sha256 = "sha256-fWQYr2LMc1VqssJbSt9n9FI4q4kliI96VyUTWdTr7R4=";
   };
 
   patches = [
@@ -55,15 +56,17 @@ in stdenv.mkDerivation rec {
     makeWrapper
     which # for locale detection
     libxml2 # for xml-stripblanks
+    dbus # for dbus-run-session
+    gobject-introspection
+  ] ++ lib.optionals (!stdenv.buildPlatform.canExecute stdenv.hostPlatform) [
+    mesonEmulatorHook
   ];
 
   buildInputs = [
-    gobject-introspection
     cairo
     readline
     libsysprof-capture
-    spidermonkey_91
-    dbus # for dbus-run-session
+    spidermonkey_102
   ];
 
   checkInputs = [

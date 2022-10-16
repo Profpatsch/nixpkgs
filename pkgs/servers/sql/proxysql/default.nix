@@ -16,7 +16,7 @@
 , libev
 , libgcrypt
 , libinjection
-, libmicrohttpd_0_9_70
+, libmicrohttpd_0_9_69
 , libuuid
 , lz4
 , nlohmann_json
@@ -30,13 +30,13 @@
 
 stdenv.mkDerivation rec {
   pname = "proxysql";
-  version = "2.4.3";
+  version = "2.4.4";
 
   src = fetchFromGitHub {
     owner = "sysown";
     repo = pname;
     rev = version;
-    hash = "sha256-gh0x8wi1v/+iUlE4JymOyD/NI7rL+2/JJQYGAcsL7/g=";
+    hash = "sha256-S0Oy0uQPbAn52KM0r7yxLvVl1DKQwRW3QYVHtJ20CnM=";
   };
 
   patches = [
@@ -100,7 +100,7 @@ stdenv.mkDerivation rec {
         { f = "libdaemon"; p = libdaemon; }
         { f = "libev"; p = libev; }
         { f = "libinjection"; p = libinjection; }
-        { f = "libmicrohttpd"; p = libmicrohttpd_0_9_70; }
+        { f = "libmicrohttpd"; p = libmicrohttpd_0_9_69; }
         { f = "libssl"; p = openssl; }
         { f = "lz4"; p = lz4; }
         { f = "pcre"; p = pcre; }

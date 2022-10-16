@@ -32,6 +32,7 @@
 , "asar"
 , "audiosprite"
 , "autoprefixer"
+, "auto-changelog"
 , "aws-azure-login"
 , "aws-cdk"
 , "awesome-lint"
@@ -378,7 +379,6 @@
 , "vscode-json-languageserver"
 , "vscode-json-languageserver-bin"
 , "vscode-langservers-extracted"
-, { "vscode-lldb-build-deps": "../../applications/editors/vscode/extensions/vscode-lldb/build-deps" }
 , "vue-cli"
 , "vue-language-server"
 , "wavedrom-cli"
@@ -388,6 +388,7 @@
 , "webpack-dev-server"
 , "copy-webpack-plugin"
 , "webtorrent-cli"
+, "@withgraphite/graphite-cli"
 , "wrangler"
 , "wring"
 , "write-good"

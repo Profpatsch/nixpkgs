@@ -13,6 +13,13 @@
     <itemizedlist>
       <listitem>
         <para>
+          GNOME has been upgraded to 43. Please take a look at their
+          <link xlink:href="https://release.gnome.org/43/">Release
+          Notes</link> for details.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           During cross-compilation, tests are now executed if the test
           suite can be executed by the build platform. This is the case
           when doing “native” cross-compilation where the build and host
@@ -125,6 +132,13 @@
       </listitem>
       <listitem>
         <para>
+          Perl has been updated to 5.36, and its core module
+          <literal>HTTP::Tiny</literal> was patched to verify SSL/TLS
+          certificates by default.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           Cinnamon has been updated to 5.4. While at it, the cinnamon
           module now defaults to blueman as bluetooth manager and
           slick-greeter as lightdm greeter to match upstream.
@@ -133,6 +147,13 @@
       <listitem>
         <para>
           OpenSSL now defaults to OpenSSL 3, updated from 1.1.1.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          An image configuration and generator has been added for Linode
+          images, largely based on the present GCE configuration and
+          image.
         </para>
       </listitem>
       <listitem>
@@ -182,6 +203,13 @@
       </listitem>
       <listitem>
         <para>
+          <link xlink:href="https://tandoor.dev">Tandoor Recipes</link>,
+          a self-hosted multi-tenant recipe collection. Available as
+          <link xlink:href="options.html#opt-services.tandoor-recipes.enable">services.tandoor-recipes</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           <link xlink:href="https://hbase.apache.org/">HBase
           cluster</link>, a distributed, scalable, big data store.
           Available as
@@ -205,6 +233,14 @@
       </listitem>
       <listitem>
         <para>
+          <link xlink:href="https://github.com/prymitive/kthxbye">kthxbye</link>,
+          an alert acknowledgement management daemon for Prometheus
+          Alertmanager. Available as
+          <link xlink:href="options.html#opt-services.kthxbye.enable">services.kthxbye</link>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           <link xlink:href="https://github.com/jtroo/kanata">kanata</link>,
           a tool to improve keyboard comfort and usability with advanced
           customization. Available as
@@ -220,9 +256,30 @@
       </listitem>
       <listitem>
         <para>
+          <link xlink:href="https://gitlab.com/CalcProgrammer1/OpenRGB/-/tree/master">OpenRGB</link>,
+          a FOSS tool for controlling RGB lighting. Available as
+          <link xlink:href="options.html#opt-services-hardware-openrgb-enable">services.hardware.openrgb.enable</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           <link xlink:href="https://www.getoutline.com/">Outline</link>,
           a wiki and knowledge base similar to Notion. Available as
           <link linkend="opt-services.outline.enable">services.outline</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <link xlink:href="https://git.sr.ht/~migadu/alps">alps</link>,
+          a simple and extensible webmail. Available as
+          <link linkend="opt-services.alps.enable">services.alps</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <link xlink:href="https://github.com/shizunge/endlessh-go">endlessh-go</link>,
+          an SSH tarpit that exposes Prometheus metrics. Available as
+          <link linkend="opt-services.endlessh-go.enable">services.endlessh-go</link>.
         </para>
       </listitem>
       <listitem>
@@ -258,6 +315,13 @@
       </listitem>
       <listitem>
         <para>
+          <link xlink:href="https://freshrss.org/">FreshRSS</link>, a
+          free, self-hostable RSS feed aggregator. Available as
+          <link linkend="opt-services.freshrss.enable">services.freshrss</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           <link xlink:href="https://www.expressvpn.com">expressvpn</link>,
           the CLI client for ExpressVPN. Available as
           <link linkend="opt-services.expressvpn.enable">services.expressvpn</link>.
@@ -268,6 +332,15 @@
           <link xlink:href="https://github.com/L11R/go-autoconfig">go-autoconfig</link>,
           IMAP/SMTP autodiscover server. Available as
           <link linkend="opt-services.go-autoconfig.enable">services.go-autoconfig</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <link xlink:href="https://github.com/tmate-io/tmate-ssh-server">tmate-ssh-server</link>,
+          server side part of
+          <link xlink:href="https://tmate.io/">tmate</link>. Available
+          as
+          <link linkend="opt-services.tmate-ssh-server.enable">services.tmate-ssh-server</link>.
         </para>
       </listitem>
       <listitem>
@@ -307,6 +380,13 @@
           a simple blogging platform with ActivityPub support. Available
           as
           <link xlink:href="options.html#opt-services.writefreely.enable">services.writefreely</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <link xlink:href="https://listmonk.app">Listmonk</link>, a
+          self-hosted newsletter manager. Enable using
+          <link xlink:href="options.html#opt-services.listmonk.enable">services.listmonk</link>.
         </para>
       </listitem>
     </itemizedlist>
@@ -417,6 +497,16 @@
       </listitem>
       <listitem>
         <para>
+          The <literal>p4</literal> package now only includes the
+          open-source Perforce Helix Core command-line client and APIs.
+          It no longer installs the unfree Helix Core Server binaries
+          <literal>p4d</literal>, <literal>p4broker</literal>, and
+          <literal>p4p</literal>. To install the Helix Core Server
+          binaries, use the <literal>p4d</literal> package instead.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           The <literal>coq</literal> package and versioned variants
           starting at <literal>coq_8_14</literal> no longer include
           CoqIDE, which is now available through
@@ -435,7 +525,9 @@
       <listitem>
         <para>
           <literal>pkgs.cosign</literal> does not provide the
-          <literal>cosigned</literal> binary anymore.
+          <literal>cosigned</literal> binary anymore. The
+          <literal>sget</literal> binary has been moved into its own
+          package.
         </para>
       </listitem>
       <listitem>
@@ -472,6 +564,24 @@
       </listitem>
       <listitem>
         <para>
+          <literal>teleport</literal> has been upgraded to major version
+          10. Please see upstream
+          <link xlink:href="https://goteleport.com/docs/ver/10.0/management/operations/upgrading/">upgrade
+          instructions</link> and
+          <link xlink:href="https://goteleport.com/docs/ver/10.0/changelog/#1000">release
+          notes</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          lemmy module option
+          <literal>services.lemmy.settings.database.createLocally</literal>
+          moved to
+          <literal>services.lemmy.database.createLocally</literal>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           virtlyst package and <literal>services.virtlyst</literal>
           module removed, due to lack of maintainers.
         </para>
@@ -485,6 +595,55 @@
           <literal>python3.pkgs.influxgraph</literal> packages, have
           been removed due to lack of upstream maintenance.
         </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <literal>aws</literal> package has been removed due to
+          being abandoned by the upstream. It is recommended to use
+          <literal>awscli</literal> or <literal>awscli2</literal>
+          instead.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <literal>systemd-networkd</literal> v250 deprecated, renamed,
+          and moved some sections and settings which leads to the
+          following breaking module changes:
+        </para>
+        <itemizedlist spacing="compact">
+          <listitem>
+            <para>
+              <literal>systemd.network.networks.&lt;name&gt;.dhcpV6PrefixDelegationConfig</literal>
+              is renamed to
+              <literal>systemd.network.networks.&lt;name&gt;.dhcpPrefixDelegationConfig</literal>.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literal>systemd.network.networks.&lt;name&gt;.dhcpV6Config</literal>
+              no longer accepts the
+              <literal>ForceDHCPv6PDOtherInformation=</literal> setting.
+              Please use the <literal>WithoutRA=</literal> and
+              <literal>UseDelegatedPrefix=</literal> settings in your
+              <literal>systemd.network.networks.&lt;name&gt;.dhcpV6Config</literal>
+              and the <literal>DHCPv6Client=</literal> setting in your
+              <literal>systemd.network.networks.&lt;name&gt;.ipv6AcceptRAConfig</literal>
+              to control when the DHCPv6 client is started and how the
+              delegated prefixes are handled by the DHCPv6 client.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <literal>systemd.network.networks.&lt;name&gt;.networkConfig</literal>
+              no longer accepts the <literal>IPv6Token=</literal>
+              setting. Use the <literal>Token=</literal> setting in your
+              <literal>systemd.network.networks.&lt;name&gt;.ipv6AcceptRAConfig</literal>
+              instead. The
+              <literal>systemd.network.networks.&lt;name&gt;.ipv6Prefixes.*.ipv6PrefixConfig</literal>
+              now also accepts the <literal>Token=</literal> setting.
+            </para>
+          </listitem>
+        </itemizedlist>
       </listitem>
       <listitem>
         <para>
@@ -516,6 +675,12 @@
       </listitem>
       <listitem>
         <para>
+          The default <literal>kops</literal> version is now 1.25.1 and
+          support for 1.22 and older has been dropped.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           <literal>k3s</literal> no longer supports docker as runtime
           due to upstream dropping support.
         </para>
@@ -524,6 +689,15 @@
         <para>
           <literal>k3s</literal> supports <literal>clusterInit</literal>
           option, and it is enabled by default, for servers.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <literal>stylua</literal> no longer accepts
+          <literal>lua52Support</literal> and
+          <literal>luauSupport</literal> overrides, use
+          <literal>features</literal> instead, which defaults to
+          <literal>[ &quot;lua54&quot; &quot;luau&quot; ]</literal>.
         </para>
       </listitem>
     </itemizedlist>
@@ -573,6 +747,12 @@
       </listitem>
       <listitem>
         <para>
+          The <literal>networking.wireguard</literal> module now can set
+          the mtu on interfaces and tag its packets with an fwmark.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           The <literal>services.matrix-synapse</literal> systemd unit
           has been hardened.
         </para>
@@ -594,6 +774,14 @@
           0.8.36 to 2.0.15. See the
           <link xlink:href="https://github.com/bbuchfink/diamond/releases">upstream
           release notes</link> for more details.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <literal>guake</literal> package has been updated from
+          3.6.3 to 3.9.0, see the
+          <link xlink:href="https://github.com/Guake/guake/releases">changelog</link>
+          for more details.
         </para>
       </listitem>
       <listitem>
@@ -650,6 +838,21 @@
       </listitem>
       <listitem>
         <para>
+          systemd-oomd is enabled by default. Depending on which systemd
+          units have <literal>ManagedOOMSwap=kill</literal> or
+          <literal>ManagedOOMMemoryPressure=kill</literal>, systemd-oomd
+          will SIGKILL all the processes under the appropriate
+          descendant cgroups when the configured limits are exceeded.
+          NixOS does currently not configure cgroups with oomd by
+          default, this can be enabled using
+          <link xlink:href="options.html#opt-systemd.oomd.enableRootSlice">systemd.oomd.enableRootSlice</link>,
+          <link xlink:href="options.html#opt-systemd.oomd.enableSystemSlice">systemd.oomd.enableSystemSlice</link>,
+          and
+          <link xlink:href="options.html#opt-systemd.oomd.enableUserServices">systemd.oomd.enableUserServices</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           The <literal>pass-secret-service</literal> package now
           includes systemd units from upstream, so adding it to the
           NixOS <literal>services.dbus.packages</literal> option will
@@ -661,6 +864,13 @@
         <para>
           There is a new module for AMD SEV CPU functionality, which
           grants access to the hardware.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The Wordpress module got support for installing language packs
+          through
+          <literal>services.wordpress.sites.&lt;site&gt;.languages</literal>.
         </para>
       </listitem>
       <listitem>
@@ -686,6 +896,18 @@
         <para>
           The <literal>nomad</literal> package now defaults to 1.3,
           which no longer has a downgrade path to releases 1.2 or older.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <literal>nodePackages</literal> package set now defaults
+          to the LTS release in the <literal>nodejs</literal> package
+          again, instead of being pinned to
+          <literal>nodejs-14_x</literal>. Several updates to node2nix
+          have been made for compatibility with newer Node.js and npm
+          versions and a new <literal>postRebuild</literal> hook has
+          been added for packages to perform extra build steps before
+          the npm install step prunes dev dependencies.
         </para>
       </listitem>
     </itemizedlist>

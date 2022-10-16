@@ -822,6 +822,8 @@ dont-distribute-packages:
  - boots-cloud
  - boots-web
  - borel
+ - box-csv
+ - box-socket
  - breakout
  - bricks
  - bricks-internal-test
@@ -1201,7 +1203,6 @@ dont-distribute-packages:
  - direct-rocksdb
  - directory-contents
  - dirfiles
- - disco
  - discogs-haskell
  - discord-gateway
  - discord-hs
@@ -1283,6 +1284,7 @@ dont-distribute-packages:
  - edge
  - edges
  - editable
+ - edits
  - effective-aspects-mzv
  - eflint
  - egison
@@ -1371,6 +1373,7 @@ dont-distribute-packages:
  - fallingblocks
  - family-tree
  - fast-bech32
+ - fastcdc
  - fastirc
  - fastly
  - fastparser
@@ -1502,6 +1505,7 @@ dont-distribute-packages:
  - gbu
  - gdax
  - gdiff-ig
+ - gearhash
  - gedcom
  - geek
  - geek-server
@@ -2024,6 +2028,7 @@ dont-distribute-packages:
  - hedgehog-gen-json
  - hedis-pile
  - heist-aeson
+ - heist-extra
  - helic
  - helics
  - helics-wai
@@ -2069,6 +2074,7 @@ dont-distribute-packages:
  - hipbot
  - hipsql-client
  - hipsql-server
+ - hipsql-tx-simple
  - hirt
  - hist-pl
  - hist-pl-dawg
@@ -2205,6 +2211,7 @@ dont-distribute-packages:
  - hunt-searchengine
  - hunt-server
  - hurdle
+ - hurl-xml
  - huzzy
  - hw-all
  - hw-aws-sqs-conduit
@@ -2562,6 +2569,7 @@ dont-distribute-packages:
  - ltext
  - luachunk
  - lucid-colonnade
+ - lucid2-htmx
  - lucienne
  - luhn
  - lui
@@ -2652,7 +2660,6 @@ dont-distribute-packages:
  - minioperational
  - minirotate
  - mirror-tweet
- - miso-action-logger
  - miss
  - miss-porcelain
  - missing-py2
@@ -2682,6 +2689,7 @@ dont-distribute-packages:
  - monad-stlike-stm
  - monad-unlift-ref
  - monadiccp-gecode
+ - monadology
  - monarch
  - monetdb-mapi
  - mongrel2-handler
@@ -2920,7 +2928,6 @@ dont-distribute-packages:
  - peparser
  - perdure
  - perf-analysis
- - perf_0_10_0
  - perfecthash
  - periodic-client
  - periodic-client-exe
@@ -2990,9 +2997,7 @@ dont-distribute-packages:
  - poke
  - polh-lexicon
  - polydata
- - polysemy-RandomFu
  - polysemy-http
- - polysemy-optics
  - polyseq
  - polytypeable-utils
  - pomodoro
@@ -3001,6 +3006,8 @@ dont-distribute-packages:
  - porcupine-core
  - porcupine-http
  - porcupine-s3
+ - portray-diff-hunit
+ - portray-diff-quickcheck
  - ports
  - poseidon
  - poseidon-postgis
@@ -3023,6 +3030,7 @@ dont-distribute-packages:
  - pred-trie
  - prednote-test
  - prefork
+ - prelate
  - presto-hdbc
  - preview
  - primal-memory
@@ -3039,6 +3047,7 @@ dont-distribute-packages:
  - product
  - prof2dot
  - progressbar
+ - project-forge
  - project-m36
  - prolog-graph
  - prolog-graph-lib
@@ -3048,7 +3057,6 @@ dont-distribute-packages:
  - propane
  - proplang
  - prosidyc
- - proteome
  - proto-lens-descriptors
  - proto3-suite
  - proto3-wire
@@ -3199,6 +3207,7 @@ dont-distribute-packages:
  - registry-hedgehog
  - registry-hedgehog-aeson
  - registry-messagepack
+ - registry-options
  - regular-extras
  - regular-web
  - regular-xmlpickler
@@ -3242,7 +3251,6 @@ dont-distribute-packages:
  - rewrite
  - rewriting
  - rezoom
- - rfc
  - rfc-env
  - rfc-http-client
  - rfc-psql
@@ -3250,8 +3258,10 @@ dont-distribute-packages:
  - rfc-servant
  - rhythm-game-tutorial
  - ribosome
+ - ribosome-app
+ - ribosome-host
+ - ribosome-host-test
  - ribosome-root
- - ribosome-test
  - ridley-extras
  - rio-process-pool
  - riot
@@ -3291,6 +3301,7 @@ dont-distribute-packages:
  - ruler
  - ruler-core
  - runtime-arbitrary
+ - runtime-instances
  - rv
  - s-expression
  - safe-coloured-text-gen
@@ -3317,11 +3328,9 @@ dont-distribute-packages:
  - sarsi
  - sasl
  - sat-micro-hs
- - satchmo-backends
- - satchmo-examples
  - satchmo-funsat
- - satchmo-minisat
  - satchmo-toysat
+ - sauron
  - sc2-lowlevel
  - sc2-support
  - sc2hs
@@ -3389,7 +3398,6 @@ dont-distribute-packages:
  - servant-matrix-param
  - servant-oauth2
  - servant-oauth2-examples
- - servant-polysemy
  - servant-postgresql
  - servant-pushbullet-client
  - servant-rate-limit
@@ -3608,6 +3616,7 @@ dont-distribute-packages:
  - sydtest
  - sydtest-aeson
  - sydtest-amqp
+ - sydtest-autodocodec
  - sydtest-hedgehog
  - sydtest-hedis
  - sydtest-hspec
@@ -3673,10 +3682,11 @@ dont-distribute-packages:
  - tdlib
  - tdlib-gen
  - tdlib-types
- - techlab
  - telega
  - telegram-bot
  - telegram-raw-api
+ - ten-lens
+ - ten-unordered-containers
  - tensorflow-core-ops
  - tensorflow-logging
  - tensorflow-ops
@@ -3924,6 +3934,7 @@ dont-distribute-packages:
  - warped
  - wavesurfer
  - wavy
+ - weatherhs
  - web-inv-route
  - web-mongrel2
  - web-page
