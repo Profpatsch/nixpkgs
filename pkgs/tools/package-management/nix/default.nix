@@ -50,7 +50,10 @@ in lib.makeExtensible (self: {
 
   nix_2_5 = throw "nixVersions.nix_2_5 has been removed";
 
-  nix_2_6 = throw "nixVersions.nix_2_6 has been removed";
+  nix_2_6 = common {
+    version = "2.6.1";
+    sha256 = "sha256-E9iQ7f+9Z6xFcUvvfksTEfn8LsDfzmwrcRBC//5B3V0=";
+  };
 
   nix_2_7 = common {
     version = "2.7.0";
