@@ -27,18 +27,23 @@
 , typer
 , typing-extensions
 , wasabi
+, writeScript
+, stdenv
+, nix
+, git
+, nix-update
 }:
 
 buildPythonPackage rec {
   pname = "spacy";
-  version = "3.4.1";
+  version = "3.5.0";
   format = "setuptools";
 
   disabled = pythonOlder "3.6";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-WcXPXTSKbA5kpZrFz+bNhdCOhmM3hwyV0exhYdUx5GM=";
+    hash = "sha256-/iAScBKZJ3iATZP3XOk3DViFcwcmOcODLOw49Uv35KU=";
   };
 
   propagatedBuildInputs = [
@@ -69,10 +74,10 @@ buildPythonPackage rec {
 
   postPatch = ''
     substituteInPlace setup.cfg \
-      --replace "pydantic>=1.7.4,!=1.8,!=1.8.1,<1.9.0" "pydantic~=1.2"
+      --replace "typer>=0.3.0,<0.5.0" "typer>=0.3.0"
   '';
 
-  checkInputs = [
+  nativeCheckInputs = [
     pytest
   ];
 
@@ -85,7 +90,19 @@ buildPythonPackage rec {
     "spacy"
   ];
 
-  passthru.tests.annotation = callPackage ./annotation-test { };
+  passthru = {
+    updateScript = writeScript "update-spacy" ''
+    #!${stdenv.shell}
+    set -eou pipefail
+    PATH=${lib.makeBinPath [ nix git nix-update ]}
+
+    nix-update python3Packages.spacy
+
+    # update spacy models as well
+    echo | nix-shell maintainers/scripts/update.nix --argstr package python3Packages.spacy_models.en_core_web_sm
+    '';
+    tests.annotation = callPackage ./annotation-test { };
+  };
 
   meta = with lib; {
     description = "Industrial-strength Natural Language Processing (NLP)";

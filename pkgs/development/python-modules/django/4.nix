@@ -43,14 +43,14 @@
 
 buildPythonPackage rec {
   pname = "Django";
-  version = "4.1.2";
+  version = "4.1.7";
   format = "pyproject";
 
   disabled = pythonOlder "3.8";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-uNhDcUgQq4jVk0RQfURHvoss8SpJAxNjtu7Z8bmyKA8=";
+    hash = "sha256-RPcUuBxfGQ2dLdrQGlMv5QL6AcTLj68dCB9CZO0V3Ng=";
   };
 
   patches = [
@@ -82,7 +82,7 @@ buildPythonPackage rec {
   # ModuleNotFoundError: No module named 'asgiref'
   doCheck = false;
 
-  checkInputs = [
+  nativeCheckInputs = [
     aiosmtpd
     argon2-cffi
     asgiref
@@ -113,6 +113,7 @@ buildPythonPackage rec {
   '';
 
   meta = with lib; {
+    changelog = "https://docs.djangoproject.com/en/${lib.versions.majorMinor version}/releases/${version}/";
     description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design.";
     homepage = "https://www.djangoproject.com";
     license = licenses.bsd3;

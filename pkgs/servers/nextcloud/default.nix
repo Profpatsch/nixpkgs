@@ -4,7 +4,9 @@ let
   generic = {
     version, sha256,
     eol ? false, extraVulnerabilities ? []
-  }: stdenv.mkDerivation rec {
+  }: let
+    major = lib.versions.major version;
+  in stdenv.mkDerivation rec {
     pname = "nextcloud";
     inherit version;
 
@@ -13,7 +15,7 @@ let
       inherit sha256;
     };
 
-    patches = [ ./0001-Setup-remove-custom-dbuser-creation-behavior.patch ];
+    patches = [ (./patches + "/v${major}/0001-Setup-remove-custom-dbuser-creation-behavior.patch") ];
 
     passthru.tests = nixosTests.nextcloud;
 
@@ -25,6 +27,7 @@ let
     '';
 
     meta = with lib; {
+      changelog = "https://nextcloud.com/changelog/#${lib.replaceStrings [ "." ] [ "-" ] version}";
       description = "Sharing solution for files, calendars, contacts and more";
       homepage = "https://nextcloud.com";
       maintainers = with maintainers; [ schneefux bachp globin ma27 ];
@@ -44,17 +47,17 @@ in {
     in your NixOS config.
 
     WARNING: if you were on Nextcloud 22 on NixOS 22.05 you have to upgrade to Nextcloud 23
-    first on 22.05 because Nextcloud doesn't support upgrades accross multiple major versions!
+    first on 22.05 because Nextcloud doesn't support upgrades across multiple major versions!
   '';
 
   nextcloud24 = generic {
-    version = "24.0.6";
-    sha256 = "b26dff9980a47e7e722805fdbbf87e07f59a3817b03ecc32698e028e9baf0301";
+    version = "24.0.10";
+    sha256 = "sha256-B6+0gO9wn39BpcR0IsIuMa81DH8TWuDOlTZR9O1qRbk=";
   };
 
   nextcloud25 = generic {
-    version = "25.0.0";
-    sha256 = "2c05ac9d7b72b44ef8b3d2ae03ff0fd6121e254b8054556f5163bd8760dd8f49";
+    version = "25.0.4";
+    sha256 = "sha256-wyUeAIOpQwPi1piLNS87Mwgqeacmsw/3RnCbD+hpoaY=";
   };
 
   # tip: get the sha with:

@@ -1,21 +1,28 @@
-{ lib, fetchFromGitHub, buildGoModule }:
+{ lib
+, fetchFromGitHub
+, buildGoModule
+}:
 
 buildGoModule rec {
   pname = "act";
-  version = "0.2.32";
+  version = "0.2.42";
 
   src = fetchFromGitHub {
     owner = "nektos";
     repo = pname;
-    rev = "v${version}";
-    sha256 = "sha256-fHGS05qlRSVTrjEx71hhVridbpbLVyaAOg3uMYIj0TU=";
+    rev = "refs/tags/v${version}";
+    hash = "sha256-+1ciEHBMl78aFDu/NzIAdsGtAZJOfHZRDDZCR1+YuEM=";
   };
 
-  vendorSha256 = "sha256-ctIKaThBIzaBw3/a0pat+G7Zb4Y2F7mk8VZWoM0XdyI=";
+  vendorHash = "sha256-qXjDeR0VZyyhASpt6zv6OyltEZDoguILhhD1ejpd0F4=";
 
   doCheck = false;
 
-  ldflags = [ "-s" "-w" "-X main.version=${version}" ];
+  ldflags = [
+    "-s"
+    "-w"
+    "-X main.version=${version}"
+  ];
 
   meta = with lib; {
     description = "Run your GitHub Actions locally";

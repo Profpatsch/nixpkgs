@@ -2,7 +2,7 @@
 , llvmShared, llvmSharedForBuild, llvmSharedForHost, llvmSharedForTarget, llvmPackages
 , fetchurl, file, python3
 , darwin, cmake, rust, rustPlatform
-, pkg-config, openssl
+, pkg-config, openssl, xz
 , libiconv
 , which, libffi
 , withBundledLLVM ? false
@@ -11,6 +11,8 @@
 , sha256
 , patches ? []
 , fd
+, ripgrep
+, wezterm
 , firefox
 , thunderbird
 }:
@@ -41,11 +43,20 @@ in stdenv.mkDerivation rec {
   # See: https://github.com/NixOS/nixpkgs/pull/56540#issuecomment-471624656
   stripDebugList = [ "bin" ];
 
+  # The Rust pkg-config crate does not support prefixed pkg-config executables[1],
+  # but it does support checking these idiosyncratic PKG_CONFIG_${TRIPLE}
+  # environment variables.
+  # [1]: https://github.com/rust-lang/pkg-config-rs/issues/53
+  "PKG_CONFIG_${builtins.replaceStrings ["-"] ["_"] (rust.toRustTarget stdenv.buildPlatform)}" =
+    "${pkgsBuildHost.stdenv.cc.targetPrefix}pkg-config";
+
   NIX_LDFLAGS = toString (
        # when linking stage1 libstd: cc: undefined reference to `__cxa_begin_catch'
        optional (stdenv.isLinux && !withBundledLLVM) "--push-state --as-needed -lstdc++ --pop-state"
     ++ optional (stdenv.isDarwin && !withBundledLLVM) "-lc++"
-    ++ optional stdenv.isDarwin "-rpath ${llvmSharedForHost}/lib");
+    ++ optional stdenv.isDarwin "-rpath ${llvmSharedForHost}/lib"
+       # https://github.com/NixOS/nixpkgs/issues/201254
+    ++ optional (stdenv.isLinux && stdenv.isAarch64 && stdenv.cc.isGNU) "-lgcc");
 
   # Increase codegen units to introduce parallelism within the compiler.
   RUSTFLAGS = "-Ccodegen-units=10";
@@ -148,16 +159,16 @@ in stdenv.mkDerivation rec {
   # use it for the normal build. This disables cmake in Nix.
   dontUseCmakeConfigure = true;
 
+  depsBuildBuild = [ pkgsBuildHost.stdenv.cc pkg-config ];
+
   nativeBuildInputs = [
     file python3 rustPlatform.rust.rustc cmake
-    which libffi removeReferencesTo pkg-config
+    which libffi removeReferencesTo pkg-config xz
   ];
 
   buildInputs = [ openssl ]
-    ++ optionals stdenv.isDarwin [ Security ]
+    ++ optionals stdenv.isDarwin [ libiconv Security ]
     ++ optional (!withBundledLLVM) llvmShared;
-
-  depsTargetTargetPropagated = optionals stdenv.isDarwin [ libiconv ];
 
   outputs = [ "out" "man" "doc" ];
   setOutputFlags = false;
@@ -195,13 +206,15 @@ in stdenv.mkDerivation rec {
   passthru = {
     llvm = llvmShared;
     inherit llvmPackages;
-    tests = { inherit fd; } // lib.optionalAttrs stdenv.hostPlatform.isLinux { inherit firefox thunderbird; };
+    tests = {
+      inherit fd ripgrep wezterm;
+    } // lib.optionalAttrs stdenv.hostPlatform.isLinux { inherit firefox thunderbird; };
   };
 
   meta = with lib; {
     homepage = "https://www.rust-lang.org/";
     description = "A safe, concurrent, practical language";
-    maintainers = with maintainers; [ madjar cstrahan globin havvy ];
+    maintainers = with maintainers; [ cstrahan globin havvy ] ++ teams.rust.members;
     license = [ licenses.mit licenses.asl20 ];
     platforms = platforms.linux ++ platforms.darwin;
   };

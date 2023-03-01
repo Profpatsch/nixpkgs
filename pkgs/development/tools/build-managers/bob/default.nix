@@ -2,18 +2,18 @@
 
 buildGoModule rec {
   pname = "bob";
-  version = "0.6.2";
+  version = "0.7.2";
 
   src = fetchFromGitHub {
     owner = "benchkram";
     repo = pname;
     rev = version;
-    hash = "sha256-Bq/BL45EN4h7eV1glCkuVqUhZCrDS5b5mVg6JJxlTD4=";
+    hash = "sha256-yPdAf/j/vpQ2j+Zp8D7us7yaiDs47sKFPHZgggDjT3w=";
   };
 
   ldflags = [ "-s" "-w" "-X main.Version=${version}" ];
 
-  vendorHash = "sha256-jakmXkDHjcA1BOIorrP2ZukcJhosbkJoC+Y/+wAPBCc=";
+  vendorHash = "sha256-6wAbwZKm8RTMt2Wm90N3AYZREipdo7Dq+XTWsLANd88=";
 
   excludedPackages = [ "example/server-db" "test/e2e" "tui-example" ];
 

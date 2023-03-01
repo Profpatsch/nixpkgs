@@ -409,6 +409,7 @@ in {
         (optionalString (cfg.config != null) copyConfig) +
         (optionalString (cfg.lovelaceConfig != null) copyLovelaceConfig)
       ;
+      environment.PYTHONPATH = package.pythonPath;
       serviceConfig = let
         # List of capabilities to equip home-assistant with, depending on configured components
         capabilities = lib.unique ([
@@ -433,27 +434,41 @@ in {
         componentsUsingBluetooth = [
           # Components that require the AF_BLUETOOTH address family
           "august"
+          "august_ble"
+          "airthings_ble"
+          "aranet"
           "bluemaestro"
           "bluetooth"
+          "bluetooth_adapters"
           "bluetooth_le_tracker"
           "bluetooth_tracker"
           "bthome"
           "default_config"
           "eq3btsmart"
+          "eufylife_ble"
           "esphome"
           "fjaraskupan"
           "govee_ble"
           "homekit_controller"
           "inkbird"
+          "keymitt_ble"
           "led_ble"
           "melnor"
           "moat"
+          "mopeka"
+          "oralb"
           "qingping"
+          "ruuvi_gateway"
+          "ruuvitag_ble"
+          "sensirion_ble"
           "sensorpro"
           "sensorpush"
+          "shelly"
+          "snooz"
           "switchbot"
           "thermobeacon"
           "thermopro"
+          "tilt_ble"
           "xiaomi_ble"
           "yalexs_ble"
         ];

@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , click
 , ordered-set
+, orjson
 , clevercsv
 , jsonpickle
 , numpy
@@ -14,7 +15,7 @@
 
 buildPythonPackage rec {
   pname = "deepdiff";
-  version = "6.1.0";
+  version = "6.2.3";
   format = "setuptools";
 
   disabled = pythonOlder "3.7";
@@ -23,7 +24,7 @@ buildPythonPackage rec {
     owner = "seperman";
     repo = "deepdiff";
     rev = "refs/tags/${version}";
-    hash = "sha256-ngtQNyVQaywMyYitj37m0RJGBiMpjB4b8Rn+feMOjVU=";
+    hash = "sha256-rlMksUi+R48fIEjVv2E3yOETDezTghZ8+Zsypu8fAnQ=";
   };
 
   postPatch = ''
@@ -33,6 +34,7 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = [
     ordered-set
+    orjson
   ];
 
   passthru.optional-dependencies = {
@@ -44,7 +46,7 @@ buildPythonPackage rec {
     ];
   };
 
-  checkInputs = [
+  nativeCheckInputs = [
     jsonpickle
     numpy
     pytestCheckHook

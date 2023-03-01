@@ -14,7 +14,7 @@
 
 buildPythonPackage rec {
   pname = "dinghy";
-  version = "0.13.4";
+  version = "1.2.0";
   format = "setuptools";
 
   disabled = pythonOlder "3.8";
@@ -22,8 +22,8 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "nedbat";
     repo = pname;
-    rev = version;
-    hash = "sha256-H3AFKKtSiFD3LqyWaIYB4LncPaH2/eptuKS4BN0cNBQ=";
+    rev = "refs/tags/${version}";
+    hash = "sha256-xtcNcykfgcWvifso0xaeMT31+G5x4HCp+tLAIEEq4cw=";
   };
 
   propagatedBuildInputs = [
@@ -36,7 +36,7 @@ buildPythonPackage rec {
     pyyaml
   ];
 
-  checkInputs = [
+  nativeCheckInputs = [
     pytestCheckHook
   ];
 
@@ -47,6 +47,7 @@ buildPythonPackage rec {
   meta = with lib; {
     description = "A GitHub activity digest tool";
     homepage = "https://github.com/nedbat/dinghy";
+    changelog = "https://github.com/nedbat/dinghy/blob/${version}/CHANGELOG.rst";
     license = licenses.asl20;
     maintainers = with maintainers; [ trundle veehaitch ];
   };

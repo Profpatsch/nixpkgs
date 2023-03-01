@@ -19,13 +19,13 @@
 
 stdenv.mkDerivation rec {
   pname = "libsoup";
-  version = "2.74.2";
+  version = "2.74.3";
 
   outputs = [ "out" "dev" ];
 
   src = fetchurl {
     url = "mirror://gnome/sources/${pname}/${lib.versions.majorMinor version}/${pname}-${version}.tar.xz";
-    sha256 = "sha256-8KQnZW5f4Z4d9xwQfojfobLmc8JcVHt4I7YBi0DQEVk=";
+    sha256 = "sha256-5Ld8Qc/EyMWgNfzcMgx7xs+3XvfFoDQVPfFBP6HZLxM=";
   };
 
   depsBuildBuild = [
@@ -42,7 +42,6 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    gobject-introspection
     sqlite
     libpsl
     glib.out
@@ -65,7 +64,7 @@ stdenv.mkDerivation rec {
     "-Dsysprof=disabled"
   ];
 
-  NIX_CFLAGS_COMPILE = "-lpthread";
+  env.NIX_CFLAGS_COMPILE = "-lpthread";
 
   doCheck = false; # ERROR:../tests/socket-test.c:37:do_unconnected_socket_test: assertion failed (res == SOUP_STATUS_OK): (2 == 200)
 

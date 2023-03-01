@@ -10,21 +10,19 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "just";
-  version = "1.7.0";
+  version = "1.13.0";
 
   src = fetchFromGitHub {
     owner = "casey";
     repo = pname;
-    rev = version;
-    hash = "sha256-W8ko9hzZmgF8XEqzbPtCJp5J38m0pAz5wTp3VRUmZOQ=";
+    rev = "refs/tags/${version}";
+    hash = "sha256-5JI3QaUuWvwI3pClZXMPU8v1lcPZ5YioMPGKl/lIjQ0=";
   };
 
-  cargoSha256 = "sha256-rC+PcLQHjnaGSEELod6IF9NTCl0tnXvOOkHF0z77Lao=";
+  cargoHash = "sha256-91C/5m2avsW7GKQDg/Ez9fzzFhe8ih1De1RbV/MBJbM=";
 
   nativeBuildInputs = [ installShellFiles ];
   buildInputs = lib.optionals stdenv.isDarwin [ libiconv ];
-
-  checkInputs = [ coreutils bash ];
 
   preCheck = ''
     # USER must not be empty
@@ -64,6 +62,6 @@ rustPlatform.buildRustPackage rec {
     changelog = "https://github.com/casey/just/blob/${version}/CHANGELOG.md";
     description = "A handy way to save and run project-specific commands";
     license = licenses.cc0;
-    maintainers = with maintainers; [ xrelkd jk ];
+    maintainers = with maintainers; [ xrelkd jk adamcstephens ];
   };
 }

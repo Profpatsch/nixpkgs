@@ -27,10 +27,11 @@
 , range-v3
 , tl-expected
 , hunspell
-, glibmm
+, glibmm_2_68
 , webkitgtk_4_1
 , jemalloc
 , rnnoise
+, protobuf
 , abseil-cpp
   # Transitive dependencies:
 , util-linuxMinimal
@@ -66,7 +67,7 @@
 let
   tg_owt = callPackage ./tg_owt.nix {
     abseil-cpp = abseil-cpp.override {
-      cxxStandard = "17";
+      cxxStandard = "20";
     };
   };
   # Aarch64 default gcc9 will cause ICE. For reference #108305
@@ -74,7 +75,7 @@ let
 in
 env.mkDerivation rec {
   pname = "telegram-desktop";
-  version = "4.2.4";
+  version = "4.6.5";
   # Note: Update via pkgs/applications/networking/instant-messengers/telegram/tdesktop/update.py
 
   # Telegram-Desktop with submodules
@@ -83,7 +84,7 @@ env.mkDerivation rec {
     repo = "tdesktop";
     rev = "v${version}";
     fetchSubmodules = true;
-    sha256 = "sha256-X2ZbjlL3YbPdXSgS+wqZL3FUW2xQ0DhqiOO5MR1QyLY=";
+    sha256 = "0c65ry82ffmh1qzc2lnsyjs78r9jllv62p9vglpz0ikg86zf36sk";
   };
 
   postPatch = ''
@@ -131,10 +132,11 @@ env.mkDerivation rec {
     range-v3
     tl-expected
     hunspell
-    glibmm
+    glibmm_2_68
     webkitgtk_4_1
     jemalloc
     rnnoise
+    protobuf
     tg_owt
     # Transitive dependencies:
     util-linuxMinimal # Required for libmount thus not nativeBuildInputs.

@@ -1,7 +1,7 @@
 { lib
 , fetchFromGitHub
 , wrapQtAppsHook
-, miniupnpc_2
+, miniupnpc
 , ffmpeg
 , enableSwftools ? false
 , swftools
@@ -51,7 +51,7 @@ python3Packages.buildPythonPackage rec {
     twisted
   ];
 
-  checkInputs = with python3Packages; [
+  nativeCheckInputs = with python3Packages; [
     nose
     mock
     httmock
@@ -108,7 +108,7 @@ python3Packages.buildPythonPackage rec {
   dontWrapQtApps = true;
   preFixup = ''
     makeWrapperArgs+=("''${qtWrapperArgs[@]}")
-    makeWrapperArgs+=(--prefix PATH : ${lib.makeBinPath [ ffmpeg miniupnpc_2 ]})
+    makeWrapperArgs+=(--prefix PATH : ${lib.makeBinPath [ ffmpeg miniupnpc ]})
   '';
 
   meta = with lib; {

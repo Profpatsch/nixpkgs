@@ -1,9 +1,11 @@
 { lib, stdenv
-, fetchurl
+, fetchFromGitLab
 , fetchpatch
+, nix-update-script
 
 , autoreconfHook
 , pkg-config
+, sphinx
 
 , libdeflate
 , libjpeg
@@ -18,16 +20,17 @@
 , gdal
 , openimageio
 , freeimage
-, imlib
 }:
 
 stdenv.mkDerivation rec {
   pname = "libtiff";
-  version = "4.4.0";
+  version = "4.5.0";
 
-  src = fetchurl {
-    url = "https://download.osgeo.org/libtiff/tiff-${version}.tar.gz";
-    sha256 = "1vdbk3sc497c58kxmp02irl6nqkfm9rjs3br7g59m59qfnrj6wli";
+  src = fetchFromGitLab {
+    owner = "libtiff";
+    repo = "libtiff";
+    rev = "v${version}";
+    hash = "sha256-KG6rB940JMjFUTAgtkzg+Zh75gylPY6Q7/4gEbL0Hcs=";
   };
 
   patches = [
@@ -37,14 +40,9 @@ stdenv.mkDerivation rec {
     # `version` in the project's include paths
     ./rename-version.patch
     (fetchpatch {
-      name = "CVE-2022-34526.patch";
-      url = "https://gitlab.com/libtiff/libtiff/-/commit/275735d0354e39c0ac1dc3c0db2120d6f31d1990.patch";
-      sha256 = "sha256-faKsdJjvQwNdkAKjYm4vubvZvnULt9zz4l53zBFr67s=";
-    })
-    (fetchpatch {
-      name = "CVE-2022-2953.patch";
-      url = "https://gitlab.com/libtiff/libtiff/-/commit/48d6ece8389b01129e7d357f0985c8f938ce3da3.patch";
-      sha256 = "sha256-h9hulV+dnsUt/2Rsk4C1AKdULkvweM2ypIJXYQ3BqQU=";
+      name = "CVE-2022-48281.patch";
+      url = "https://gitlab.com/libtiff/libtiff/-/commit/d1b6b9c1b3cae2d9e37754506c1ad8f4f7b646b5.diff";
+      sha256 = "sha256-FWUlyJyHXac6fuM5f9PG33kcF5Bm4fyFmYnaDal46iM=";
     })
   ];
 
@@ -55,14 +53,15 @@ stdenv.mkDerivation rec {
   outputs = [ "bin" "dev" "dev_private" "out" "man" "doc" ];
 
   postFixup = ''
-    moveToOutput include/tif_dir.h $dev_private
     moveToOutput include/tif_config.h $dev_private
+    moveToOutput include/tif_dir.h $dev_private
+    moveToOutput include/tif_hash_set.h $dev_private
     moveToOutput include/tiffiop.h $dev_private
   '';
 
   # If you want to change to a different build system, please make
   # sure cross-compilation works first!
-  nativeBuildInputs = [ autoreconfHook pkg-config ];
+  nativeBuildInputs = [ autoreconfHook pkg-config sphinx ];
 
   propagatedBuildInputs = [ libjpeg xz zlib ]; #TODO: opengl support (bogus configure detection)
 
@@ -72,9 +71,12 @@ stdenv.mkDerivation rec {
 
   doCheck = true;
 
-  passthru.tests = {
-    inherit libgeotiff imagemagick graphicsmagick gdal openimageio freeimage imlib;
-    inherit (python3Packages) pillow imread;
+  passthru = {
+    tests = {
+      inherit libgeotiff imagemagick graphicsmagick gdal openimageio freeimage;
+      inherit (python3Packages) pillow imread;
+    };
+    updateScript = nix-update-script { };
   };
 
   meta = with lib; {

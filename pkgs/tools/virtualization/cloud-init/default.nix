@@ -14,14 +14,14 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "cloud-init";
-  version = "22.3.3";
+  version = "22.4";
   namePrefix = "";
 
   src = fetchFromGitHub {
     owner = "canonical";
     repo = "cloud-init";
-    rev = version;
-    hash = "sha256-9vdFPSmkkdJDlVfA9DgqczRoOBMmSMezdl3D/0OSbsQ=";
+    rev = "refs/tags/${version}";
+    hash = "sha256-MsT5t2da79Eb9FlTLPr2893JcF0ujNnToJTCQRT1QEo=";
   };
 
   patches = [ ./0001-add-nixos-support.patch ];
@@ -60,7 +60,7 @@ python3.pkgs.buildPythonApplication rec {
     requests
   ];
 
-  checkInputs = with python3.pkgs; [
+  nativeCheckInputs = with python3.pkgs; [
     pytestCheckHook
     httpretty
     dmidecode
@@ -118,7 +118,7 @@ python3.pkgs.buildPythonApplication rec {
     homepage = "https://cloudinit.readthedocs.org";
     description = "Provides configuration and customization of cloud instance";
     license = with licenses; [ asl20 gpl3Plus ];
-    maintainers = with maintainers; [ madjar phile314 illustris ];
+    maintainers = with maintainers; [ illustris ];
     platforms = platforms.all;
   };
 }

@@ -24,19 +24,15 @@
 assert (!libsOnly) -> kernel != null;
 
 stdenv.mkDerivation rec {
-  version = "18.0.3-53079";
+  version = "18.2.0-53488";
   pname = "prl-tools";
 
   # We download the full distribution to extract prl-tools-lin.iso from
   # => ${dmg}/Parallels\ Desktop.app/Contents/Resources/Tools/prl-tools-lin.iso
   src = fetchurl {
     url = "https://download.parallels.com/desktop/v${lib.versions.major version}/${version}/ParallelsDesktop-${version}.dmg";
-    sha256 = "sha256-z9B2nhcTSZr3L30fa54zYi6WnonQ2wezHoneT2tQWAc=";
+    hash = "sha256-FpAbQQapIcZ7GsGjH4ZeJ81Ke+NUF7GvgV1wEDLKoUU=";
   };
-
-  patches = lib.optionals (lib.versionAtLeast kernel.version "6.0") [
-    ./prl-tools-6.0.patch
-  ];
 
   hardeningDisable = [ "pic" "format" ];
 
@@ -51,7 +47,7 @@ stdenv.mkDerivation rec {
   inherit libsOnly;
 
   unpackPhase = ''
-    undmg "${src}"
+    undmg $src
     export sourceRoot=prl-tools-build
     7z x "Parallels Desktop.app/Contents/Resources/Tools/prl-tools-lin${lib.optionalString stdenv.isAarch64 "-arm"}.iso" -o$sourceRoot
     if test -z "$libsOnly"; then

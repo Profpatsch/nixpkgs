@@ -1,22 +1,21 @@
 { lib, stdenv, fetchFromGitHub, pkg-config
 , meson
 , ninja
-, libuuid
 , libnvme
 , json_c
 , zlib
-, python3
+, python3Packages
 }:
 
 stdenv.mkDerivation rec {
   pname = "nvme-cli";
-  version = "2.1.2";
+  version = "2.2.1";
 
   src = fetchFromGitHub {
     owner = "linux-nvme";
     repo = "nvme-cli";
     rev = "v${version}";
-    hash = "sha256-ZjgysgWMmBlN+aalI5u2vQ58XrtEbJlDPCqUN6avv08=";
+    hash = "sha256-okYtGiKUPNO31ntD9j5iAgdcnS5OQ/g1QAY+svhga4c=";
   };
 
   mesonFlags = [
@@ -27,10 +26,9 @@ stdenv.mkDerivation rec {
     meson
     ninja
     pkg-config
-    python3.pkgs.nose2
+    python3Packages.nose2
   ];
   buildInputs = [
-    libuuid
     libnvme
     json_c
     zlib

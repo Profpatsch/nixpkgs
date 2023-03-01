@@ -2,16 +2,16 @@
 
 buildGoModule rec {
   pname = "infra";
-  version = "0.15.2";
+  version = "0.21.0";
 
   src = fetchFromGitHub {
     owner = "infrahq";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-luwswGFI+ygLWp8Yi0PuZpkjQiPiF7bCv0kc8DNYxkw=";
+    sha256 = "sha256-uz4wimhOfeHSL949m+biIhjfDwwEGnTiJWaz/r3Rsko=";
   };
 
-  vendorSha256 = "sha256-j+ZtBqAIeI25qRKu6RvW79Ug/lUGreC06qXL5dgchHc=";
+  vendorHash = "sha256-qbmaebQcD3cN+tbmzzJbry0AXz2LZFMoqbcBwGGrRo4=";
 
   subPackages = [ "." ];
 

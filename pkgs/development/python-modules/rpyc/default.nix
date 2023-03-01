@@ -1,4 +1,5 @@
 { lib
+, stdenv
 , buildPythonPackage
 , fetchFromGitHub
 , hatchling
@@ -9,7 +10,7 @@
 
 buildPythonPackage rec {
   pname = "rpyc";
-  version = "5.2.3";
+  version = "5.3.0";
   format = "pyproject";
 
   disabled = pythonOlder "3.7";
@@ -17,8 +18,8 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "tomerfiliba";
     repo = pname;
-    rev = version;
-    hash = "sha256-SDt6Oh+8qRIdM02FEFM+Xw1y/bBn66D6KbOrhGVs6ng=";
+    rev = "refs/tags/${version}";
+    hash = "sha256-gqYjCvyiLhgosmzYITrthMkjLA6WJcBbmjkTNXZKUxc=";
   };
 
   nativeBuildInputs = [
@@ -29,7 +30,7 @@ buildPythonPackage rec {
     plumbum
   ];
 
-  checkInputs = [
+  nativeCheckInputs = [
     pytestCheckHook
   ];
 
@@ -49,6 +50,8 @@ buildPythonPackage rec {
   pythonImportsCheck = [
     "rpyc"
   ];
+
+  doCheck = !stdenv.isDarwin;
 
   meta = with lib; {
     description = "Remote Python Call (RPyC), a transparent and symmetric RPC library";

@@ -60,7 +60,7 @@ in rec {
         `asDropin` creates a drop-in file named `overrides.conf`.
         Mainly needed to define instances for systemd template units (e.g. `systemd-nspawn@mycontainer.service`).
 
-        See also systemd.unit(1).
+        See also {manpage}`systemd.unit(5)`.
       '';
     };
 
@@ -68,10 +68,9 @@ in rec {
       default = [];
       type = types.listOf unitNameType;
       description = lib.mdDoc ''
-        Units that require (i.e. depend on and need to go down with)
-        this unit. The discussion under `wantedBy`
-        applies here as well: inverse `.requires`
-        symlinks are established.
+        Units that require (i.e. depend on and need to go down with) this unit.
+        As discussed in the `wantedBy` option description this also creates
+        `.requires` symlinks automatically.
       '';
     };
 
@@ -79,16 +78,17 @@ in rec {
       default = [];
       type = types.listOf unitNameType;
       description = lib.mdDoc ''
-        Units that want (i.e. depend on) this unit. The standard way
-        to make a unit start by default at boot is to set this option
-        to `[ "multi-user.target" ]`. That's despite
-        the fact that the systemd.unit(5) manpage says this option
-        goes in the `[Install]` section that controls
-        the behaviour of `systemctl enable`. Since
-        such a process is stateful and thus contrary to the design of
-        NixOS, setting this option instead causes the equivalent
-        inverse `.wants` symlink to be present,
-        establishing the same desired relationship in a stateless way.
+        Units that want (i.e. depend on) this unit. The default method for
+        starting a unit by default at boot time is to set this option to
+        '["multi-user.target"]' for system services. Likewise for user units
+        (`systemd.user.<name>.*`) set it to `["default.target"]` to make a unit
+        start by default when the user `<name>` logs on.
+
+        This option creates a `.wants` symlink in the given target that exists
+        statelessly without the need for running `systemctl enable`.
+        The `[Install]` section described in {manpage}`systemd.unit(5)` however is
+        not supported because it is a stateful process that does not fit well
+        into the NixOS design.
       '';
     };
 
@@ -324,7 +324,11 @@ in rec {
       scriptArgs = mkOption {
         type = types.str;
         default = "";
-        description = lib.mdDoc "Arguments passed to the main process script.";
+        example = "%i";
+        description = lib.mdDoc ''
+          Arguments passed to the main process script.
+          Can contain specifiers (`%` placeholders expanded by systemd, see {manpage}`systemd.unit(5)`).
+        '';
       };
 
       preStart = mkOption {

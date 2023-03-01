@@ -14,12 +14,15 @@ let
     generic = [ av ];
     google_translate = [ mutagen ];
     google_sheets = [ oauth2client ];
-    homeassistant_sky_connect = [ bellows zha-quirks zigpy-deconz zigpy-xbee zigpy-zigate zigpy-znp ];
+    govee_ble = [ ibeacon-ble ];
+    hassio = [ bellows zha-quirks zigpy-deconz zigpy-xbee zigpy-zigate zigpy-znp ];
+    homeassistant_sky_connect = [ bellows zha-quirks zigpy-deconz zigpy-xbee zigpy-zigate zigpy-znp zwave-js-server-python ];
     homeassistant_yellow = [ bellows zha-quirks zigpy-deconz zigpy-xbee zigpy-zigate zigpy-znp ];
     lovelace = [ PyChromecast ];
     nest = [ av ];
     onboarding = [ pymetno radios rpi-bad-power ];
     raspberry_pi = [ rpi-bad-power ];
+    shelly = [ pyswitchbot ];
     tilt_ble = [ govee-ble ibeacon-ble ];
     tomorrowio = [ pyclimacell ];
     version = [ aioaseko ];
@@ -31,11 +34,6 @@ let
   };
 
   extraDisabledTestPaths = {
-    tado = [
-      # tado/test_{climate,water_heater}.py: Tries to connect to my.tado.com
-      "tests/components/tado/test_climate.py"
-      "tests/components/tado/test_water_heater.py"
-    ];
   };
 
   extraDisabledTests = {
@@ -43,17 +41,9 @@ let
       # homeassistant.components.roku.media_player:media_player.py:428 Media type music is not supported with format None (mime: audio/x-matroska)
       "test_services_play_media_audio"
     ];
-    rfxtrx = [
-      # bytearrray mismatch
-      "test_rfy_cover"
-    ];
   };
 
   extraPytestFlagsArray = {
-    asuswrt = [
-      # Sandbox network limitations, fails with unexpected error
-      "--deselect tests/components/asuswrt/test_config_flow.py::test_on_connect_failed"
-    ];
     dnsip = [
       # AssertionError: assert <FlowResultType.FORM: 'form'> == <FlowResultTy...create_entry'>
       "--deselect tests/components/dnsip/test_config_flow.py::test_options_flow"
@@ -62,19 +52,16 @@ let
       # Flaky: AssertionError: assert '0.0' == '12.0'
       "--deselect tests/components/history_stats/test_sensor.py::test_end_time_with_microseconds_zeroed"
     ];
-    skybell = [
-      # Sandbox network limitations: Cannot connect to host cloud.myskybell.com:443
-      "--deselect tests/components/skybell/test_config_flow.py::test_flow_user_unknown_error"
+    logbook = [
+      "--deselect tests/components/logbook/test_websocket_api.py::test_recorder_is_far_behind "
     ];
-    stream = [
-      # Tries to write to /example and gets "Permission denied"
-      "--deselect tests/components/stream/test_recorder.py::test_record_lookback"
-      "--deselect tests/components/stream/test_recorder.py::test_recorder_log"
-      "--deselect tests/components/stream/test_worker.py::test_get_image"
+    modem_callerid = [
+      # aioserial mock produces wrong state
+      "--deselect tests/components/modem_callerid/test_init.py::test_setup_entry"
     ];
-    zha = [
-      # AssertionError: assert 'manual_pick_radio_type' == 'choose_serial_port'
-      "--deselect tests/components/zha/test_config_flow.py::test_options_flow_restarts_running_zha_if_cancelled"
+    unifiprotect = [
+      # "TypeError: object Mock can't be used in 'await' expression
+      "--deselect tests/components/unifiprotect/test_repairs.py::test_ea_warning_fix"
     ];
   };
 in lib.listToAttrs (map (component: lib.nameValuePair component (
@@ -85,12 +72,12 @@ in lib.listToAttrs (map (component: lib.nameValuePair component (
     dontBuild = true;
     dontInstall = true;
 
-    checkInputs = old.checkInputs
+    nativeCheckInputs = old.nativeCheckInputs
       ++ home-assistant.getPackages component home-assistant.python.pkgs
       ++ extraCheckInputs.${component} or [ ];
 
-    disabledTests = old.disabledTests ++ extraDisabledTests.${component} or [];
-    disabledTestPaths = old.disabledTestPaths ++ extraDisabledTestPaths.${component} or [ ];
+    disabledTests = old.disabledTests or [] ++ extraDisabledTests.${component} or [];
+    disabledTestPaths = old.disabledTestPaths or [] ++ extraDisabledTestPaths.${component} or [ ];
 
     # components are more often racy than the core
     dontUsePytestXdist = true;
@@ -106,8 +93,6 @@ in lib.listToAttrs (map (component: lib.nameValuePair component (
 
     meta = old.meta // {
       broken = lib.elem component [
-        "modem_callerid"
-        "subaru"
       ];
       # upstream only tests on Linux, so do we.
       platforms = lib.platforms.linux;

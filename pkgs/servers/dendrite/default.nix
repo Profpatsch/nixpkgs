@@ -3,16 +3,16 @@
 
 buildGoModule rec {
   pname = "matrix-dendrite";
-  version = "0.10.4";
+  version = "0.11.0";
 
   src = fetchFromGitHub {
     owner = "matrix-org";
     repo = "dendrite";
     rev = "v${version}";
-    sha256 = "sha256-CJ83blu8xpXpcgIS7l2ya/2xJaPau5JaT4+PV+bAEhU=";
+    sha256 = "sha256-EJUHpV+ZsMMSMsJGhF0Atblksg5rgI3a2qcRxLyZP38=";
   };
 
-  vendorSha256 = "sha256-i7lICrsQ5I5IFsrkey0jcJeYnRPAURTOGdYU+BCR+js=";
+  vendorHash = "sha256-Ygd5wC4j0kAbEMMVct5WXZvkcYSqqK8d7ZZ9CDU1RHU=";
 
   subPackages = [
     # The server as a monolith: https://matrix-org.github.io/dendrite/installation/install/monolith
@@ -34,7 +34,7 @@ buildGoModule rec {
     # "cmd/dendritejs-pinecone"
   ];
 
-  checkInputs = [
+  nativeCheckInputs = [
     postgresqlTestHook
     postgresql
   ];

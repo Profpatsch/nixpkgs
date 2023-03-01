@@ -12,7 +12,7 @@
 
 buildPythonPackage rec {
   pname = "pydaikin";
-  version = "2.7.2";
+  version = "2.9.0";
   format = "setuptools";
 
   disabled = pythonOlder "3.6";
@@ -21,7 +21,7 @@ buildPythonPackage rec {
     owner = "mustang51";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-IONmzrCW/5nAEa7GlWMZsnweQWTSUwV4HwhXww6/9ig=";
+    hash = "sha256-cJkrBt4HRH2SX4YWo+gK4rd7uyZRzLUvFXJ6L5nxzeM=";
   };
 
   propagatedBuildInputs = [
@@ -30,7 +30,7 @@ buildPythonPackage rec {
     urllib3
   ];
 
-  checkInputs = [
+  nativeCheckInputs = [
     freezegun
     pytest-aiohttp
     pytestCheckHook

@@ -2,16 +2,16 @@
 
 buildGoModule rec {
   pname = "temporal-cli";
-  version = "1.17.0";
+  version = "1.18.0";
 
   src = fetchFromGitHub {
     owner = "temporalio";
     repo = "tctl";
     rev = "v${version}";
-    sha256 = "sha256-XEN4Ntt7yHng1+3E5SlxthEWPXJ+kSx9L1GbW9bV03Y=";
+    hash = "sha256-LcBKkx3mcDOrGT6yJx98CSgxbwskqGPWqOzHWOu6cig=";
   };
 
-  vendorSha256 = "sha256-9bgovXVj+qddfDSI4DTaNYH4H8Uc4DZqeVYG5TWXTNw=";
+  vendorHash = "sha256-BUYEeC5zli++OxVFgECJGqJkbDwglLppSxgo+4AqOb0=";
 
   ldflags = [ "-s" "-w" ];
 

@@ -11,22 +11,23 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "karlender";
-  version = "0.6.2";
+  version = "0.9.0";
 
   src = fetchFromGitLab {
-    owner = "loers";
-    repo = "karlender";
+    owner = "floers";
+    repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-YF46C+Vz7eGl4lqOQXqiQqaa6ieo1p8l6QCh4oNSJEg=";
+    hash = "sha256-lmNG9B2uO/zitOY/cNjnLRjCn6mSJ3CIpXIXpChDi9A=";
   };
 
-  cargoSha256 = "sha256-Kx5K2tp5PAQWac8LVrmOsk8Qf9m34SJ1vyfv7Ef2Wr0=";
+  cargoHash = "sha256-foxl8pqRqEbVwUWUGHmaTGazrwLQxcDJ/RvJE9wIszg=";
 
   nativeBuildInputs = [
     pkg-config
     wrapGAppsHook4
     glib
   ];
+
   buildInputs = [
     gtk4
     libadwaita
@@ -34,6 +35,7 @@ rustPlatform.buildRustPackage rec {
 
   postPatch = ''
     substituteInPlace src/domain/time.rs --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+    substituteInPlace build.rs --replace "// gra::build" "gra::build"
   '';
 
   postInstall = ''
@@ -52,7 +54,7 @@ rustPlatform.buildRustPackage rec {
 
   meta = with lib; {
     description = "Mobile-friendly GTK calendar application";
-    homepage = "https://gitlab.com/loers/karlender";
+    homepage = "https://gitlab.com/floers/karlender";
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ chuangzhu ];
     platforms = platforms.linux;

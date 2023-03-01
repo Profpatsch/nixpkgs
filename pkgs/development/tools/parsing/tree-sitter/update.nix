@@ -6,9 +6,7 @@
 , lib
 , coreutils
 , curl
-, jq
 , xe
-, src
 }:
 
 # Grammar list:
@@ -33,8 +31,6 @@ let
     "tree-sitter-scala"
     "tree-sitter-ocaml"
     "tree-sitter-julia"
-    "tree-sitter-agda"
-    "tree-sitter-fluent"
     "tree-sitter-html"
     "tree-sitter-haskell"
     "tree-sitter-regex"
@@ -75,6 +71,10 @@ let
     "tree-sitter-graph"
     # abandoned
     "tree-sitter-swift"
+    # abandoned
+    "tree-sitter-agda"
+    # abandoned
+    "tree-sitter-fluent"
   ];
   ignoredTreeSitterOrgReposJson = jsonFile "ignored-tree-sitter-org-repos" ignoredTreeSitterOrgRepos;
 
@@ -139,7 +139,7 @@ let
       repo = "tree-sitter-svelte";
     };
     "tree-sitter-sql" = {
-      orga = "m-novikov";
+      orga = "derekstride";
       repo = "tree-sitter-sql";
     };
     "tree-sitter-vim" = {
@@ -225,6 +225,10 @@ let
     "tree-sitter-surface" = {
       orga = "connorlay";
       repo = "tree-sitter-surface";
+    };
+    "tree-sitter-eex" = {
+      orga = "connorlay";
+      repo = "tree-sitter-eex";
     };
     "tree-sitter-heex" = {
       orga = "connorlay";
@@ -371,169 +375,83 @@ let
           knownTreeSitterOrgGrammarRepos);
 
     in
-    mergeAttrsUnique otherGrammars treeSitterOrgaGrammars;
-
-  # TODO: move to lib
-  mergeAttrsUnique = left: right:
-    let intersect = lib.intersectLists (lib.attrNames left) (lib.attrNames right); in
-    assert
-    lib.assertMsg (intersect == [ ])
-      (lib.concatStringsSep "\n" [
-        "mergeAttrsUnique: keys in attrset overlapping:"
-        "left: ${lib.generators.toPretty {} (lib.getAttrs intersect left)}"
-        "right: ${lib.generators.toPretty {} (lib.getAttrs intersect right)}"
-      ]);
-    left // right;
+    lib.attrsets.unionOfDisjoint otherGrammars treeSitterOrgaGrammars;
 
 
 
   jsonFile = name: val: (formats.json { }).generate name val;
 
-  # check the tree-sitter orga repos
-  checkTreeSitterRepos = writeShellScript "get-grammars.sh" ''
-    set -euo pipefail
-    res=$(${jq}/bin/jq \
-      --slurpfile known "${knownTreeSitterOrgGrammarReposJson}" \
-      --slurpfile ignore "${ignoredTreeSitterOrgReposJson}" \
-      '. - ($known[0] + $ignore[0])' \
-      )
-    if [ ! "$res" == "[]" ]; then
-      echo "These repositories are neither known nor ignored:" 1>&2
-      echo "$res" 1>&2
-      exit 1
-    fi
-  '';
+  # implementation of the updater
+  updateImpl = passArgs "updateImpl-with-args" {
+      binaries = {
+        curl = "${curl}/bin/curl";
+        nix-prefetch-git = "${nix-prefetch-git}/bin/nix-prefetch-git";
+        printf = "${coreutils}/bin/printf";
+      };
+      inherit
+        knownTreeSitterOrgGrammarRepos
+        ignoredTreeSitterOrgRepos
+        ;
+    }
+    (writers.writePython3 "updateImpl" {
+        flakeIgnore = ["E501"];
+    } ./update_impl.py);
 
-  # TODO
-  urlEscape = x: x;
-
-  # update one tree-sitter grammar repo and print their nix-prefetch-git output
-  updateGrammar = writers.writePython3 "latest-github-release" {
-    flakeIgnore = ["E501"];
-  } ''
-    from urllib.parse import quote
-    import json
-    import subprocess as sub
-    import os
-    import sys
-
-    debug = True if os.environ.get("DEBUG", False) else False
-
-    jsonArg = sys.argv[1]
-
-
-    def curl_args(orga, repo, token):
-        """Query the github API via curl"""
-        yield "curl"
-        if not debug:
-            yield "--silent"
-        if token:
-            yield "-H"
-            yield f"Authorization: token {token}"
-        yield f"https://api.github.com/repos/{quote(orga)}/{quote(repo)}/releases/latest"
-
-
-    def curl_result(orga, repo, output):
-        """Parse the curl result of the github API"""
-        res = json.loads(output)
-        message = res.get("message", "")
-        if "rate limit" in message:
-            sys.exit("Rate limited by the Github API")
-        if "Not Found" in message:
-            # repository not there or no releases; if the repo is missing,
-            # we’ll notice when we try to clone it
-            return {}
-        return res
-
-
-    def nix_prefetch_args(url, version_rev):
-        """Prefetch a git repository"""
-        yield "nix-prefetch-git"
-        if not debug:
-            yield "--quiet"
-        yield "--no-deepClone"
-        yield "--url"
-        yield url
-        yield "--rev"
-        yield version_rev
-
-
-    match json.loads(jsonArg):
-        case {"orga": orga, "repo": repo}:
-            token = os.environ.get("GITHUB_TOKEN", None)
-            curl_cmd = list(curl_args(orga, repo, token))
-            if debug:
-                print(curl_cmd, file=sys.stderr)
-            out = sub.check_output(curl_cmd)
-            release = curl_result(orga, repo, out).get("tag_name", None)
-
-            # github sometimes returns an empty list even tough there are releases
-            if not release:
-                print(f"uh-oh, latest for {orga}/{repo} is not there, using HEAD", file=sys.stderr)
-                release = "HEAD"
-
-            print(f"Fetching latest release ({release}) of {orga}/{repo} …", file=sys.stderr)
-            sub.check_call(
-                list(nix_prefetch_args(
-                    url=f"https://github.com/{quote(orga)}/{quote(repo)}",
-                    version_rev=release
-                ))
-            )
-        case _:
-            sys.exit("input json must have `orga` and `repo` keys")
-  '';
-
-  # find the latest repos of a github organization
-  latestGithubRepos = { orga }: writeShellScript "latest-github-repos" ''
-    set -euo pipefail
-
-    args=( '--silent' )
-    if [ -n "''${GITHUB_TOKEN:-}" ]; then
-      args+=( "-H" "Authorization: token ''${GITHUB_TOKEN}" )
-    fi
-    args+=( 'https://api.github.com/orgs/${urlEscape orga}/repos?per_page=100' )
-
-    res=$(${curl}/bin/curl "''${args[@]}")
-
-    if [[ "$(printf "%s" "$res" | ${jq}/bin/jq '.message?')" =~ "rate limit" ]]; then
-      echo "rate limited" >&2
-      exit 1
-    elif [[ "$(printf "%s" "$res" | ${jq}/bin/jq '.message?')" =~ "Bad credentials" ]]; then
-      echo "bad credentials" >&2
-      exit 1
-    fi
-
-    printf "%s" "$res" | ${jq}/bin/jq 'map(.name)' \
-      || echo "failed $res"
+  # Pass the given arguments to the command, in the ARGS environment variable.
+  # The arguments are just a json object that should be available in the script.
+  passArgs = name: argAttrs: script: writeShellScript name ''
+    env ARGS="$(< ${jsonFile "${name}-args" argAttrs})" \
+      ${script} "$@"
   '';
 
   foreachSh = attrs: f:
     lib.concatMapStringsSep "\n" f
       (lib.mapAttrsToList (k: v: { name = k; } // v) attrs);
 
+  jsonNewlines = lib.concatMapStringsSep "\n" (lib.generators.toJSON {});
+
+  # Run the given script for each of the attr list.
+  # The attrs are passed to the script as a json value.
+  forEachParallel = name: script: listOfAttrs: writeShellScript "for-each-parallel.sh" ''
+    < ${writeText "${name}.json" (jsonNewlines listOfAttrs)} \
+      ${xe}/bin/xe -F -j5 ${script} {}
+  '';
+
+  # The output directory in the current source tree.
+  # This will depend on your local environment, but that is intentional.
+  outputDir = "${toString ./.}/grammars";
+
   update-all-grammars = writeShellScript "update-all-grammars.sh" ''
     set -euo pipefail
-    echo "fetching list of grammars" 1>&2
-    treeSitterRepos=$(${latestGithubRepos { orga = "tree-sitter"; }})
-    echo "checking the tree-sitter repo list against the grammars we know" 1>&2
-    printf '%s' "$treeSitterRepos" | ${checkTreeSitterRepos}
-    outputDir="${toString ./.}/grammars"
-    echo "writing files to $outputDir" 1>&2
-    mkdir -p "$outputDir"
-    ${foreachSh allGrammars
-      ({name, orga, repo}: ''
-        ${updateGrammar} '${lib.generators.toJSON {} {inherit orga repo;}}' \
-          > $outputDir/${name}.json
-      '')}
-    ( echo "{ lib }:"
-      echo "{"
-      ${foreachSh allGrammars
-        ({name, ...}: ''
-           # indentation hack
-             printf "  %s = lib.importJSON ./%s.json;\n" "${name}" "${name}"'')}
-      echo "}" ) \
-      > "$outputDir/default.nix"
+   ${updateImpl} fetch-and-check-tree-sitter-repos '{}'
+    echo "writing files to ${outputDir}" 1>&2
+    mkdir -p "${outputDir}"
+    ${forEachParallel
+        "repos-to-fetch"
+        (writeShellScript "fetch-repo" ''
+            ${updateImpl} fetch-repo "$1"
+        '')
+        (lib.mapAttrsToList
+          (nixRepoAttrName: attrs: attrs // {
+            inherit
+              nixRepoAttrName
+              outputDir;
+          })
+          allGrammars)
+    }
+    ${updateImpl} print-all-grammars-nix-file "$(< ${
+        jsonFile "all-grammars.json" {
+          allGrammars =
+            (lib.mapAttrsToList
+              (nixRepoAttrName: attrs: attrs // {
+                inherit nixRepoAttrName;
+              })
+              allGrammars);
+          inherit outputDir;
+        }
+    })"
   '';
+
 
 in
 update-all-grammars
