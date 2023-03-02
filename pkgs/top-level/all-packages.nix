@@ -386,6 +386,8 @@ with pkgs;
 
   catppuccin-kde = callPackage ../data/themes/catppuccin-kde { };
 
+  catppuccin-kvantum = callPackage ../data/themes/catppuccin-kvantum { };
+
   catppuccin-papirus-folders = callPackage ../data/icons/catppuccin-papirus-folders { };
 
   btdu = callPackage ../tools/misc/btdu { };
@@ -3057,6 +3059,8 @@ with pkgs;
 
   go-cve-search = callPackage ../tools/security/go-cve-search { };
 
+  go-dork = callPackage ../tools/security/go-dork { };
+
   chkcrontab = callPackage ../tools/admin/chkcrontab { };
 
   claws = callPackage ../tools/misc/claws { };
@@ -5507,6 +5511,8 @@ with pkgs;
   shell-hist = callPackage ../tools/misc/shell-hist { };
 
   shellhub-agent = callPackage ../applications/networking/shellhub-agent { };
+
+  shellclear = callPackage ../tools/security/shellclear { };
 
   shellnoob = callPackage ../tools/security/shellnoob { };
 
@@ -12265,9 +12271,7 @@ with pkgs;
 
   ssldump = callPackage ../tools/networking/ssldump { };
 
-  sslsplit = callPackage ../tools/networking/sslsplit {
-    openssl = openssl_1_1;
-  };
+  sslsplit = callPackage ../tools/networking/sslsplit { };
 
   sstp = callPackage ../tools/networking/sstp {};
 
@@ -14115,6 +14119,10 @@ with pkgs;
   arachne-pnr = callPackage ../development/compilers/arachne-pnr { };
 
   asciigraph = callPackage ../tools/text/asciigraph { };
+
+  autocorrect = callPackage ../tools/text/autocorrect {
+    inherit (darwin.apple_sdk.frameworks) Security;
+  };
 
   as31 = callPackage ../development/compilers/as31 { };
 
@@ -22317,6 +22325,8 @@ with pkgs;
 
   mpeg2dec = libmpeg2;
 
+  mqtt-benchmark = callPackage ../tools/networking/mqtt-benchmark { };
+
   mqttui = callPackage ../tools/networking/mqttui {
     inherit (darwin.apple_sdk.frameworks) Security;
   };
@@ -30093,6 +30103,8 @@ with pkgs;
 
   gosmore = callPackage ../applications/misc/gosmore { stdenv = gcc10StdenvCompat; };
 
+  gossa = callPackage ../applications/networking/gossa { };
+
   gpsbabel = libsForQt5.callPackage ../applications/misc/gpsbabel { };
 
   gpsbabel-gui = gpsbabel.override {
@@ -32918,9 +32930,11 @@ with pkgs;
 
   shfmt = callPackage ../tools/text/shfmt { };
 
+  shipments = callPackage ../applications/misc/shipments { };
+
   shortwave = callPackage ../applications/audio/shortwave { };
 
-  shotgun = callPackage ../tools/graphics/shotgun {};
+  shotgun = callPackage ../tools/graphics/shotgun { };
 
   shutter = callPackage ../applications/graphics/shutter { };
 
@@ -39113,6 +39127,8 @@ with pkgs;
   zfs-prune-snapshots = callPackage ../tools/backup/zfs-prune-snapshots {};
 
   zfs-replicate = python3Packages.callPackage ../tools/backup/zfs-replicate { };
+
+  zfxtop = callPackage ../tools/system/zfxtop { };
 
   zrepl = callPackage ../tools/backup/zrepl { };
 
