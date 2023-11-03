@@ -22698,6 +22698,8 @@ with pkgs;
 
   libchipcard = callPackage ../development/libraries/aqbanking/libchipcard.nix { };
 
+  libcld2 = callPackage ../development/libraries/libcld2 { };
+
   libcrafter = callPackage ../development/libraries/libcrafter { };
 
   libcrossguid = callPackage ../development/libraries/libcrossguid { };
