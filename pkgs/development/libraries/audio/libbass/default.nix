@@ -9,24 +9,24 @@ let
   allBass = {
     bass = {
       h = "bass.h";
-      version = "2.4.15";
+      version = "2.4.17";
       so = {
-        i686_linux = "libbass.so";
-        x86_64-linux = "x64/libbass.so";
+        i686_linux = "libs/x86/libbass.so";
+        x86_64-linux = "libs/x86_64/libbass.so";
       };
       urlpath = "bass24-linux.zip";
-      sha256 = "1lmysxfhy727zskavml3ibg5w876ir88923bm17c21s59w5lh7l8";
+      sha256 = "sha256-1g7J1K9PG6B1CW0DDh4tEDrH1qewYUYgvWBpkScDL2U=";
     };
 
     bass_fx = {
       h = "C/bass_fx.h";
-      version = "2.4.12.1";
+      version = "2.4.12.6";
       so = {
-        i686_linux = "libbass_fx.so";
-        x86_64-linux = "x64/libbass_fx.so";
+        i686_linux = "libs/x86/libbass_fx.so";
+        x86_64-linux = "libs/x86_64/libbass_fx.so";
       };
       urlpath = "z/0/bass_fx24-linux.zip";
-      sha256 = "1q0g74z7iyhxqps5b3gnnbic8v2jji1r0mkvais57lsx8y21sbin";
+      sha256 = "sha256-Hul2ELwnaDV8TDRMDXoFisle31GATDkf3PdkR2K9QTs=";
     };
   };
 
@@ -61,7 +61,7 @@ let
       license = licenses.unfreeRedistributable;
       platforms = builtins.attrNames bass.so;
       # until upstream has stable URLs, this package is prone to always being broken
-      broken = true;
+      broken = false;
     };
   };
 
